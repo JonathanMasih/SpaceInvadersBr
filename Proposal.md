@@ -8,7 +8,9 @@ collect more points than their opponents. Players will be distinguished by diffe
 nickname for the leaderboard. The top five scores between the two players will also be displayed on the leaderboard.
 
 250 Point breakdown and rough schedule:
+
 One player mode GUI - 25 points
+
 Two player mode GUI - 25 points - **Finish both layouts by April 17**.
 
 Shields and ability to be broken down - 30 points 
@@ -17,7 +19,8 @@ Aliens to shoot and be destroyed - 30 points - **Finish this section by April 21
 
 Enemy ships and ability to shoot and ability to be destroyed - 30 points
 Two player ability to move around and shoot at each other (*Learn about ability of co-op playing*) - 50 points
-**Finish these two sections by April 28.** *These two milestones will be considered vital for out project to be considered a success because 
+**Finish these two sections by April 28.** 
+*These two milestones will be considered vital for out project to be considered a success because 
 of the time it will take to learn the ability to allow for both players to play at once, and the ability to implement all of the enemy ships 
 and functionality*.
 
