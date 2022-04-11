@@ -20,7 +20,8 @@ Players' Ships ability to shoot and be destroyed - 30 points
 Aliens to shoot and be destroyed - 30 points - **Finish this section by April 21.**
 
 Enemy ships and ability to shoot and ability to be destroyed - 30 points
-Two player ability to move around and shoot at each other (*Learn about ability of co-op playing*) - 50 points
+
+Two player ability to move around and shoot at each other (*Learn about ability of co-op playing*) - 50 points -
 **Finish these two sections by April 28.** 
 
 *These two milestones will be considered vital for out project to be considered a success because 
@@ -29,5 +30,5 @@ and functionality*.
 
 Scoreboard and leaderboard display for player one mode - 15 points
 
-Scoreboard and leaderboard for two player mode - 15 points
+Scoreboard and leaderboard for two player mode - 15 points -
 **Finish these sections by May 2.**
