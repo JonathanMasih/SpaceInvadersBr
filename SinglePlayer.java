@@ -27,6 +27,29 @@ public class SinglePlayer implements Runnable {
         // window, the application should terminate
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        JPanel panel = new JPanel() {
+			@Override
+			public void paintComponent(Graphics g) {
+
+				// first, we should call the paintComponent method we are
+				// overriding in JPanel
+				super.paintComponent(g);
+
+				// draw a big, blue background
+				g.setColor(Color.BLUE);
+				g.fillRect(0, 0, 500, 500);
+
+				// draw the snowflake
+				g.drawImage(background, 100, 100, this);
+
+			}
+		};
+
+        JPanel gamePanel = new JPanel();
+        Toolkit tools = Toolkit.getDefaultToolkit();
+        Image background = tools.getImage("Background for space invaders.jpeg");
+        gamePanel.drawImage(background, 0, 0, this);
+
         // display the window we've created
         frame.pack();
         frame.setVisible(true);
