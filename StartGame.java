@@ -39,15 +39,17 @@ public class StartGame implements ActionListener, Runnable {
 
         // JPanel for the buttons to pick the game mode
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel ,BoxLayout.Y_AXIS));
+        panel.setLayout(null);
          
         JPanel centerPanel = new JPanel(new BorderLayout());
-   
+        
+        //to center buttons and selection label, make panel layout manager null
+        //and position them in center of the panel with font metrics
         JLabel selection = new JLabel("Please select a game mode.");
         selection.setPreferredSize(new Dimension(250, 100));
         selection.setFont(new Font("Verdana", Font.PLAIN, 20));
         onePlayer = new JButton("Single Player");
-        onePlayer.setPreferredSize(new Dimension(200, 50));
+        onePlayer.setBounds(400, panel.getHeight(), 100, 20);
         twoPlayer = new JButton("Multiplayer");
         twoPlayer.setPreferredSize(new Dimension(200, 50));
         onePlayer.addActionListener(this);
