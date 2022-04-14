@@ -23,24 +23,9 @@ public class SinglePlayer implements Runnable {
         // tiny GUI, and give the window a name
         JFrame frame = new JFrame("Welcome to Space Invaders!");
         frame.setPreferredSize(new Dimension(800, 800));
-
         // tell the JFrame that when someone closes the
         // window, the application should terminate
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // JPanel with a paintComponent method
-        panel = new JPanel();
-
-        onePlayer = new JButton("One Player");
-        twoPlayer = new JButton("Two Players");
-        
-        onePlayer.addActionListener(this);
-        twoPlayer.addActionListener(this);
-       
-
-        panel.add(onePlayer);
-        panel.add(twoPlayer);
-        frame.add(panel);
 
         // display the window we've created
         frame.pack();

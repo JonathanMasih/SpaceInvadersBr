@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+
+import javax.accessibility.AccessibleTextSequence;
 import javax.swing.*;
 
 /**
@@ -14,9 +16,7 @@ import javax.swing.*;
 public class StartGame implements ActionListener, Runnable {
     private JButton onePlayer;
     private JButton twoPlayer;
-    private JPanel panel;
-    private JLabel selection;
-
+   
     /**
      * The run method to set up the graphical user interface
      */
@@ -37,39 +37,28 @@ public class StartGame implements ActionListener, Runnable {
         // window, the application should terminate
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // JPanel with a paintComponent method
-        JPanel panel = new JPanel() {
-            @Override
-            public void paintComponent(Graphics g) {
-
-                super.paintComponent(g);
-
-                FontMetrics fm = g.getFontMetrics();
-
-                // String toDisplay = "Mouse Around and See!";
-                int stringWidth = fm.stringWidth(toDisplay);
-                int stringAscent = fm.getAscent();
-
-                int xStart = getWidth() / 2 - stringWidth / 2;
-                int yStart = getHeight() / 2 + stringAscent / 2;
-
-                g.drawString(toDisplay, xStart, yStart);
-            }
-        };
-
-        selection = new JLabel("Please select a game mode.");
+        // JPanel for the buttons to pick the game mode
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel ,BoxLayout.Y_AXIS));
+         
+        JPanel centerPanel = new JPanel(new BorderLayout());
+   
+        JLabel selection = new JLabel("Please select a game mode.");
+        selection.setPreferredSize(new Dimension(250, 100));
+        selection.setFont(new Font("Verdana", Font.PLAIN, 20));
         onePlayer = new JButton("Single Player");
-        onePlayer.setPreferredSize(new Dimension(50, 50));
+        onePlayer.setPreferredSize(new Dimension(200, 50));
         twoPlayer = new JButton("Multiplayer");
-        twoPlayer.setPreferredSize(new Dimension(50, 50));
-
+        twoPlayer.setPreferredSize(new Dimension(200, 50));
         onePlayer.addActionListener(this);
         twoPlayer.addActionListener(this);
-
+  
         panel.add(selection);
         panel.add(onePlayer);
         panel.add(twoPlayer);
-        frame.add(panel);
+        centerPanel.add(panel,BorderLayout.CENTER);
+        
+        frame.add(centerPanel);
 
         // display the window we've created
         frame.pack();
@@ -79,10 +68,10 @@ public class StartGame implements ActionListener, Runnable {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == onePlayer) {
-
+           // javax.swing.SwingUtilities.invokeLater(new SinglePlayer());
         }
         if (e.getSource() == twoPlayer) {
-
+           // javax.swing.SwingUtilities.invokeLater(new DoublePlayer());
         }
 
     }

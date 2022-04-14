@@ -11,7 +11,6 @@ import javax.swing.*;
  */
 public class DoublePlayer implements Runnable {
 
-
     @Override
     public void run(){
 
