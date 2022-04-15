@@ -11,6 +11,7 @@ import javax.swing.*;
  * @version Spring 2022
  */
 public class SinglePlayer implements Runnable {
+    private Image background;
 
     @Override
     public void run(){
@@ -26,6 +27,8 @@ public class SinglePlayer implements Runnable {
         // tell the JFrame that when someone closes the
         // window, the application should terminate
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Toolkit tools = Toolkit.getDefaultToolkit();
+        background = tools.getImage("Background for space invaders.jpeg");
 
         JPanel panel = new JPanel() {
 			@Override
@@ -36,20 +39,19 @@ public class SinglePlayer implements Runnable {
 				super.paintComponent(g);
 
 				// draw a big, blue background
-				g.setColor(Color.BLUE);
-				g.fillRect(0, 0, 500, 500);
+				//g.setColor(Color.BLUE);
+				//g.fillRect(0, 0, 500, 500);
 
-				// draw the snowflake
-				g.drawImage(background, 100, 100, this);
+				
+				//g.drawImage(background, 100, 100, this);
 
 			}
 		};
 
         JPanel gamePanel = new JPanel();
-        Toolkit tools = Toolkit.getDefaultToolkit();
-        Image background = tools.getImage("Background for space invaders.jpeg");
-        gamePanel.drawImage(background, 0, 0, this);
-
+   
+         frame.add(gamePanel);
+         frame.add(panel);
         // display the window we've created
         frame.pack();
         frame.setVisible(true);

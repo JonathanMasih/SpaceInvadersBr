@@ -1,9 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-
-import javax.accessibility.AccessibleTextSequence;
 import javax.swing.*;
+
 
 /**
  * This GUI will display two buttons with options for playing the single player
@@ -39,26 +38,38 @@ public class StartGame implements ActionListener, Runnable {
 
         // JPanel for the buttons to pick the game mode
         JPanel panel = new JPanel();
-        panel.setLayout(null);
-         
+        panel.setLayout(new BoxLayout( panel, BoxLayout.PAGE_AXIS));
         JPanel centerPanel = new JPanel(new BorderLayout());
         
         //to center buttons and selection label, make panel layout manager null
         //and position them in center of the panel with font metrics
         JLabel selection = new JLabel("Please select a game mode.");
-        selection.setPreferredSize(new Dimension(250, 100));
+        selection.setPreferredSize(new Dimension(300, 50));
         selection.setFont(new Font("Verdana", Font.PLAIN, 20));
         onePlayer = new JButton("Single Player");
-        onePlayer.setBounds(400, panel.getHeight(), 100, 20);
+        onePlayer.setFont(new Font("Verdana", Font.PLAIN, 20));
+        onePlayer.setPreferredSize(new Dimension(200, 50));
         twoPlayer = new JButton("Multiplayer");
+        twoPlayer.setFont(new Font("Verdana", Font.PLAIN, 20));
         twoPlayer.setPreferredSize(new Dimension(200, 50));
         onePlayer.addActionListener(this);
         twoPlayer.addActionListener(this);
-  
-        panel.add(selection);
-        panel.add(onePlayer);
-        panel.add(twoPlayer);
-        centerPanel.add(panel,BorderLayout.CENTER);
+        
+        JPanel selectionLabelPanel = new JPanel();
+        selectionLabelPanel.add(selection);
+        selectionLabelPanel.setPreferredSize(new Dimension(300, 50));
+        JPanel oneplayerButtonPanel = new JPanel();
+        oneplayerButtonPanel.setPreferredSize(new Dimension(200, 50));
+        oneplayerButtonPanel.add(onePlayer);
+        JPanel twoPlayerButtonPanel = new JPanel();
+        twoPlayerButtonPanel.setPreferredSize(new Dimension(200, 50));
+        twoPlayerButtonPanel.add(twoPlayer);
+
+
+        panel.add(selectionLabelPanel);
+        panel.add(oneplayerButtonPanel);
+        panel.add(twoPlayerButtonPanel);
+        centerPanel.add(panel , BorderLayout.CENTER);
         
         frame.add(centerPanel);
 
@@ -79,6 +90,11 @@ public class StartGame implements ActionListener, Runnable {
     }
 
     public static void main(String[] args) {
+        //"javax.swing.plaf.nimbus.NimbusLookAndFeel")
+        try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        }catch(Exception e){
+        }
         javax.swing.SwingUtilities.invokeLater(new StartGame());
     }
 
