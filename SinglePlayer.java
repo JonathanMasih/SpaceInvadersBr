@@ -2,6 +2,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import javax.sound.sampled.*;
 /**
  * This GUI will be set up to show one player attemoting to shoot aliends and
  * other ships
@@ -34,7 +37,20 @@ public class SinglePlayer extends Thread{
         // tell the JFrame that when someone closes the
         // window, the application should terminate
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       
+       //Plays the background music 
+       File audiofile = new File("spaceInvadersMusic.wav");
+       try {
+           AudioInputStream audioStream =  AudioSystem.getAudioInputStream(audiofile);
+           Clip clip = AudioSystem.getClip();
+           clip.open(audioStream);
+           clip.start();
+       } catch (UnsupportedAudioFileException e) {
+           e.printStackTrace();
+       } catch (IOException e) {
+           e.printStackTrace();
+       } catch (LineUnavailableException e) {
+           e.printStackTrace();
+       }
      
         // display the window we've created
         frame.pack();

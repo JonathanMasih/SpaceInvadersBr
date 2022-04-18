@@ -2,6 +2,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import javax.sound.sampled.*;
 
 /**
  * This GUI will display two buttons with options for playing the single player
@@ -49,6 +52,22 @@ public class StartGame implements ActionListener, Runnable {
                 g.drawImage(backgroundImage, 0, 0, frame.getWidth(), frame.getHeight(), this);
             }
         };
+        //Plays the background music 
+        File audiofile = new File("spaceInvadersMusic.wav");
+        try {
+            AudioInputStream audioStream =  AudioSystem.getAudioInputStream(audiofile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    
+
 
         // to center buttons and selection label, make panel layout manager null
         // and position them in center of the panel with font metrics
