@@ -25,6 +25,7 @@ public class StartGame implements ActionListener, Runnable {
     public void run() {
         // create a JFrame in which we will build our very
         // tiny GUI, and give the window a name
+
         frame = new JFrame("Welcome to Space Invaders!");
         frame.setPreferredSize(new Dimension(800, 800));
 
@@ -103,10 +104,14 @@ public class StartGame implements ActionListener, Runnable {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == onePlayer) {
-            // javax.swing.SwingUtilities.invokeLater(new SinglePlayer());
+             //makes a new singleplayer objects and starts it
+           SinglePlayer game = new SinglePlayer(frame,backGroundPanel );
+           game.start();
         }
         if (e.getSource() == twoPlayer) {
-            // javax.swing.SwingUtilities.invokeLater(new DoublePlayer());
+            //makes a new doubleplayer objects and starts it
+            DoublePlayer game = new DoublePlayer(frame,backGroundPanel );
+           game.start();
         }
 
     }
