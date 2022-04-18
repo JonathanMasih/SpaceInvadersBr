@@ -10,50 +10,35 @@ import javax.swing.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class SinglePlayer implements Runnable {
-    private Image background;
+public class SinglePlayer extends Thread  implements Runnable {
+    private JFrame frame;
+    private JPanel backGroundPanel; 
 
+    public SinglePlayer(JFrame frame , JPanel backGroundPanel){
+     this.frame = frame;
+     this.backGroundPanel = backGroundPanel;
+    }
+    
+     /**
+     * The run method to set up the graphical user interface
+     */
     @Override
     public void run(){
-
-        // set up the GUI "look and feel" which should match
-        // the OS on which we are running
-        JFrame.setDefaultLookAndFeelDecorated(true);
-
-        // create a JFrame in which we will build our very
-        // tiny GUI, and give the window a name
-        JFrame frame = new JFrame("Welcome to Space Invaders!");
+        //Clears the frame from the Main menu and buttons so we can 
+        //Implement single player mode components
+        frame.getContentPane().removeAll();
+        frame.setTitle("Welcome to Single Player!");
         frame.setPreferredSize(new Dimension(800, 800));
+        //sets the background image for the frame.
+        frame.setContentPane(backGroundPanel);
         // tell the JFrame that when someone closes the
         // window, the application should terminate
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Toolkit tools = Toolkit.getDefaultToolkit();
-        background = tools.getImage("Background for space invaders.jpeg");
-
-        JPanel panel = new JPanel() {
-			@Override
-			public void paintComponent(Graphics g) {
-
-				// first, we should call the paintComponent method we are
-				// overriding in JPanel
-				super.paintComponent(g);
-
-				// draw a big, blue background
-				//g.setColor(Color.BLUE);
-				//g.fillRect(0, 0, 500, 500);
-
-				
-				//g.drawImage(background, 100, 100, this);
-
-			}
-		};
-
-        JPanel gamePanel = new JPanel();
-   
-         frame.add(gamePanel);
-         frame.add(panel);
+       
+     
         // display the window we've created
         frame.pack();
         frame.setVisible(true);
+      
     }
 }
