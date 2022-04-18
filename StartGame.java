@@ -20,6 +20,7 @@ public class StartGame implements ActionListener, Runnable {
     private static Image backgroundImage;
     private JFrame frame;
     private JPanel backGroundPanel;
+    private Clip clip;
 
     /**
      * The run method to set up the graphical user interface
@@ -56,7 +57,7 @@ public class StartGame implements ActionListener, Runnable {
         File audiofile = new File("spaceInvadersMusic.wav");
         try {
             AudioInputStream audioStream =  AudioSystem.getAudioInputStream(audiofile);
-            Clip clip = AudioSystem.getClip();
+            clip = AudioSystem.getClip();
             clip.open(audioStream);
             clip.start();
         } catch (UnsupportedAudioFileException e) {
@@ -125,11 +126,13 @@ public class StartGame implements ActionListener, Runnable {
         if (e.getSource() == onePlayer) {
              //makes a new singleplayer objects and starts it
            SinglePlayer game = new SinglePlayer(frame,backGroundPanel );
+           clip.stop();
            game.start();
         }
         if (e.getSource() == twoPlayer) {
             //makes a new doubleplayer objects and starts it
             DoublePlayer game = new DoublePlayer(frame,backGroundPanel );
+            clip.stop();
            game.start();
         }
 
