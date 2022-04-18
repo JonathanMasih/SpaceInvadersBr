@@ -10,7 +10,7 @@ import javax.swing.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class SinglePlayer extends Thread  implements Runnable {
+public class SinglePlayer extends Thread{
     private JFrame frame;
     private JPanel backGroundPanel; 
 
