@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
 
+
 /**
  * This GUI will display two buttons with options for playing the single player
  * mode
@@ -14,12 +15,11 @@ import javax.sound.sampled.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class StartGame implements ActionListener, Runnable {
+public class StartGame implements ActionListener, Runnable{
     private JButton onePlayer;
     private JButton twoPlayer;
     private static Image backgroundImage;
     private JFrame frame;
-    private JPanel backGroundPanel;
     private Clip clip;
 
     /**
@@ -31,7 +31,7 @@ public class StartGame implements ActionListener, Runnable {
         // tiny GUI, and give the window a name
 
         frame = new JFrame("Welcome to Space Invaders!");
-        frame.setPreferredSize(new Dimension(800, 800));
+        frame.setPreferredSize(new Dimension(1000,850));
 
         // tell the JFrame that when someone closes the
         // window, the application should terminate
@@ -43,16 +43,17 @@ public class StartGame implements ActionListener, Runnable {
         JPanel centerPanel = new JPanel(new BorderLayout());
 
         // Setting the background of the frame
-        backGroundPanel = new JPanel() {
+        JPanel backGroundPanel = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
                 // first, we should call the paintComponent method we are
                 // overriding in JPanel
                 super.paintComponent(g);
-                // draw the snowflake
-                g.drawImage(backgroundImage, 0, 0, frame.getWidth(), frame.getHeight(), this);
+                // draw the background
+                g.drawImage(backgroundImage, 0 ,  0 , frame.getWidth(), frame.getHeight(), this);
             }
         };
+        backGroundPanel.setLayout(new BorderLayout());
         //Plays the background music 
         File audiofile = new File("spaceInvadersMusic.wav");
         try {
@@ -105,13 +106,15 @@ public class StartGame implements ActionListener, Runnable {
         gameModePanel.setOpaque(false);
         centerPanel.setOpaque(false);
         centerPanel.add(gameModePanel, BorderLayout.CENTER);
-
         onePlayer.addActionListener(this);
         twoPlayer.addActionListener(this);
-        // Sets the background of the frame to space image
-        frame.setContentPane(backGroundPanel);
-        frame.add(centerPanel);
+
+    
         // display the window we've created
+         // Sets the background of the frame to space image 
+         // adds the buttons and message to the frame
+         backGroundPanel.add(centerPanel,BorderLayout.CENTER );
+        frame.add(backGroundPanel);
         frame.pack();
         frame.setVisible(true);
     }
@@ -125,18 +128,19 @@ public class StartGame implements ActionListener, Runnable {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == onePlayer) {
              //makes a new singleplayer objects and starts it
-           SinglePlayer game = new SinglePlayer(frame,backGroundPanel );
+           SinglePlayer game = new SinglePlayer(frame,backgroundImage );
            clip.stop();
            game.start();
         }
         if (e.getSource() == twoPlayer) {
             //makes a new doubleplayer objects and starts it
-            DoublePlayer game = new DoublePlayer(frame,backGroundPanel );
+            DoublePlayer game = new DoublePlayer(frame, backgroundImage );
             clip.stop();
            game.start();
         }
 
     }
+
 
     public static void main(String[] args) {
         // "javax.swing.plaf.nimbus.NimbusLookAndFeel")

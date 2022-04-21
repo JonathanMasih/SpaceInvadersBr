@@ -15,11 +15,14 @@ import javax.sound.sampled.*;
  */
 public class DoublePlayer extends Thread  {
     private JFrame frame;
-    private JPanel backGroundPanel; 
+    private Image backgroundImage;
+    private final static int GAME_PANEL_WIDTH = 800;
+    private final static int GAME_PANEL_HEIGHT = 850;
 
-    public DoublePlayer(JFrame frame , JPanel backGroundPanel){
+
+    public DoublePlayer(JFrame frame, Image img){
      this.frame = frame;
-     this.backGroundPanel = backGroundPanel;
+     this.backgroundImage = img;
     }
     
      /**
@@ -27,20 +30,30 @@ public class DoublePlayer extends Thread  {
      */
     @Override
     public void run(){
-        //Clears the frame from the Main menu and buttons so we can 
-        //Implement double player mode components
+        // Clears the frame from the Main menu and buttons so we can
+        // Implement single player mode components
         frame.getContentPane().removeAll();
-        frame.setTitle("Welcome to Double Player!");
-        frame.setPreferredSize(new Dimension(800, 800));
-        //sets the background image for the frame.
-        frame.setContentPane(backGroundPanel);
-        // tell the JFrame that when someone closes the
+        frame.setTitle("Welcome to Single Player!");
+        frame.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
         // window, the application should terminate
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //Plays the background music 
+        // Setting the background of the frame
+        JPanel backGroundPanel = new JPanel() {
+            @Override
+            public void paintComponent(Graphics g) {
+                // first, we should call the paintComponent method we are
+                // overriding in JPanel
+                super.paintComponent(g);
+                // draw the background
+                g.drawImage(backgroundImage, 0, 0, frame.getWidth(), frame.getHeight(), this);
+            }
+        };
+        backGroundPanel.setLayout(new BorderLayout());
+
+        // Plays the background music
         File audiofile = new File("spaceInvadersMusic.wav");
         try {
-            AudioInputStream audioStream =  AudioSystem.getAudioInputStream(audiofile);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audiofile);
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
             clip.start();
@@ -51,11 +64,24 @@ public class DoublePlayer extends Thread  {
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         }
-       
-     
+        // Gets the image for the background
+
+        JPanel gamePanel = new JPanel() {
+            @Override
+            public void paintComponent(Graphics g) {
+                // first, we should call the paintComponent method we are
+                // overriding in JPanel
+                super.paintComponent(g);
+                g.setColor(Color.WHITE);
+                g.drawRect(0, 0, 700,GAME_PANEL_HEIGHT);
+            }
+        };
+        gamePanel.setOpaque(false);
+        backGroundPanel.add(gamePanel);
+
+        frame.add(backGroundPanel);
         // display the window we've created
         frame.pack();
         frame.setVisible(true);
-      
     }
 }
