@@ -74,7 +74,7 @@ public class SinglePlayer extends Thread {
                 super.paintComponent(g);
                 g.setColor(Color.WHITE);
                 g.drawRect(0, 0, 700,GAME_PANEL_HEIGHT);
-                g.drawImage(playerOneImg ,350, GAME_PANEL_HEIGHT -50,50, 50,this);
+                g.drawImage(playerOneImg ,350, GAME_PANEL_HEIGHT -150,70, 75,this);
             }
         };
         gamePanel.setOpaque(false);
