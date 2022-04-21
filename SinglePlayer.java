@@ -49,7 +49,6 @@ public class SinglePlayer extends Thread {
             }
         };
         backGroundPanel.setLayout(new BorderLayout());
-
         // Plays the background music
         File audiofile = new File("spaceInvadersMusic.wav");
         try {
@@ -64,7 +63,8 @@ public class SinglePlayer extends Thread {
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         }
-        // Gets the image for the background
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Image playerOneImg = toolkit.getImage("PlayerOne.png");
 
         JPanel gamePanel = new JPanel() {
             @Override
@@ -74,6 +74,7 @@ public class SinglePlayer extends Thread {
                 super.paintComponent(g);
                 g.setColor(Color.WHITE);
                 g.drawRect(0, 0, 700,GAME_PANEL_HEIGHT);
+                g.drawImage(playerOneImg ,350, GAME_PANEL_HEIGHT -50,50, 50,this);
             }
         };
         gamePanel.setOpaque(false);
