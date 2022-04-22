@@ -128,13 +128,13 @@ public class StartGame implements ActionListener, Runnable{
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == onePlayer) {
              //makes a new singleplayer objects and starts it
-           SinglePlayer game = new SinglePlayer(frame,backgroundImage );
+           SinglePlayer game = new SinglePlayer(frame,backgroundImage ,clip);
            clip.stop();
            game.start();
         }
         if (e.getSource() == twoPlayer) {
             //makes a new doubleplayer objects and starts it
-            DoublePlayer game = new DoublePlayer(frame, backgroundImage );
+            DoublePlayer game = new DoublePlayer(frame, backgroundImage , clip );
             clip.stop();
            game.start();
         }

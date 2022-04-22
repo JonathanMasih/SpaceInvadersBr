@@ -19,10 +19,12 @@ public class SinglePlayer extends Thread {
     private Image backgroundImage;
     private final static int GAME_PANEL_WIDTH = 800;
     private final static int GAME_PANEL_HEIGHT = 850;
+    private Clip clip;
 
-    public SinglePlayer(JFrame frame , Image img) {
+    public SinglePlayer(JFrame frame , Image img , Clip clip) {
         this.frame = frame;
         this.backgroundImage = img;
+        this.clip = clip;
     }
 
     /**
@@ -50,19 +52,8 @@ public class SinglePlayer extends Thread {
         };
         backGroundPanel.setLayout(new BorderLayout());
         // Plays the background music
-        File audiofile = new File("spaceInvadersMusic.wav");
-        try {
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audiofile);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        }
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
+       
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Image playerOneImg = toolkit.getImage("PlayerOne.png");
 
