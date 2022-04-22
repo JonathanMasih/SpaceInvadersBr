@@ -56,7 +56,7 @@ public class DoublePlayer extends Thread  {
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audiofile);
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
-            clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (IOException e) {
