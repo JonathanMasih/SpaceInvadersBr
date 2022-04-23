@@ -12,14 +12,19 @@ import javax.sound.sampled.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class SinglePlayer extends Thread {
+public class SinglePlayer extends Thread implements KeyListener {
     private JFrame frame;
     private Image backgroundImage;
     private final static int GAME_PANEL_WIDTH = 800;
     private final static int GAME_PANEL_HEIGHT = 850;
+    // amount to the move player on each key press
+    public static final int MOVE_BY = 10;
     private Clip clip;
+    private Point upperLeftOfPlayer;
+    private JPanel gamePanel;
+    private Player player;
 
-    public SinglePlayer(JFrame frame , Image img , Clip clip) {
+    public SinglePlayer(JFrame frame, Image img, Clip clip) {
         this.frame = frame;
         this.backgroundImage = img;
         this.clip = clip;
@@ -51,27 +56,60 @@ public class SinglePlayer extends Thread {
         backGroundPanel.setLayout(new BorderLayout());
         // Plays the background music
         clip.loop(Clip.LOOP_CONTINUOUSLY);
-       
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Image playerOneImg = toolkit.getImage("PlayerOne.png");
+        upperLeftOfPlayer = new Point(315, 700);
 
-        JPanel gamePanel = new JPanel() {
+        gamePanel = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
                 // first, we should call the paintComponent method we are
                 // overriding in JPanel
                 super.paintComponent(g);
                 g.setColor(Color.WHITE);
-                g.drawRect(0, 0, 700,GAME_PANEL_HEIGHT);
-                g.drawImage(playerOneImg ,350, GAME_PANEL_HEIGHT -180,70, 70,this);
+                // draws the border for the game
+                g.drawRect(0, 0, 700, GAME_PANEL_HEIGHT);
+                // draw the player
+                player.paint(g);
+
             }
         };
+        // sets the size of the game panel
+        gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
+        // Creates a player when the game started
+        player = new Player(upperLeftOfPlayer);
         gamePanel.setOpaque(false);
         backGroundPanel.add(gamePanel);
 
         frame.add(backGroundPanel);
+        // Checks if any key is pressed
+        frame.addKeyListener(this);
+        //Sets the keyboard focus on this frame
+        frame.requestFocus();
         // display the window we've created
         frame.pack();
         frame.setVisible(true);
     }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        Point currentPosPlayer = player.getPlayerCenter();
+        // Moves the player depending on which button is pressed
+        if (e.getKeyCode() == 'A' && currentPosPlayer.x > (5 + Player.PLAYERSIZE / 2)) {
+            player.translate(-MOVE_BY);
+        } else if (e.getKeyCode() == 'D' && currentPosPlayer.x < GAME_PANEL_WIDTH - (2 * Player.PLAYERSIZE)) {
+            player.translate(MOVE_BY);
+        } else {
+            return;
+        }
+        // trigger paint so we can see the player in its new location
+        gamePanel.repaint();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
 }
