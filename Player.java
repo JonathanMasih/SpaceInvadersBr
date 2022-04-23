@@ -9,13 +9,18 @@ import javax.swing.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class Player {
+public class Player{
     private Point upperLeftOfPLayer;
     private Point centerOfPlayer;
     private static Image playerImage;
+    public static final int PLAYERSIZE = 70;
+    public static final int PLAYERYPOS = 700;
 
     public Player(Point startPos) {
         this.upperLeftOfPLayer = startPos;
+        this.centerOfPlayer = new Point(upperLeftOfPLayer.x+(PLAYERSIZE /2 ),
+                                        PLAYERYPOS +(PLAYERSIZE /2 )
+                                        );
     }
 
     /**
@@ -35,8 +40,8 @@ public class Player {
      * @param g the Graphics object where the shape should be drawn
      */
     public void paint(Graphics g) {
-        g.drawImage(playerImage, upperLeftOfPLayer.x, upperLeftOfPLayer.y, 70, 70,null);
-        this.centerOfPlayer = new Point(upperLeftOfPLayer.x + 35, upperLeftOfPLayer.y - 35);
+        g.drawImage(playerImage, upperLeftOfPLayer.x, PLAYERYPOS, PLAYERSIZE, PLAYERSIZE,null);
+        this.centerOfPlayer = new Point(upperLeftOfPLayer.x + 35, PLAYERYPOS - 35);
     }
 
     /**
@@ -50,7 +55,7 @@ public class Player {
       /**
      * Set the Image to be used by the player Object 
      */
-    public static void loadSnowPic() {
+    public static void loadPlayerPic() {
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Player.playerImage = toolkit.getImage("PlayerOne.png");
