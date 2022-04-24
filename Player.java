@@ -7,10 +7,10 @@ import java.awt.*;
  * @version Spring 2022
  */
 public class Player extends Thread{
-    private Point upperLeftOfPLayer;
+    protected Point upperLeftOfPLayer;
     private Point centerOfPlayer;
     protected static Image playerImage;
-    public static final int PLAYERSIZE = 70;
+    public final int PLAYERSIZE = 70;
     public static final int PLAYERYPOS = 700;
     private int playerLives;
 
