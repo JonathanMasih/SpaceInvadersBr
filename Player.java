@@ -12,6 +12,7 @@ public class Player{
     private static Image playerImage;
     public static final int PLAYERSIZE = 70;
     public static final int PLAYERYPOS = 700;
+    private int playerlives;
 
     public Player(Point startPos) {
         this.upperLeftOfPLayer = startPos;

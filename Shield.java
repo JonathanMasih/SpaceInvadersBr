@@ -12,7 +12,7 @@ public class Shield {
     protected int sheildHitsTaken;
     public static final int SHIELDSIZEW = 100;
     public static final int SHIELDSIZEL = 30;
-    public static final int PLAYERYPOS = 700;
+    public static final int PLAYERYPOS = 600;
 
     public Shield(Point upperLeft) {
         this.upperLeftOfShield = upperLeft;

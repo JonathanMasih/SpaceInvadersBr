@@ -150,6 +150,8 @@ public class StartGame implements ActionListener, Runnable{
         }
         // loads the image of the player
         Player.loadPlayerPic();
+        //loads the image of the alien
+        Alien.loadAlienPic();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         backgroundImage = toolkit.getImage("background.gif");
         javax.swing.SwingUtilities.invokeLater(new StartGame());
