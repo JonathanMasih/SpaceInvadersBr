@@ -12,12 +12,12 @@ public class Shield {
     protected int sheildHitsTaken;
     public static final int SHIELDSIZEW = 100;
     public static final int SHIELDSIZEL = 30;
-    public static final int PLAYERYPOS = 600;
+    public static final int SHIELDPOS = 600;
 
     public Shield(Point upperLeft) {
         this.upperLeftOfShield = upperLeft;
         this.centerOfShield = new Point(upperLeft.x+(SHIELDSIZEW /2 ),
-                                        PLAYERYPOS +(SHIELDSIZEL /2 )
+                                        SHIELDPOS +(SHIELDSIZEL /2 )
                                         );
         this.sheildBroken = false;
     }
@@ -38,7 +38,7 @@ public class Shield {
      * Returns the center of the  Sheild at any given call.
      * 
      */
-    public Point getPlayerCenter() {
+    public Point getShieldCenter() {
         return centerOfShield;
     }
 

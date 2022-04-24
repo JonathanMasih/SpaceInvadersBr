@@ -20,7 +20,6 @@ public class SinglePlayer extends Thread implements KeyListener {
     // amount to the move player on each key press
     public static final int MOVE_BY = 10;
     private Clip clip;
-    private Point upperLeftOfPlayer;
     private JPanel gamePanel;
     private Player player;
     private ArrayList<Bullet> bulletList;
@@ -70,22 +69,23 @@ public class SinglePlayer extends Thread implements KeyListener {
         clip.loop(Clip.LOOP_CONTINUOUSLY);
         
         //making sheilds 
-        Shield sheild1 = new Shield(new Point(100,Shield.PLAYERYPOS ));
-        Shield sheild2 = new Shield(new Point(500,Shield.PLAYERYPOS));
+        Shield sheild1 = new Shield(new Point(100,Shield.SHIELDPOS ));
+        Shield sheild2 = new Shield(new Point(500,Shield.SHIELDPOS));
         shieldList.add(sheild1 );
         shieldList.add(sheild2 );
 
         //Making aliens
-        Alien alien1 = new Alien(new Point(200,Alien.ALIENYPOS1));
+        Alien alien1 = new Alien(new Point(100,Alien.ALIENYPOS1));
+        Alien alien12 = new Alien(new Point(200,Alien.ALIENYPOS1));
         Alien alien2 = new Alien(new Point(300,Alien.ALIENYPOS1));
         Alien alien3 = new Alien(new Point(400,Alien.ALIENYPOS1));
         Alien alien4 = new Alien(new Point(500,Alien.ALIENYPOS1));
-        Alien alien5 = new Alien(new Point(600,Alien.ALIENYPOS1));
         alienList.add( alien1);
+        alienList.add(  alien12 );
         alienList.add(alien2);
         alienList.add( alien3 );
         alienList.add( alien4);
-        alienList.add(alien5);
+        alienList.add(alien4);
 
         gamePanel = new JPanel() {
             @Override
@@ -103,29 +103,29 @@ public class SinglePlayer extends Thread implements KeyListener {
               while (i < shieldList.size()) {
                 Shield s =  shieldList.get(i);
                 if (s.isSheildBroken()) {
-                    bulletList.remove(i);
+                    bulletList.remove(i );
                 } else {
                     s.paint(g);
                     i++;
                 }}
                //draws the aliens
                int j = 0;
-               while (i <  alienList.size()) {
-               Alien a = alienList.get(i);
+               while (j <  alienList.size()) {
+               Alien a = alienList.get(j);
                 if (a.isAlienHit()) {
-                    alienList.remove(i);
+                    alienList.remove(j);
                 } else {
                     a.paint(g);
-                    i++; }}
+                    j++; }}
                   //draws the bullets 
-                // int k= 0;
-                while (i < bulletList.size()) {
-                    Bullet b = bulletList.get(i);
+                int k= 0;
+                while ( k < bulletList.size()) {
+                    Bullet b = bulletList.get(k);
                     if (b.isOffPanel()) {
-                        bulletList.remove(i);
+                        bulletList.remove(k);
                     } else {
                         b.paint(g);
-                        i++;
+                        k++;
                     }
                 }
 
@@ -141,7 +141,7 @@ public class SinglePlayer extends Thread implements KeyListener {
         frame.addKeyListener(this);
         //Sets the keyboard focus on this frame
         frame.setFocusable(true);
-        frame.requestFocus();
+        frame.requestFocus();  
         // display the window we've created
         frame.pack();
         frame.setVisible(true);
