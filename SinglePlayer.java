@@ -83,11 +83,16 @@ public class SinglePlayer extends Thread implements KeyListener {
                 g.drawRect(0, 0, 700, GAME_PANEL_HEIGHT);
                 // draw the player
                 player.paint(g);
-
+              //draws the shields 
+                for(Shield s :shieldList){
+                    if(!s.isSheildBroken()){
+                      s.paint(g);
+                    }
+                  }
+                  //draws the bullets 
                 int i = 0;
                 while (i < bulletList.size()) {
                     Bullet b = bulletList.get(i);
-                    System.out.println(bulletList.size());
                     if (b.isOffPanel()) {
                         bulletList.remove(i);
                     } else {
@@ -96,11 +101,7 @@ public class SinglePlayer extends Thread implements KeyListener {
                     }
                 }
   
-            for(Shield s :shieldList){
-              if(!s.isSheildBroken()){
-                s.paint(g);
-              }
-            }
+
 
 
             }
@@ -132,21 +133,23 @@ public class SinglePlayer extends Thread implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_A && 
             currentPosPlayer1.x > (5 + Player.PLAYERSIZE / 2)) {
             player.translate(-MOVE_BY);
+            currentPosPlayer1 = player.getPlayerCenter();
             // If the player is moving and wants to shoot
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 Bullet bullet = new Bullet(gamePanel, currentPosPlayer1);
                 bullet.start();
                 bulletList.add(bullet);
-            }
+            } 
         } else if (e.getKeyCode() == KeyEvent.VK_D && 
                   currentPosPlayer1.x < GAME_PANEL_WIDTH - (2 * Player.PLAYERSIZE)) {
             player.translate(MOVE_BY);
+            currentPosPlayer1 = player.getPlayerCenter();
             // If the player is moving and wants to shoot
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 Bullet bullet = new Bullet(gamePanel, currentPosPlayer1);
                 bullet.start();
                 bulletList.add(bullet);
-            }
+            } 
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             Bullet bullet = new Bullet(gamePanel, currentPosPlayer1);
             bullet.start();

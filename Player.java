@@ -16,7 +16,7 @@ public class Player{
     public Player(Point startPos) {
         this.upperLeftOfPLayer = startPos;
         this.centerOfPlayer = new Point(startPos.x+(PLAYERSIZE /2 ),
-                                        PLAYERYPOS +(PLAYERSIZE /2 )
+                                        PLAYERYPOS  + (PLAYERSIZE /2 )
                                         );
     }
 
@@ -38,6 +38,7 @@ public class Player{
      */
     public void paint(Graphics g) {
         g.drawImage(playerImage, upperLeftOfPLayer.x, PLAYERYPOS, PLAYERSIZE, PLAYERSIZE,null);
+        centerOfPlayer = new Point(upperLeftOfPLayer.x + (PLAYERSIZE/2), upperLeftOfPLayer.y +(PLAYERSIZE/2));
     }
 
     /**

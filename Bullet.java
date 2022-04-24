@@ -16,12 +16,13 @@ public class Bullet extends Thread {
    private boolean  offPanel;
    private static final int bulletHeight = 10;
   private static final int bulletWidth = 6;
-  private static final int bulletSPEED = 5;
+  private static final int bulletSPEED = 10;
+  private static final int DELAY_TIME = 30;
 
    public Bullet(Component panel, Point currentPos) {
     this.panel = panel;
     this.offPanel = false; 
-    this.upperLeft = new Point(currentPos.x- (bulletWidth / 2),currentPos.y+ bulletHeight) ;
+    this.upperLeft = new Point(currentPos.x- (bulletWidth / 2),Player.PLAYERYPOS - 5 ) ;
    }
 
    /**
@@ -31,9 +32,13 @@ public class Bullet extends Thread {
      */
     @Override
     public void run() {
-        while ( 0 + bulletHeight < upperLeft.y  ) {
+        while ( 0 < upperLeft.y  ) {
             // every 30 ms or so, we move the coordinates of bullet
-            upperLeft.translate(0, -1);
+            try {
+                sleep(DELAY_TIME);
+            } catch (InterruptedException e) {
+            }
+            upperLeft.translate(0, -bulletSPEED );
             //Repaint
             panel.repaint();
         }
@@ -47,7 +52,6 @@ public class Bullet extends Thread {
      * @param g the Graphics object in which to paint
      */
     public void paint(Graphics g) {
-        System.out.println("Hello");
             g.setColor(Color.WHITE);
             g.fillRect(upperLeft.x, upperLeft.y, bulletWidth,  bulletHeight);
     }
