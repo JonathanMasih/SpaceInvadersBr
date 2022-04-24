@@ -1,7 +1,4 @@
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
 
 /**
  * This class makes an player with an image that can move around.
@@ -18,7 +15,7 @@ public class Player{
 
     public Player(Point startPos) {
         this.upperLeftOfPLayer = startPos;
-        this.centerOfPlayer = new Point(upperLeftOfPLayer.x+(PLAYERSIZE /2 ),
+        this.centerOfPlayer = new Point(startPos.x+(PLAYERSIZE /2 ),
                                         PLAYERYPOS +(PLAYERSIZE /2 )
                                         );
     }
