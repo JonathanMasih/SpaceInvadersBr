@@ -23,6 +23,7 @@ public class SinglePlayer extends Thread implements KeyListener {
     private Point upperLeftOfPlayer;
     private JPanel gamePanel;
     private Player player;
+    ArrayList<Bullet> bulletList;
 
     public SinglePlayer(JFrame frame, Image img, Clip clip) {
         this.frame = frame;
@@ -56,8 +57,10 @@ public class SinglePlayer extends Thread implements KeyListener {
         backGroundPanel.setLayout(new BorderLayout());
         // Plays the background music
         clip.loop(Clip.LOOP_CONTINUOUSLY);
-        upperLeftOfPlayer = new Point(315, 700);
 
+        upperLeftOfPlayer = new Point(315, 700);
+         
+        bulletList = new ArrayList<Bullet>();
         gamePanel = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
@@ -69,6 +72,12 @@ public class SinglePlayer extends Thread implements KeyListener {
                 g.drawRect(0, 0, 700, GAME_PANEL_HEIGHT);
                 // draw the player
                 player.paint(g);
+
+                for(Bullet b: bulletList){
+                    if(!b.isOffPanel()){
+                          b.paint(g);
+                    }
+                }
 
             }
         };
@@ -95,13 +104,32 @@ public class SinglePlayer extends Thread implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        Point currentPosPlayer = player.getPlayerCenter();
+        Point currentPosPlayer1 = player.getPlayerCenter();
+
         // Moves the player depending on which button is pressed
-        if (e.getKeyCode() == 'A' && currentPosPlayer.x > (5 + Player.PLAYERSIZE / 2)) {
+        if (e.getKeyCode() == KeyEvent.VK_A && currentPosPlayer1.x > (5 + Player.PLAYERSIZE / 2)) {
             player.translate(-MOVE_BY);
-        } else if (e.getKeyCode() == 'D' && currentPosPlayer.x < GAME_PANEL_WIDTH - (2 * Player.PLAYERSIZE)) {
+            // If the player is moving and wants to shoot
+            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                Bullet bullet = new Bullet(gamePanel, currentPosPlayer1);
+                bullet.start();
+                bulletList.add(bullet);
+            }
+        } else if (e.getKeyCode() == KeyEvent.VK_D
+                && currentPosPlayer1.x < GAME_PANEL_WIDTH - (2 * Player.PLAYERSIZE)) {
             player.translate(MOVE_BY);
+            // If the player is moving and wants to shoot
+            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                Bullet bullet = new Bullet(gamePanel, currentPosPlayer1);
+                bullet.start();
+                bulletList.add(bullet);
+            }
+        } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            Bullet bullet = new Bullet(gamePanel, currentPosPlayer1);
+            bullet.start();
+            bulletList.add(bullet);
         } else {
+            // any other key pressed. ignores it.
             return;
         }
         // trigger paint so we can see the player in its new location
