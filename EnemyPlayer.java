@@ -38,7 +38,8 @@ public class EnemyPlayer extends Player {
                 movementSpeedx += rand.nextInt(11) - 10;
             super.translate(movementSpeedx);
             }
-            else if(super.upperLeftOfPLayer.x +  super.PLAYERSIZE > SinglePlayer.GAME_PANEL_WIDTH)
+            else if(super.upperLeftOfPLayer.x +  super.PLAYERSIZE > SinglePlayer.GAME_PANEL_WIDTH){
+            }
         }
     }
 

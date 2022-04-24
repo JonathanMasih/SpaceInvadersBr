@@ -10,7 +10,7 @@ public class Player extends Thread{
     protected Point upperLeftOfPLayer;
     private Point centerOfPlayer;
     protected static Image playerImage;
-    public final int PLAYERSIZE = 70;
+    public final static int PLAYERSIZE = 70;
     public static final int PLAYERYPOS = 700;
     private int playerLives;
 

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
 
+
 /**
  * This GUI will display two buttons with options for playing the single player
  * mode
@@ -14,7 +15,7 @@ import javax.sound.sampled.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class StartGame implements ActionListener, Runnable {
+public class StartGame implements ActionListener, Runnable{
     private JButton onePlayer;
     private JButton twoPlayer;
     private static Image backgroundImage;
@@ -30,7 +31,7 @@ public class StartGame implements ActionListener, Runnable {
         // tiny GUI, and give the window a name
 
         frame = new JFrame("Welcome to Space Invaders!");
-        frame.setPreferredSize(new Dimension(1000, 850));
+        frame.setPreferredSize(new Dimension(1000,850));
 
         // tell the JFrame that when someone closes the
         // window, the application should terminate
@@ -38,8 +39,8 @@ public class StartGame implements ActionListener, Runnable {
 
         // JPanel for the buttons to pick the game mode
         JPanel gameModePanel = new JPanel();
-        gameModePanel.setLayout(new BoxLayout(gameModePanel, BoxLayout.PAGE_AXIS));
-        JPanel centerPanel = new JPanel(new BorderLayout());
+        gameModePanel.setLayout(null);
+        gameModePanel.setBounds(0, 0, 1000, 850);
 
         // Setting the background of the frame
         JPanel backGroundPanel = new JPanel() {
@@ -49,14 +50,14 @@ public class StartGame implements ActionListener, Runnable {
                 // overriding in JPanel
                 super.paintComponent(g);
                 // draw the background
-                g.drawImage(backgroundImage, 0, 0, frame.getWidth(), frame.getHeight(), this);
+                g.drawImage(backgroundImage, 0 ,  0 , frame.getWidth(), frame.getHeight(), this);
             }
         };
         backGroundPanel.setLayout(new BorderLayout());
-        // Plays the background music
+        //Plays the background music 
         File audiofile = new File("spaceInvadersMusic.wav");
         try {
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audiofile);
+            AudioInputStream audioStream =  AudioSystem.getAudioInputStream(audiofile);
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             clip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -67,49 +68,60 @@ public class StartGame implements ActionListener, Runnable {
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         }
+    
 
         // to center buttons and selection label, make panel layout manager null
         // and position them in center of the panel with font metrics
         JLabel selection = new JLabel("Please select a game mode.");
-        selection.setPreferredSize(new Dimension(300, 50));
+        // selection.setPreferredSize(new Dimension(300, 50));
         selection.setFont(new Font("Verdana", Font.PLAIN, 20));
         selection.setForeground(Color.BLUE);
+        selection.setBounds(gameModePanel.getWidth() / 2 - 150,
+                gameModePanel.getHeight() / 3 - 50, 300, 50);
+
         onePlayer = new JButton("Single Player");
         onePlayer.setFont(new Font("Verdana", Font.PLAIN, 20));
-        onePlayer.setPreferredSize(new Dimension(200, 50));
+        onePlayer.setBounds(gameModePanel.getWidth() / 2 - 100,
+                gameModePanel.getHeight() / 3, 200, 50);
+
         twoPlayer = new JButton("Multiplayer");
         twoPlayer.setFont(new Font("Verdana", Font.PLAIN, 20));
-        twoPlayer.setPreferredSize(new Dimension(200, 50));
+        // twoPlayer.setPreferredSize(new Dimension(200, 50));
+        twoPlayer.setBounds(gameModePanel.getWidth() / 2 - 100,
+                gameModePanel.getHeight() / 3 + 75, 200, 50);
+
         onePlayer.addActionListener(this);
         twoPlayer.addActionListener(this);
 
-        JPanel selectionLabelPanel = new JPanel();
-        selectionLabelPanel.add(selection);
-        selectionLabelPanel.setPreferredSize(new Dimension(300, 50));
-        selectionLabelPanel.setOpaque(false);
-        JPanel oneplayerButtonPanel = new JPanel();
-        oneplayerButtonPanel.setPreferredSize(new Dimension(200, 50));
-        oneplayerButtonPanel.add(onePlayer);
-        oneplayerButtonPanel.setOpaque(false);
-        JPanel twoPlayerButtonPanel = new JPanel();
-        twoPlayerButtonPanel.setPreferredSize(new Dimension(200, 50));
-        twoPlayerButtonPanel.add(twoPlayer);
-        twoPlayerButtonPanel.setOpaque(false);
-        gameModePanel.add(selectionLabelPanel);
-        gameModePanel.add(oneplayerButtonPanel);
-        gameModePanel.add(twoPlayerButtonPanel);
+        /*
+         * JPanel selectionLabelPanel = new JPanel();
+         * selectionLabelPanel.add(selection);
+         * selectionLabelPanel.setPreferredSize(new Dimension(300, 50));
+         * selectionLabelPanel.setOpaque(false);
+         * JPanel oneplayerButtonPanel = new JPanel();
+         * oneplayerButtonPanel.setPreferredSize(new Dimension(200, 50));
+         * oneplayerButtonPanel.add(onePlayer);
+         * oneplayerButtonPanel.setBounds(50, 50, 100, 100);
+         * oneplayerButtonPanel.setOpaque(false);
+         * JPanel twoPlayerButtonPanel = new JPanel();
+         * twoPlayerButtonPanel.setPreferredSize(new Dimension(200, 50));
+         * twoPlayerButtonPanel.add(twoPlayer);
+         * twoPlayerButtonPanel.setOpaque(false);
+         */
+        gameModePanel.add(selection);
+        gameModePanel.add(onePlayer);
+        gameModePanel.add(twoPlayer);
 
         // makes the gameModePanel transparent
         gameModePanel.setOpaque(false);
-        centerPanel.setOpaque(false);
-        centerPanel.add(gameModePanel, BorderLayout.CENTER);
         onePlayer.addActionListener(this);
         twoPlayer.addActionListener(this);
 
+    
         // display the window we've created
-        // Sets the background of the frame to space image
-        // adds the buttons and message to the frame
-        backGroundPanel.add(centerPanel, BorderLayout.CENTER);
+         // Sets the background of the frame to space image 
+         // adds the buttons and message to the frame
+        backGroundPanel.add(gameModePanel);
         frame.add(backGroundPanel);
         frame.pack();
         frame.setVisible(true);
@@ -123,19 +135,20 @@ public class StartGame implements ActionListener, Runnable {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == onePlayer) {
-            // makes a new singleplayer objects and starts it
-            SinglePlayer game = new SinglePlayer(frame, backgroundImage, clip);
-            clip.stop();
-            game.start();
+             //makes a new singleplayer objects and starts it
+           SinglePlayer game = new SinglePlayer(frame,backgroundImage ,clip);
+           clip.stop();
+           game.start();
         }
         if (e.getSource() == twoPlayer) {
-            // makes a new doubleplayer objects and starts it
-            DoublePlayer game = new DoublePlayer(frame, backgroundImage, clip);
+            //makes a new doubleplayer objects and starts it
+            DoublePlayer game = new DoublePlayer(frame, backgroundImage , clip );
             clip.stop();
-            game.start();
+           game.start();
         }
 
     }
+
 
     public static void main(String[] args) {
         // "javax.swing.plaf.nimbus.NimbusLookAndFeel")
@@ -145,11 +158,7 @@ public class StartGame implements ActionListener, Runnable {
         }
         // loads the image of the player
         Player.loadPlayerPic();
-
-        // loads image of enemy player
-        EnemyPlayer.loadPlayerPic();
-
-        // loads the image of the alien
+        //loads the image of the alien
         Alien.loadAlienPic();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         backgroundImage = toolkit.getImage("background.gif");
