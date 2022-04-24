@@ -11,17 +11,19 @@ import java.awt.*;
 public class Bullet extends Thread {
 
    // the Component where the bullet is being fired
-   private Component panel;
-   private Point upperLeft;
-   private boolean  offPanel;
+   protected Component panel;
+   protected Point upperLeft;
+   protected boolean  offPanel;
+   private boolean hit;
    private static final int bulletHeight = 10;
   private static final int bulletWidth = 6;
-  private static final int bulletSPEED = 10;
-  private static final int DELAY_TIME = 30;
+  protected final int bulletSPEED = 10;
+  protected final int DELAY_TIME = 30;
 
    public Bullet(Component panel, Point currentPos) {
     this.panel = panel;
     this.offPanel = false; 
+    this.hit = false;
     this.upperLeft = new Point(currentPos.x- (bulletWidth / 2),Player.PLAYERYPOS - 5 ) ;
    }
 
@@ -62,6 +64,15 @@ public class Bullet extends Thread {
      */
     public boolean isOffPanel(){
         return offPanel;
+    }
+
+     /**
+     * returns if the bullet has hit an object or not
+     * 
+     * @return true if the bullet hit an object
+     */
+    public boolean isHit(){
+        return hit;
     }
 
 }
