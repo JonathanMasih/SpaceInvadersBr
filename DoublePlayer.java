@@ -13,7 +13,7 @@ import javax.sound.sampled.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class DoublePlayer extends Thread  {
+public class DoublePlayer extends Thread implements KeyListener  {
     private JFrame frame;
     private Image backgroundImage;
     private final static int GAME_PANEL_WIDTH = 800;
@@ -73,5 +73,20 @@ public class DoublePlayer extends Thread  {
         // display the window we've created
         frame.pack();
         frame.setVisible(true);
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+     
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // TODO Auto-generated method stub
+        
     }
 }
