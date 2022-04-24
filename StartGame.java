@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
 
-
 /**
  * This GUI will display two buttons with options for playing the single player
  * mode
@@ -15,7 +14,7 @@ import javax.sound.sampled.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class StartGame implements ActionListener, Runnable{
+public class StartGame implements ActionListener, Runnable {
     private JButton onePlayer;
     private JButton twoPlayer;
     private static Image backgroundImage;
@@ -31,7 +30,7 @@ public class StartGame implements ActionListener, Runnable{
         // tiny GUI, and give the window a name
 
         frame = new JFrame("Welcome to Space Invaders!");
-        frame.setPreferredSize(new Dimension(1000,850));
+        frame.setPreferredSize(new Dimension(1000, 850));
 
         // tell the JFrame that when someone closes the
         // window, the application should terminate
@@ -50,14 +49,14 @@ public class StartGame implements ActionListener, Runnable{
                 // overriding in JPanel
                 super.paintComponent(g);
                 // draw the background
-                g.drawImage(backgroundImage, 0 ,  0 , frame.getWidth(), frame.getHeight(), this);
+                g.drawImage(backgroundImage, 0, 0, frame.getWidth(), frame.getHeight(), this);
             }
         };
         backGroundPanel.setLayout(new BorderLayout());
-        //Plays the background music 
+        // Plays the background music
         File audiofile = new File("spaceInvadersMusic.wav");
         try {
-            AudioInputStream audioStream =  AudioSystem.getAudioInputStream(audiofile);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audiofile);
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             clip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -68,8 +67,6 @@ public class StartGame implements ActionListener, Runnable{
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         }
-    
-
 
         // to center buttons and selection label, make panel layout manager null
         // and position them in center of the panel with font metrics
@@ -109,11 +106,10 @@ public class StartGame implements ActionListener, Runnable{
         onePlayer.addActionListener(this);
         twoPlayer.addActionListener(this);
 
-    
         // display the window we've created
-         // Sets the background of the frame to space image 
-         // adds the buttons and message to the frame
-         backGroundPanel.add(centerPanel,BorderLayout.CENTER );
+        // Sets the background of the frame to space image
+        // adds the buttons and message to the frame
+        backGroundPanel.add(centerPanel, BorderLayout.CENTER);
         frame.add(backGroundPanel);
         frame.pack();
         frame.setVisible(true);
@@ -127,20 +123,19 @@ public class StartGame implements ActionListener, Runnable{
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == onePlayer) {
-             //makes a new singleplayer objects and starts it
-           SinglePlayer game = new SinglePlayer(frame,backgroundImage ,clip);
-           clip.stop();
-           game.start();
+            // makes a new singleplayer objects and starts it
+            SinglePlayer game = new SinglePlayer(frame, backgroundImage, clip);
+            clip.stop();
+            game.start();
         }
         if (e.getSource() == twoPlayer) {
-            //makes a new doubleplayer objects and starts it
-            DoublePlayer game = new DoublePlayer(frame, backgroundImage , clip );
+            // makes a new doubleplayer objects and starts it
+            DoublePlayer game = new DoublePlayer(frame, backgroundImage, clip);
             clip.stop();
-           game.start();
+            game.start();
         }
 
     }
-
 
     public static void main(String[] args) {
         // "javax.swing.plaf.nimbus.NimbusLookAndFeel")
@@ -150,7 +145,11 @@ public class StartGame implements ActionListener, Runnable{
         }
         // loads the image of the player
         Player.loadPlayerPic();
-        //loads the image of the alien
+
+        // loads image of enemy player
+        EnemyPlayer.loadPlayerPic();
+
+        // loads the image of the alien
         Alien.loadAlienPic();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         backgroundImage = toolkit.getImage("background.gif");
