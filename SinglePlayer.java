@@ -23,12 +23,20 @@ public class SinglePlayer extends Thread implements KeyListener {
     private Point upperLeftOfPlayer;
     private JPanel gamePanel;
     private Player player;
-    ArrayList<Bullet> bulletList;
+    private ArrayList<Bullet> bulletList;
+    private ArrayList<Shield> shieldList;
 
     public SinglePlayer(JFrame frame, Image img, Clip clip) {
         this.frame = frame;
         this.backgroundImage = img;
         this.clip = clip;
+        // Creates a player when the game started
+        this.player = new Player(new Point(350,Player.PLAYERYPOS));
+        //creates the ArrayList<Bullet>
+        this.bulletList = new ArrayList<Bullet>();
+        // Makes the Arraylist shields
+        this.shieldList = new ArrayList<Shield>();
+   
     }
 
     /**
@@ -57,10 +65,13 @@ public class SinglePlayer extends Thread implements KeyListener {
         backGroundPanel.setLayout(new BorderLayout());
         // Plays the background music
         clip.loop(Clip.LOOP_CONTINUOUSLY);
+        
+        //making sheilds 
+        Shield sheild1 = new Shield(new Point(100,600));
+        Shield sheild2 = new Shield(new Point(500,600));
+        shieldList.add(sheild1 );
+        shieldList.add(sheild2 );
 
-        upperLeftOfPlayer = new Point(315, 700);
-         
-        bulletList = new ArrayList<Bullet>();
         gamePanel = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
@@ -73,18 +84,29 @@ public class SinglePlayer extends Thread implements KeyListener {
                 // draw the player
                 player.paint(g);
 
-                for(Bullet b: bulletList){
-                    if(!b.isOffPanel()){
-                          b.paint(g);
+                int i = 0;
+                while (i < bulletList.size()) {
+                    Bullet b = bulletList.get(i);
+                    System.out.println(bulletList.size());
+                    if (b.isOffPanel()) {
+                        bulletList.remove(i);
+                    } else {
+                        b.paint(g);
+                        i++;
                     }
                 }
+  
+            for(Shield s :shieldList){
+              if(!s.isSheildBroken()){
+                s.paint(g);
+              }
+            }
+
 
             }
         };
         // sets the size of the game panel
         gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
-        // Creates a player when the game started
-        player = new Player(upperLeftOfPlayer);
         gamePanel.setOpaque(false);
         backGroundPanel.add(gamePanel);
 
@@ -107,7 +129,8 @@ public class SinglePlayer extends Thread implements KeyListener {
         Point currentPosPlayer1 = player.getPlayerCenter();
 
         // Moves the player depending on which button is pressed
-        if (e.getKeyCode() == KeyEvent.VK_A && currentPosPlayer1.x > (5 + Player.PLAYERSIZE / 2)) {
+        if (e.getKeyCode() == KeyEvent.VK_A && 
+            currentPosPlayer1.x > (5 + Player.PLAYERSIZE / 2)) {
             player.translate(-MOVE_BY);
             // If the player is moving and wants to shoot
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -115,8 +138,8 @@ public class SinglePlayer extends Thread implements KeyListener {
                 bullet.start();
                 bulletList.add(bullet);
             }
-        } else if (e.getKeyCode() == KeyEvent.VK_D
-                && currentPosPlayer1.x < GAME_PANEL_WIDTH - (2 * Player.PLAYERSIZE)) {
+        } else if (e.getKeyCode() == KeyEvent.VK_D && 
+                  currentPosPlayer1.x < GAME_PANEL_WIDTH - (2 * Player.PLAYERSIZE)) {
             player.translate(MOVE_BY);
             // If the player is moving and wants to shoot
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {

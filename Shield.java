@@ -10,7 +10,7 @@ public class Shield {
     private Point centerOfShield;
     protected boolean sheildBroken;
     protected int sheildHitsTaken;
-    public static final int SHIELDSIZEW = 70;
+    public static final int SHIELDSIZEW = 100;
     public static final int SHIELDSIZEL = 30;
     public static final int PLAYERYPOS = 700;
 
@@ -31,7 +31,7 @@ public class Shield {
     public void paint(Graphics g) {
        if(!sheildBroken){
          g.setColor(Color.BLUE);
-         g.drawRect( upperLeftOfShield.x,upperLeftOfShield.y, SHIELDSIZEW ,SHIELDSIZEL);
+         g.fillRect( upperLeftOfShield.x,upperLeftOfShield.y, SHIELDSIZEW ,SHIELDSIZEL);
        }
     }
     /**
@@ -41,5 +41,14 @@ public class Shield {
     public Point getPlayerCenter() {
         return centerOfShield;
     }
+
+    /**
+     * Returns if the shield is broken or not
+     * 
+     */
+    public boolean isSheildBroken () {
+        return sheildBroken;
+    }
+
 
 }

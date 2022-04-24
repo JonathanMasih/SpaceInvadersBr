@@ -28,7 +28,7 @@ public class Player{
      */
     public void translate(int dx) {
         upperLeftOfPLayer.translate(dx, upperLeftOfPLayer.y);
-        centerOfPlayer = new Point(upperLeftOfPLayer.x + 35, upperLeftOfPLayer.y + 35);
+        centerOfPlayer = new Point(upperLeftOfPLayer.x + (PLAYERSIZE/2), upperLeftOfPLayer.y +(PLAYERSIZE/2));
     }
 
     /**
@@ -38,7 +38,6 @@ public class Player{
      */
     public void paint(Graphics g) {
         g.drawImage(playerImage, upperLeftOfPLayer.x, PLAYERYPOS, PLAYERSIZE, PLAYERSIZE,null);
-        this.centerOfPlayer = new Point(upperLeftOfPLayer.x + 35, PLAYERYPOS - 35);
     }
 
     /**
