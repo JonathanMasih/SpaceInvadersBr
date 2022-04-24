@@ -148,6 +148,8 @@ public class StartGame implements ActionListener, Runnable{
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         } catch (Exception e) {
         }
+        // loads the image of the player
+        Player.loadPlayerPic();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         backgroundImage = toolkit.getImage("background.gif");
         javax.swing.SwingUtilities.invokeLater(new StartGame());
