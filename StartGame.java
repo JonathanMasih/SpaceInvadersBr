@@ -39,8 +39,8 @@ public class StartGame implements ActionListener, Runnable{
 
         // JPanel for the buttons to pick the game mode
         JPanel gameModePanel = new JPanel();
-        gameModePanel.setLayout(new BoxLayout(gameModePanel, BoxLayout.PAGE_AXIS));
-        JPanel centerPanel = new JPanel(new BorderLayout());
+        gameModePanel.setLayout(null);
+        gameModePanel.setBounds(0, 0, 1000, 850);
 
         // Setting the background of the frame
         JPanel backGroundPanel = new JPanel() {
@@ -70,42 +70,50 @@ public class StartGame implements ActionListener, Runnable{
         }
     
 
-
         // to center buttons and selection label, make panel layout manager null
         // and position them in center of the panel with font metrics
         JLabel selection = new JLabel("Please select a game mode.");
-        selection.setPreferredSize(new Dimension(300, 50));
+        // selection.setPreferredSize(new Dimension(300, 50));
         selection.setFont(new Font("Verdana", Font.PLAIN, 20));
         selection.setForeground(Color.BLUE);
+        selection.setBounds(gameModePanel.getWidth() / 2 - 150,
+                gameModePanel.getHeight() / 3 - 50, 300, 50);
+
         onePlayer = new JButton("Single Player");
         onePlayer.setFont(new Font("Verdana", Font.PLAIN, 20));
-        onePlayer.setPreferredSize(new Dimension(200, 50));
+        onePlayer.setBounds(gameModePanel.getWidth() / 2 - 100,
+                gameModePanel.getHeight() / 3, 200, 50);
+
         twoPlayer = new JButton("Multiplayer");
         twoPlayer.setFont(new Font("Verdana", Font.PLAIN, 20));
-        twoPlayer.setPreferredSize(new Dimension(200, 50));
+        // twoPlayer.setPreferredSize(new Dimension(200, 50));
+        twoPlayer.setBounds(gameModePanel.getWidth() / 2 - 100,
+                gameModePanel.getHeight() / 3 + 75, 200, 50);
+
         onePlayer.addActionListener(this);
         twoPlayer.addActionListener(this);
 
-        JPanel selectionLabelPanel = new JPanel();
-        selectionLabelPanel.add(selection);
-        selectionLabelPanel.setPreferredSize(new Dimension(300, 50));
-        selectionLabelPanel.setOpaque(false);
-        JPanel oneplayerButtonPanel = new JPanel();
-        oneplayerButtonPanel.setPreferredSize(new Dimension(200, 50));
-        oneplayerButtonPanel.add(onePlayer);
-        oneplayerButtonPanel.setOpaque(false);
-        JPanel twoPlayerButtonPanel = new JPanel();
-        twoPlayerButtonPanel.setPreferredSize(new Dimension(200, 50));
-        twoPlayerButtonPanel.add(twoPlayer);
-        twoPlayerButtonPanel.setOpaque(false);
-        gameModePanel.add(selectionLabelPanel);
-        gameModePanel.add(oneplayerButtonPanel);
-        gameModePanel.add(twoPlayerButtonPanel);
+        /*
+         * JPanel selectionLabelPanel = new JPanel();
+         * selectionLabelPanel.add(selection);
+         * selectionLabelPanel.setPreferredSize(new Dimension(300, 50));
+         * selectionLabelPanel.setOpaque(false);
+         * JPanel oneplayerButtonPanel = new JPanel();
+         * oneplayerButtonPanel.setPreferredSize(new Dimension(200, 50));
+         * oneplayerButtonPanel.add(onePlayer);
+         * oneplayerButtonPanel.setBounds(50, 50, 100, 100);
+         * oneplayerButtonPanel.setOpaque(false);
+         * JPanel twoPlayerButtonPanel = new JPanel();
+         * twoPlayerButtonPanel.setPreferredSize(new Dimension(200, 50));
+         * twoPlayerButtonPanel.add(twoPlayer);
+         * twoPlayerButtonPanel.setOpaque(false);
+         */
+        gameModePanel.add(selection);
+        gameModePanel.add(onePlayer);
+        gameModePanel.add(twoPlayer);
 
         // makes the gameModePanel transparent
         gameModePanel.setOpaque(false);
-        centerPanel.setOpaque(false);
-        centerPanel.add(gameModePanel, BorderLayout.CENTER);
         onePlayer.addActionListener(this);
         twoPlayer.addActionListener(this);
 
@@ -113,7 +121,7 @@ public class StartGame implements ActionListener, Runnable{
         // display the window we've created
          // Sets the background of the frame to space image 
          // adds the buttons and message to the frame
-         backGroundPanel.add(centerPanel,BorderLayout.CENTER );
+        backGroundPanel.add(gameModePanel);
         frame.add(backGroundPanel);
         frame.pack();
         frame.setVisible(true);
