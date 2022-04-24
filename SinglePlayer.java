@@ -15,8 +15,8 @@ import javax.sound.sampled.*;
 public class SinglePlayer extends Thread implements KeyListener {
     private JFrame frame;
     private Image backgroundImage;
-    private final static int GAME_PANEL_WIDTH = 800;
-    private final static int GAME_PANEL_HEIGHT = 850;
+    protected final static int GAME_PANEL_WIDTH = 800;
+    protected final static int GAME_PANEL_HEIGHT = 850;
     // amount to the move player on each key press
     public static final int MOVE_BY = 10;
     private Clip clip;
