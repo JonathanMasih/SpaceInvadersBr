@@ -6,18 +6,18 @@ import java.awt.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class Player extends Thread{
+public class Player {
     protected Point upperLeftOfPLayer;
     private Point centerOfPlayer;
     protected static Image playerImage;
     public final static int PLAYERSIZE = 70;
-    public static final int PLAYERYPOS = 700;
+    public final static int PLAYERYPOS = 700;
     private int playerLives;
 
     public Player(Point startPos) {
         this.upperLeftOfPLayer = startPos;
         this.centerOfPlayer = new Point(startPos.x+(PLAYERSIZE /2 ),
-                                        PLAYERYPOS  + (PLAYERSIZE /2 )
+        upperLeftOfPLayer.y + (PLAYERSIZE /2 )
                                         );
     }
 
@@ -25,10 +25,9 @@ public class Player extends Thread{
      * A relative move of this object.
      * 
      * @param dx amount to translate in x
-     * @param dy amount to translate in y
      */
     public void translate(int dx) {
-        upperLeftOfPLayer.translate(dx, upperLeftOfPLayer.y);
+        upperLeftOfPLayer.translate(dx,0);
         centerOfPlayer = new Point(upperLeftOfPLayer.x + (PLAYERSIZE/2), upperLeftOfPLayer.y +(PLAYERSIZE/2));
     }
 
@@ -38,7 +37,7 @@ public class Player extends Thread{
      * @param g the Graphics object where the shape should be drawn
      */
     public void paint(Graphics g) {
-        g.drawImage(playerImage, upperLeftOfPLayer.x, PLAYERYPOS, PLAYERSIZE, PLAYERSIZE,null);
+        g.drawImage(playerImage, upperLeftOfPLayer.x,PLAYERYPOS, PLAYERSIZE, PLAYERSIZE,null);
         centerOfPlayer = new Point(upperLeftOfPLayer.x + (PLAYERSIZE/2), upperLeftOfPLayer.y +(PLAYERSIZE/2));
     }
 
@@ -53,9 +52,9 @@ public class Player extends Thread{
       /**
      * Set the Image to be used by the player Object 
      */
-    public static void loadPlayerPic() {
+     public static void loadPlayerPic() {
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Player.playerImage = toolkit.getImage("PlayerOne.png");
+        playerImage = toolkit.getImage("PlayerOne.png");
     }
 }

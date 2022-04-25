@@ -11,7 +11,7 @@ import java.awt.*;
 public class Bullet extends Thread {
 
    // the Component where the bullet is being fired
-   protected Component panel;
+   protected  Component panel;
    protected Point upperLeft;
    protected boolean  offPanel;
    private boolean hit;
