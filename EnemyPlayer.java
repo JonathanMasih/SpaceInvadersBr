@@ -46,6 +46,12 @@ public class EnemyPlayer extends Thread {
      */
     public void translate(int dx) {
         upperLeftOfEnemyPlayer.translate(dx, 0);
+        if(upperLeftOfEnemyPlayer.x < 0){
+            upperLeftOfEnemyPlayer.x = 0;
+        }
+        if(upperLeftOfEnemyPlayer.x > SinglePlayer.GAME_PANEL_WIDTH - 5*(Player.PLAYERSIZE/2) ){
+            upperLeftOfEnemyPlayer.x = SinglePlayer.GAME_PANEL_WIDTH - 5* (Player.PLAYERSIZE/2);
+        }
         centerOfEnemyPlayer = new Point( upperLeftOfEnemyPlayer.x + (Player.PLAYERSIZE/2),  
         upperLeftOfEnemyPlayer.y +(Player.PLAYERSIZE/2));
     }
@@ -54,21 +60,26 @@ public class EnemyPlayer extends Thread {
     public void run() {
         Random rand = new Random();
         int movementSpeedx = 0;
-        movementSpeedx += rand.nextInt(11) - 10;
+        movementSpeedx += rand.nextInt(21) - 10;
         while (hits != 5) {
             try {
-                sleep(500);
+                sleep(150);
             } catch (InterruptedException e) {
             }
 
            // Check for the right bound of the game panel
-            if(upperLeftOfEnemyPlayer.x  < 10  ){
-                movementSpeedx += rand.nextInt(11) ;
-            }else if ( upperLeftOfEnemyPlayer.x + Player.PLAYERSIZE  + 10 > SinglePlayer.GAME_PANEL_WIDTH){
-                movementSpeedx -= rand.nextInt(11) ;
-            }else {
+            // if(upperLeftOfEnemyPlayer.x  < 10  ){
+            //     movementSpeedx += rand.nextInt(11) ;
+            // }else if ( upperLeftOfEnemyPlayer.x + Player.PLAYERSIZE  + 10 > SinglePlayer.GAME_PANEL_WIDTH){
+            //     movementSpeedx -= rand.nextInt(11) ;
+            // }else {
                 movementSpeedx += rand.nextInt(21) - 10;
-            }
+                if(upperLeftOfEnemyPlayer.x == 0){
+                    movementSpeedx += rand.nextInt(11);
+                }
+                if(upperLeftOfEnemyPlayer.x == SinglePlayer.GAME_PANEL_WIDTH - 5*(Player.PLAYERSIZE/2) ){
+                    movementSpeedx -= rand.nextInt(11);
+                }
             translate(movementSpeedx);
             
             // EnemyBullet newBullet = new EnemyBullet(SinglePlayer.gamePanel,
