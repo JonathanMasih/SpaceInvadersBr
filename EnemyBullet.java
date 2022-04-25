@@ -28,7 +28,7 @@ public class EnemyBullet extends Bullet {
             }
             upperLeft.translate(0, super.bulletSPEED );
             //Repaint
-            super.panel.repaint();
+            // panel.repaint();
         }
         super.offPanel = true;
         panel.repaint();
