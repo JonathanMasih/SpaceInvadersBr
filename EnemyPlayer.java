@@ -9,8 +9,7 @@ public class EnemyPlayer extends Thread {
     protected static Image enemyPlayerImage;
     protected final static int ENEMYPLAYERYPOS = 50;
     private int hits;
-    protected static ArrayList<EnemyBullet> enemiesBulletsList
-    = new ArrayList<>();
+    protected static ArrayList<EnemyBullet> enemiesBulletsList = new ArrayList<>();
 
     public EnemyPlayer(Component panel, Point startPos) {
         this.panel = panel;
@@ -58,6 +57,14 @@ public class EnemyPlayer extends Thread {
                 upperLeftOfEnemyPlayer.y + (Player.PLAYERSIZE / 2));
     }
 
+    /**
+     * Returns the center of the Enemy at any given call.
+     * 
+     */
+    public Point getEnemyCenter() {
+        return centerOfEnemyPlayer;
+    }
+
     @Override
     public void run() {
         Random rand = new Random();
@@ -68,7 +75,6 @@ public class EnemyPlayer extends Thread {
                 sleep(150);
             } catch (InterruptedException e) {
             }
-            //
             movementSpeedx += rand.nextInt(21) - 10;
             if (upperLeftOfEnemyPlayer.x == 0) {
                 movementSpeedx += rand.nextInt(11);
@@ -77,14 +83,23 @@ public class EnemyPlayer extends Thread {
                 movementSpeedx -= rand.nextInt(11);
             }
             translate(movementSpeedx);
-
-            EnemyBullet newBullet = new EnemyBullet(SinglePlayer.gamePanel,
-            new Point(upperLeftOfEnemyPlayer.x + (Player.PLAYERSIZE / 2),
-            upperLeftOfEnemyPlayer.y +Player.PLAYERSIZE + 5));
-            newBullet.start();
-            enemiesBulletsList.add(newBullet);
+            int fireBullet =  rand.nextInt(51);
+            if( fireBullet % 51== 0 ){
+                fireBullet();
+            }
 
         }
+    }
+
+        /**
+     * Run method to define the life of this bullet.
+     */
+    public void fireBullet(){
+        EnemyBullet bullet = new EnemyBullet(panel ,
+        new Point (upperLeftOfEnemyPlayer.x + (Player.PLAYERSIZE / 2) - (Bullet.bulletWidth / 2), 
+        ENEMYPLAYERYPOS + Player.PLAYERSIZE + 5) );
+        bullet.start();
+        enemiesBulletsList.add(bullet);
     }
 
 }

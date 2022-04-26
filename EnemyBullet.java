@@ -1,35 +1,30 @@
-import java.awt.Point;
+import java.util.ArrayList;
 import java.awt.*;
 
 /**
- * Checking to see if an enemy bullet attacks a players and lands a hit
+ * This is a bullet object that is shot from a Enemyship
  * 
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
 public class EnemyBullet extends Bullet {    
-
+    protected static ArrayList<EnemyBullet> enemyBullets = new ArrayList<EnemyBullet>();
     public EnemyBullet(Component panel, Point currentPos) {
-        super(panel, currentPos);
+        super(panel);
+        upperLeft = new Point(currentPos.x- (bulletWidth / 2),EnemyPlayer.ENEMYPLAYERYPOS - 5 ) ;
     }
 
      /**
-     * Run method to define the life of this FallingSnow, which consists of
-     * falling down to the bottom of the component, then sitting there for
-     * a little while before melting.
+     * Run method to define the life of this bullet.
      */
     @Override
     public void run() {
-        while ( SinglePlayer.GAME_PANEL_HEIGHT < super.upperLeft.y  ) {
+        while (  upperLeft.y < SinglePlayer.GAME_PANEL_HEIGHT ) {
             // every 30 ms or so, we move the coordinates of bullet
-            try {
-                sleep(DELAY_TIME);
-            } catch (InterruptedException e) {
-            }
+            sleepWithCatch(DELAY_TIME);
             upperLeft.translate(0, bulletSPEED );
         }
         offPanel = true;
-        panel.repaint();
     }
 
 }

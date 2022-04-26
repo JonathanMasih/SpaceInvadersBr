@@ -136,17 +136,17 @@ public class SinglePlayer extends Thread implements KeyListener {
                 }
                 // drawing enemy
                 enemy.paint(g);
-                //draws enemy the bullets
-                // int l= 0;
-                // while ( l < EnemyPlayer.enemiesBulletsList.size()) {
-                // Bullet b = EnemyPlayer.enemiesBulletsList.get(l);
-                // if (b.isOffPanel()) {
-                // EnemyPlayer.enemiesBulletsList.remove(l);
-                // } else {
-                // b.paint(g);
-                // l++;
-                // }
-                // }
+               // draws enemy the bullets
+                int l= 0;
+                while ( l < EnemyPlayer.enemiesBulletsList.size()) {
+                Bullet b = EnemyPlayer.enemiesBulletsList.get(l);
+                if (b.isOffPanel()) {
+                EnemyPlayer.enemiesBulletsList.remove(l);
+                } else {
+                b.paint(g);
+                l++;
+                }
+                }
 
             }
         };
@@ -220,11 +220,8 @@ public class SinglePlayer extends Thread implements KeyListener {
             bullet.start();
             bulletList.add(bullet);
         } else {
-            // any other key pressed. ignores it.
             return;
         }
-        // trigger paint so we can see the player in its new location
-        // gamePanel.repaint();
     }
 
     @Override

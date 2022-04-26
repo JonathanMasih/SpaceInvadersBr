@@ -20,11 +20,10 @@ public abstract class Bullet extends Thread {
    protected final int bulletSPEED = 10;
    protected final int DELAY_TIME = 30;
 
-   public Bullet(Component panel, Point currentPos) {
+   public Bullet(Component panel) {
     this.panel = panel;
     this.offPanel = false; 
     this.hit = false;
-    this.upperLeft = new Point(currentPos.x- (bulletWidth / 2),Player.PLAYERYPOS - 5 ) ;
    }
 
    /**
@@ -42,10 +41,8 @@ public abstract class Bullet extends Thread {
             }
             upperLeft.translate(0, -bulletSPEED );
             //Repaint
-            panel.repaint();
         }
         offPanel = true;
-        panel.repaint();
     }
 
     /**
@@ -75,4 +72,17 @@ public abstract class Bullet extends Thread {
         return hit;
     }
 
+    /**
+     * A utility method to have the thread sleep without the need to
+     * place the call in a try-catch block.
+     * 
+     * @param millis the number of milliseconds for the thread to sleep
+     */
+    public static void sleepWithCatch(long millis) {
+
+        try {
+            sleep(millis);
+        } catch (InterruptedException e) {
+        }
+    }
 }
