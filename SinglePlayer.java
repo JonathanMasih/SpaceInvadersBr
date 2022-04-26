@@ -28,6 +28,7 @@ public class SinglePlayer extends Thread implements KeyListener {
     private ArrayList<PlayerBullet> bulletList;
     private ArrayList<Shield> shieldList;
     private ArrayList<Alien> alienList;
+    private ArrayList<EnemyPlayer> enemyList;
 
     public SinglePlayer(JFrame frame, Image img, Clip clip) {
         this.frame = frame;
@@ -39,8 +40,10 @@ public class SinglePlayer extends Thread implements KeyListener {
         this.bulletList = new ArrayList<PlayerBullet>();
         // Makes the Arraylist shields
         this.shieldList = new ArrayList<Shield>();
-        // Make
+        // Making array list of aliens
         this.alienList = new ArrayList<Alien>();
+        // Creating array list of enemy players
+        this.enemyList = new ArrayList<EnemyPlayer>();
 
     }
 
@@ -116,11 +119,48 @@ public class SinglePlayer extends Thread implements KeyListener {
                 int j = 0;
                 while (j < alienList.size()) {
                     Alien a = alienList.get(j);
+                    for (int m = 0; m < bulletList.size(); m++) {
+                        Point upperLeftBullet = bulletList.get(m).getUpperLeft();
+                        Point upperLeftAlien = alienList.get(j).getUpperLeft();
+                        if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y,
+                                Bullet.bulletWidth, Bullet.bulletHeight,
+                                upperLeftAlien.x, upperLeftAlien.y,
+                                Alien.ALIENSIZE, Alien.ALIENSIZE)) {
+                            alienList.get(j).hitAlien();
+                            bulletList.get(m).bulletHit();
+                            bulletList.remove(m);
+                        }
+                    }
+
                     if (a.isAlienHit()) {
                         alienList.remove(j);
                     } else {
                         a.paint(g);
                         j++;
+                    }
+                }
+ 
+                //draws the EnemyShip
+                int p = 0;
+                while (p < enemyList.size()) {
+                    EnemyPlayer e = enemyList.get(p);
+                    for (int z = 0; z < bulletList.size(); z++) {
+                        Point upperLeftBullet = bulletList.get(z).getUpperLeft();
+                        Point upperLeftEnemy =  enemyList.get(p).getUpperLeft();
+                        if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y,
+                        Bullet.bulletWidth, Bullet.bulletHeight,
+                        upperLeftEnemy.x, upperLeftEnemy.y,
+                        Player.PLAYERSIZE, Player.PLAYERSIZE)) {
+                        enemyList.get(p).hitEnemy() ;
+                        bulletList.get(z).bulletHit();
+                        bulletList.remove(z);
+                     }
+                    }
+                    if (e.getEnemyHitCount() == EnemyPlayer.ENEMEYHEALTH ) {
+                        enemyList.remove(p);
+                    } else {
+                        e.paint(g);
+                        p++;
                     }
                 }
                 // draws the bullets
@@ -132,23 +172,27 @@ public class SinglePlayer extends Thread implements KeyListener {
                     } else {
                         b.paint(g);
                         k++;
-                    }                }
-                // drawing enemy
-                enemy.paint(g);
-               // draws enemy the bullets
-                int l= 0;
-                while ( l < EnemyPlayer.enemiesBulletsList.size()) {
-                Bullet b = EnemyPlayer.enemiesBulletsList.get(l);
-                if (b.isOffPanel()) {
-                EnemyPlayer.enemiesBulletsList.remove(l);
-                } else {
-                b.paint(g);
-                l++;
+                    }
                 }
+
+                // draws enemy the bullets
+                int l = 0;
+                while (l < EnemyPlayer.enemiesBulletsList.size()) {
+                    Bullet b = EnemyPlayer.enemiesBulletsList.get(l);
+                    if (b.isOffPanel()) {
+                        EnemyPlayer.enemiesBulletsList.remove(l);
+                    } else {
+                        b.paint(g);
+                        l++;
+                    }
                 }
 
             }
         };
+        // Making an enemies
+        enemy = new EnemyPlayer(gamePanel, new Point(100, EnemyPlayer.ENEMYPLAYERYPOS));
+        enemy.start();
+        enemyList.add(enemy);
 
         // construct and start a thread that will live as long as the program remains
         // active to call gamePanel.repaint() about 30 times per second, so individual
@@ -166,9 +210,6 @@ public class SinglePlayer extends Thread implements KeyListener {
                 }
             }
         }.start();
-        // Making an enemies
-        enemy = new EnemyPlayer(gamePanel, new Point(100, EnemyPlayer.ENEMYPLAYERYPOS));
-        enemy.start();
         // sets the size of the game panel
         gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
         gamePanel.setOpaque(false);
@@ -200,7 +241,7 @@ public class SinglePlayer extends Thread implements KeyListener {
             currentPosPlayer1 = player.getPlayerCenter();
             // If the player is moving and wants to shoot
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                PlayerBullet bullet = new  PlayerBullet (gamePanel, currentPosPlayer1);
+                PlayerBullet bullet = new PlayerBullet(gamePanel, currentPosPlayer1);
                 bullet.start();
                 bulletList.add(bullet);
             }
@@ -210,7 +251,7 @@ public class SinglePlayer extends Thread implements KeyListener {
             currentPosPlayer1 = player.getPlayerCenter();
             // If the player is moving and wants to shoot
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                PlayerBullet bullet = new PlayerBullet (gamePanel, currentPosPlayer1);
+                PlayerBullet bullet = new PlayerBullet(gamePanel, currentPosPlayer1);
                 bullet.start();
                 bulletList.add(bullet);
             }

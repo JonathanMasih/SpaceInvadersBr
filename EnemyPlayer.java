@@ -8,6 +8,7 @@ public class EnemyPlayer extends Thread {
     private Point centerOfEnemyPlayer;
     protected static Image enemyPlayerImage;
     protected final static int ENEMYPLAYERYPOS = 50;
+    protected final static int ENEMEYHEALTH = 5;
     private int hits;
     protected static ArrayList<EnemyBullet> enemiesBulletsList = new ArrayList<>();
 
@@ -65,6 +66,14 @@ public class EnemyPlayer extends Thread {
         return centerOfEnemyPlayer;
     }
 
+
+     /**
+     * Returns the upperleft of the Enemy at any given call.
+     * 
+     */
+    public Point getUpperLeft(){
+        return  upperLeftOfEnemyPlayer;
+    }
     @Override
     public void run() {
         Random rand = new Random();
@@ -91,6 +100,22 @@ public class EnemyPlayer extends Thread {
         }
     }
 
+     /**
+     * Returns the if the enemy is hit;
+     * 
+     */
+    public int getEnemyHitCount() {
+        return hits;
+    }
+    
+    
+     /**
+     * Increamts hits by 1 each time the enemy is hit
+     * 
+     */
+    public void hitEnemy(){
+        hits++;
+    }
         /**
      * Run method to define the life of this bullet.
      */

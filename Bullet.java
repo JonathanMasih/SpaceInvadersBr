@@ -18,7 +18,7 @@ public abstract class Bullet extends Thread {
    protected static final int bulletHeight = 10;
    protected static final int bulletWidth = 6;
    protected final int bulletSPEED = 10;
-   protected final int DELAY_TIME = 30;
+   protected final int DELAY_TIME = 15;
 
    public Bullet(Component panel) {
     this.panel = panel;
@@ -51,9 +51,20 @@ public abstract class Bullet extends Thread {
      * @param g the Graphics object in which to paint
      */
     public void paint(Graphics g) {
+        if( !hit){
             g.setColor(Color.WHITE);
             g.fillRect(upperLeft.x, upperLeft.y, bulletWidth,  bulletHeight);
+        }
     }
+
+     /**
+     * Set hit t true if the bullet hit an object.
+     * 
+     */
+    public void bulletHit() {
+        hit = true;
+    }
+
     /**
      * returns if the bullet is off the panel or not
      * 
@@ -70,6 +81,16 @@ public abstract class Bullet extends Thread {
      */
     public boolean isHit(){
         return hit;
+    }
+
+    
+     /**
+     * Return upperleft of the bullet
+     * 
+     * @return the upperleft of bullet
+     */
+    public Point getUpperLeft() {
+        return upperLeft;
     }
 
     /**
