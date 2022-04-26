@@ -132,8 +132,7 @@ public class SinglePlayer extends Thread implements KeyListener {
                     } else {
                         b.paint(g);
                         k++;
-                    }
-                }
+                    }                }
                 // drawing enemy
                 enemy.paint(g);
                // draws enemy the bullets
