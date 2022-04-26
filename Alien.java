@@ -12,9 +12,9 @@ public class Alien {
     private Point upperLeftOfAlien;
     private Point centerOfAlien;
     private boolean alienHit;
-    public static final int ALIENSIZE = 50;
-    public static final int ALIENYPOS1 = 300;
-    public static final int ALIENYPOS2 = 400;
+    protected static final int ALIENSIZE = 50;
+    protected  static final int ALIENYPOS1 = 300;
+    protected  static final int ALIENYPOS2 = 400;
 
     public Alien(Point upperLeft) {
         this.upperLeftOfAlien = upperLeft;

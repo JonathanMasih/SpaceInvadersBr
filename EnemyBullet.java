@@ -23,14 +23,12 @@ public class EnemyBullet extends Bullet {
         while ( SinglePlayer.GAME_PANEL_HEIGHT < super.upperLeft.y  ) {
             // every 30 ms or so, we move the coordinates of bullet
             try {
-                sleep(super.DELAY_TIME);
+                sleep(DELAY_TIME);
             } catch (InterruptedException e) {
             }
-            upperLeft.translate(0, super.bulletSPEED );
-            //Repaint
-            // panel.repaint();
+            upperLeft.translate(0, bulletSPEED );
         }
-        super.offPanel = true;
+        offPanel = true;
         panel.repaint();
     }
 

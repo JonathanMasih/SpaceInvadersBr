@@ -3,22 +3,22 @@ import java.awt.*;
 
 /**
  * This is a bullet object that is shot from a player or
- * an enemey ship.
+ * an enemey ship. An abstract class that will hold an 
+ * object.
  * 
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class Bullet extends Thread {
-
+public abstract class Bullet extends Thread {
    // the Component where the bullet is being fired
    protected  Component panel;
    protected Point upperLeft;
    protected boolean  offPanel;
    private boolean hit;
-   private static final int bulletHeight = 10;
-  private static final int bulletWidth = 6;
-  protected final int bulletSPEED = 10;
-  protected final int DELAY_TIME = 30;
+   protected static final int bulletHeight = 10;
+   protected static final int bulletWidth = 6;
+   protected final int bulletSPEED = 10;
+   protected final int DELAY_TIME = 30;
 
    public Bullet(Component panel, Point currentPos) {
     this.panel = panel;

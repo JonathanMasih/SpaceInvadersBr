@@ -16,7 +16,7 @@ public class SinglePlayer extends Thread implements KeyListener {
     protected final static int GAME_PANEL_WIDTH = 800;
     protected final static int GAME_PANEL_HEIGHT = 850;
     // amount to the move player on each key press
-    public static final int MOVE_BY = 10;
+    protected static final int MOVE_BY = 10;
     // for repaint thread
     private static final int DELAY_TIME = 33;
     private JFrame frame;
@@ -25,7 +25,7 @@ public class SinglePlayer extends Thread implements KeyListener {
     protected static JPanel gamePanel;
     private Player player;
     private EnemyPlayer enemy;
-    private ArrayList<Bullet> bulletList;
+    private ArrayList<PlayerBullet> bulletList;
     private ArrayList<Shield> shieldList;
     private ArrayList<Alien> alienList;
 
@@ -36,7 +36,7 @@ public class SinglePlayer extends Thread implements KeyListener {
         // Creates a player when the game started
         this.player = new Player(new Point(350, Player.PLAYERYPOS));
         // creates the ArrayList<Bullet>
-        this.bulletList = new ArrayList<Bullet>();
+        this.bulletList = new ArrayList<PlayerBullet>();
         // Makes the Arraylist shields
         this.shieldList = new ArrayList<Shield>();
         // Make
@@ -136,7 +136,7 @@ public class SinglePlayer extends Thread implements KeyListener {
                 }
                 // drawing enemy
                 enemy.paint(g);
-                // draws enemy the bullets
+                //draws enemy the bullets
                 // int l= 0;
                 // while ( l < EnemyPlayer.enemiesBulletsList.size()) {
                 // Bullet b = EnemyPlayer.enemiesBulletsList.get(l);
@@ -201,7 +201,7 @@ public class SinglePlayer extends Thread implements KeyListener {
             currentPosPlayer1 = player.getPlayerCenter();
             // If the player is moving and wants to shoot
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                Bullet bullet = new Bullet(gamePanel, currentPosPlayer1);
+                PlayerBullet bullet = new  PlayerBullet (gamePanel, currentPosPlayer1);
                 bullet.start();
                 bulletList.add(bullet);
             }
@@ -211,12 +211,12 @@ public class SinglePlayer extends Thread implements KeyListener {
             currentPosPlayer1 = player.getPlayerCenter();
             // If the player is moving and wants to shoot
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                Bullet bullet = new Bullet(gamePanel, currentPosPlayer1);
+                PlayerBullet bullet = new PlayerBullet (gamePanel, currentPosPlayer1);
                 bullet.start();
                 bulletList.add(bullet);
             }
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            Bullet bullet = new Bullet(gamePanel, currentPosPlayer1);
+            PlayerBullet bullet = new PlayerBullet(gamePanel, currentPosPlayer1);
             bullet.start();
             bulletList.add(bullet);
         } else {
