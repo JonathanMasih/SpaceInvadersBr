@@ -2,17 +2,18 @@ import java.awt.Point;
 import java.awt.*;
 import java.util.*;
 
-public class EnemyPlayer extends Thread {
-    private Component panel;
+public class  EnemyPlayer extends Thread {
+    protected Component panel;
     protected Point upperLeftOfEnemyPlayer;
-    private Point centerOfEnemyPlayer;
+    protected  Point centerOfEnemyPlayer;
     protected static Image enemyPlayerImage;
     protected final static int ENEMYPLAYERYPOS = 50;
     protected final static int ENEMEYHEALTH = 5;
-    private int hits;
+    protected int hits;
     protected static ArrayList<EnemyBullet> enemiesBulletsList = new ArrayList<>();
 
-    public EnemyPlayer(Component panel, Point startPos) {
+    public  EnemyPlayer(Component panel, Point startPos) {
+        System.out.println("Enemy Made");
         this.panel = panel;
         this.hits = 0;
         this.upperLeftOfEnemyPlayer = startPos;
@@ -92,10 +93,12 @@ public class EnemyPlayer extends Thread {
                 movementSpeedx -= rand.nextInt(11);
             }
             translate(movementSpeedx);
-            int fireBullet =  rand.nextInt(51);
-            if( fireBullet % 51== 0 ){
-                fireBullet();
-            }
+            // int fireBullet =  rand.nextInt(51);
+            // if( fireBullet % 51== 0 ){
+            //     fireBullet();
+            // }
+            fireBullet();
+    
 
         }
     }

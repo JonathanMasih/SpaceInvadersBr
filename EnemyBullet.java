@@ -11,7 +11,7 @@ public class EnemyBullet extends Bullet {
     protected static ArrayList<EnemyBullet> enemyBullets = new ArrayList<EnemyBullet>();
     public EnemyBullet(Component panel, Point currentPos) {
         super(panel);
-        upperLeft = new Point(currentPos.x- (bulletWidth / 2),EnemyPlayer.ENEMYPLAYERYPOS - 5 ) ;
+        upperLeft = new Point(currentPos.x- (bulletWidth / 2),currentPos.y ) ;
     }
 
      /**
