@@ -27,7 +27,7 @@ public class SinglePlayer extends Thread implements KeyListener {
     private ArrayList<PlayerBullet> bulletList;
     private ArrayList<Shield> shieldList;
     private ArrayList<Alien> alienList;
-    private ArrayList< EnemyPlayer2> enemyList;
+    private ArrayList< EnemyPlayer> enemyList;
 
     public SinglePlayer(JFrame frame, Image img, Clip clip) {
         this.frame = frame;
@@ -42,7 +42,7 @@ public class SinglePlayer extends Thread implements KeyListener {
         // Making array list of aliens
         this.alienList = new ArrayList<Alien>();
         // Creating array list of enemy players
-        this.enemyList = new ArrayList< EnemyPlayer2>();
+        this.enemyList = new ArrayList< EnemyPlayer>();
 
     }
 
@@ -142,7 +142,7 @@ public class SinglePlayer extends Thread implements KeyListener {
                 //draws the EnemyShip
                 int p = 0;
                 while (p < enemyList.size()) {
-                    EnemyPlayer2 e = enemyList.get(p);
+                    EnemyPlayer e = enemyList.get(p);
                     for (int z = 0; z < bulletList.size(); z++) {
                         Point upperLeftBullet = bulletList.get(z).getUpperLeft();
                         Point upperLeftEnemy =  enemyList.get(p).getUpperLeft();
@@ -189,7 +189,7 @@ public class SinglePlayer extends Thread implements KeyListener {
             }
         };
         // Making an enemies
-        EnemyPlayer2 enemy = new  EnemyPlayer2(gamePanel, new Point(100, EnemyPlayer.ENEMYPLAYERYPOS ) );
+        EnemyPlayer enemy = new  EnemyPlayer(gamePanel, new Point(100, EnemyPlayer.ENEMYPLAYERYPOS ) );
         enemy.start();
         enemyList.add(enemy);
 
