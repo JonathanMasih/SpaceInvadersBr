@@ -10,9 +10,9 @@ public class Shield {
     private Point centerOfShield;
     protected boolean sheildBroken;
     protected int sheildHitsTaken;
-    public static final int SHIELDSIZEW = 100;
-    public static final int SHIELDSIZEL = 30;
-    public static final int SHIELDPOS = 600;
+    protected static final int SHIELDSIZEW = 100;
+    protected static final int SHIELDSIZEL = 30;
+    protected static final int SHIELDPOS = 600;
 
     public Shield(Point upperLeft) {
         this.upperLeftOfShield = upperLeft;

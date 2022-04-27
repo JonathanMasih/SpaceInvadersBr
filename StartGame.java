@@ -114,8 +114,6 @@ public class StartGame implements ActionListener, Runnable{
 
         // makes the gameModePanel transparent
         gameModePanel.setOpaque(false);
-        onePlayer.addActionListener(this);
-        twoPlayer.addActionListener(this);
 
     
         // display the window we've created

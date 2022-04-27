@@ -3,28 +3,27 @@ import java.awt.*;
 
 /**
  * This is a bullet object that is shot from a player or
- * an enemey ship.
+ * an enemey ship. An abstract class that will hold an 
+ * object.
  * 
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class Bullet extends Thread {
-
+public abstract class Bullet extends Thread {
    // the Component where the bullet is being fired
    protected  Component panel;
    protected Point upperLeft;
    protected boolean  offPanel;
    private boolean hit;
-   private static final int bulletHeight = 10;
-  private static final int bulletWidth = 6;
-  protected final int bulletSPEED = 10;
-  protected final int DELAY_TIME = 30;
+   protected static final int bulletHeight = 10;
+   protected static final int bulletWidth = 6;
+   protected final int bulletSPEED = 10;
+   protected final int DELAY_TIME = 15;
 
-   public Bullet(Component panel, Point currentPos) {
+   public Bullet(Component panel) {
     this.panel = panel;
     this.offPanel = false; 
     this.hit = false;
-    this.upperLeft = new Point(currentPos.x- (bulletWidth / 2),Player.PLAYERYPOS - 5 ) ;
    }
 
    /**
@@ -42,10 +41,8 @@ public class Bullet extends Thread {
             }
             upperLeft.translate(0, -bulletSPEED );
             //Repaint
-            panel.repaint();
         }
         offPanel = true;
-        panel.repaint();
     }
 
     /**
@@ -54,9 +51,20 @@ public class Bullet extends Thread {
      * @param g the Graphics object in which to paint
      */
     public void paint(Graphics g) {
+        if( !hit){
             g.setColor(Color.WHITE);
             g.fillRect(upperLeft.x, upperLeft.y, bulletWidth,  bulletHeight);
+        }
     }
+
+     /**
+     * Set hit t true if the bullet hit an object.
+     * 
+     */
+    public void bulletHit() {
+        hit = true;
+    }
+
     /**
      * returns if the bullet is off the panel or not
      * 
@@ -75,4 +83,27 @@ public class Bullet extends Thread {
         return hit;
     }
 
+    
+     /**
+     * Return upperleft of the bullet
+     * 
+     * @return the upperleft of bullet
+     */
+    public Point getUpperLeft() {
+        return upperLeft;
+    }
+
+    /**
+     * A utility method to have the thread sleep without the need to
+     * place the call in a try-catch block.
+     * 
+     * @param millis the number of milliseconds for the thread to sleep
+     */
+    public static void sleepWithCatch(long millis) {
+
+        try {
+            sleep(millis);
+        } catch (InterruptedException e) {
+        }
+    }
 }

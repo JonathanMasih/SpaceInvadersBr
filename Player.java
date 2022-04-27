@@ -10,8 +10,8 @@ public class Player {
     protected Point upperLeftOfPLayer;
     private Point centerOfPlayer;
     protected static Image playerImage;
-    public final static int PLAYERSIZE = 70;
-    public final static int PLAYERYPOS = 700;
+    protected final static int PLAYERSIZE = 70;
+    protected final static int PLAYERYPOS = 700;
     private int playerLives;
 
     public Player(Point startPos) {
