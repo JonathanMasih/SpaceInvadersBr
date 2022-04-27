@@ -13,7 +13,6 @@ public class  EnemyPlayer extends Thread {
     protected static ArrayList<EnemyBullet> enemiesBulletsList = new ArrayList<>();
 
     public  EnemyPlayer(Component panel, Point startPos) {
-        System.out.println("Enemy Made");
         this.panel = panel;
         this.hits = 0;
         this.upperLeftOfEnemyPlayer = startPos;
