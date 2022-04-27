@@ -19,7 +19,7 @@ public class EnemyBullet extends Bullet {
      */
     @Override
     public void run() {
-        while (  upperLeft.y < SinglePlayer.GAME_PANEL_HEIGHT ) {
+        while (  upperLeft.y < SinglePlayer.GAME_PANEL_HEIGHT  ) {
             // every 30 ms or so, we move the coordinates of bullet
             sleepWithCatch(DELAY_TIME);
             upperLeft.translate(0, bulletSPEED );

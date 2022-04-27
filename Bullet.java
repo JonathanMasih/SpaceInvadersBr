@@ -51,14 +51,14 @@ public abstract class Bullet extends Thread {
      * @param g the Graphics object in which to paint
      */
     public void paint(Graphics g) {
-        if( !hit){
+        if( !hit || !offPanel){
             g.setColor(Color.WHITE);
             g.fillRect(upperLeft.x, upperLeft.y, bulletWidth,  bulletHeight);
         }
     }
 
      /**
-     * Set hit t true if the bullet hit an object.
+     * Set hit to true if the bullet hit an object.
      * 
      */
     public void bulletHit() {

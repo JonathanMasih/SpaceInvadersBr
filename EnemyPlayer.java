@@ -96,8 +96,6 @@ public class  EnemyPlayer extends Thread {
             if( fireBullet % 51== 0 ){
                 fireBullet();
             }
-    
-    
 
         }
     }

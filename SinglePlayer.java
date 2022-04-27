@@ -27,7 +27,10 @@ public class SinglePlayer extends Thread implements KeyListener {
     private ArrayList<PlayerBullet> bulletList;
     private ArrayList<Shield> shieldList;
     private ArrayList<Alien> alienList;
-    private ArrayList< EnemyPlayer> enemyList;
+    private ArrayList<EnemyPlayer> enemyList;
+
+    private boolean keyPress_A = false;
+    private boolean keyPress_D = false;
 
     public SinglePlayer(JFrame frame, Image img, Clip clip) {
         this.frame = frame;
@@ -42,7 +45,7 @@ public class SinglePlayer extends Thread implements KeyListener {
         // Making array list of aliens
         this.alienList = new ArrayList<Alien>();
         // Creating array list of enemy players
-        this.enemyList = new ArrayList< EnemyPlayer>();
+        this.enemyList = new ArrayList<EnemyPlayer>();
 
     }
 
@@ -103,17 +106,49 @@ public class SinglePlayer extends Thread implements KeyListener {
                 g.drawRect(0, 0, 700, GAME_PANEL_HEIGHT);
                 // draw the player
                 player.paint(g);
-                // draws the shields
+
+                // collision between the player and enemybullet
+                int l = 0;
+                while (l < EnemyPlayer.enemiesBulletsList.size()) {
+                    EnemyBullet bullet = EnemyPlayer.enemiesBulletsList.get(l);
+                    Point upperLeftBullet = bullet.getUpperLeft();
+                    Point upperLeftPlayer = player.getPlayerUpperLeft();
+                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y,
+                            Bullet.bulletWidth, Bullet.bulletHeight,
+                            upperLeftPlayer.x, upperLeftPlayer.y,
+                            Player.PLAYERSIZE, Player.PLAYERSIZE)) {
+                        player.hitPlayer();
+                        bullet.bulletHit();
+                        EnemyPlayer.enemiesBulletsList.remove(l);
+                    } else {
+                        bullet.paint(g);
+                        l++;
+                    }
+                }
+                // draws the shields and checks the collsion
                 int i = 0;
                 while (i < shieldList.size()) {
                     Shield s = shieldList.get(i);
+                    for (int  o = 0;  o  < EnemyPlayer.enemiesBulletsList.size();  o++) {
+                        Point upperLeftEnemyBullet = EnemyPlayer.enemiesBulletsList.get(o).getUpperLeft();
+                        Point upperLeftShield = s.getShieldUpperLeft();
+                        if (Collision.bulletOverlapsObject(upperLeftEnemyBullet.x, upperLeftEnemyBullet.y,
+                                Bullet.bulletWidth, Bullet.bulletHeight,
+                                upperLeftShield.x, upperLeftShield.y,
+                                Shield.SHIELDSIZEW, Shield.SHIELDSIZEL)) {
+                            s.hitSheild();
+                            EnemyPlayer.enemiesBulletsList.get(o).bulletHit();
+                            EnemyPlayer.enemiesBulletsList.remove(o);
+                        }
+                    }
                     if (s.isSheildBroken()) {
-                        bulletList.remove(i);
+                        shieldList.remove(i);
                     } else {
                         s.paint(g);
                         i++;
                     }
                 }
+
                 // draws the aliens
                 int j = 0;
                 while (j < alienList.size()) {
@@ -130,7 +165,6 @@ public class SinglePlayer extends Thread implements KeyListener {
                             bulletList.remove(m);
                         }
                     }
-
                     if (a.isAlienHit()) {
                         alienList.remove(j);
                     } else {
@@ -138,24 +172,24 @@ public class SinglePlayer extends Thread implements KeyListener {
                         j++;
                     }
                 }
- 
-                //draws the EnemyShip
+
+                // draws the EnemyShip and collion
                 int p = 0;
                 while (p < enemyList.size()) {
                     EnemyPlayer e = enemyList.get(p);
                     for (int z = 0; z < bulletList.size(); z++) {
                         Point upperLeftBullet = bulletList.get(z).getUpperLeft();
-                        Point upperLeftEnemy =  enemyList.get(p).getUpperLeft();
+                        Point upperLeftEnemy = enemyList.get(p).getUpperLeft();
                         if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y,
-                        Bullet.bulletWidth, Bullet.bulletHeight,
-                        upperLeftEnemy.x, upperLeftEnemy.y,
-                        Player.PLAYERSIZE, Player.PLAYERSIZE)) {
-                        enemyList.get(p).hitEnemy() ;
-                        bulletList.get(z).bulletHit();
-                        bulletList.remove(z);
-                     }
+                                Bullet.bulletWidth, Bullet.bulletHeight,
+                                upperLeftEnemy.x, upperLeftEnemy.y,
+                                Player.PLAYERSIZE, Player.PLAYERSIZE)) {
+                            enemyList.get(p).hitEnemy();
+                            bulletList.get(z).bulletHit();
+                            bulletList.remove(z);
+                        }
                     }
-                    if (e.getEnemyHitCount() == EnemyPlayer.ENEMEYHEALTH ) {
+                    if (e.getEnemyHitCount() == EnemyPlayer.ENEMEYHEALTH) {
                         enemyList.remove(p);
                     } else {
                         e.paint(g);
@@ -175,21 +209,21 @@ public class SinglePlayer extends Thread implements KeyListener {
                 }
 
                 // draws enemy the bullets
-                int l = 0;
-                while (l < EnemyPlayer.enemiesBulletsList.size()) {
-                    Bullet b = EnemyPlayer.enemiesBulletsList.get(l);
-                    if (b.isOffPanel()) {
-                        EnemyPlayer.enemiesBulletsList.remove(l);
+                int q = 0;
+                while (q < EnemyPlayer.enemiesBulletsList.size()) {
+                    Bullet b = EnemyPlayer.enemiesBulletsList.get(q);
+                    if (b.isOffPanel() || b.isHit()) {
+                        EnemyPlayer.enemiesBulletsList.remove(q);
                     } else {
                         b.paint(g);
-                        l++;
+                        q++;
                     }
                 }
 
             }
         };
         // Making an enemies
-        EnemyPlayer enemy = new  EnemyPlayer(gamePanel, new Point(100, EnemyPlayer.ENEMYPLAYERYPOS ) );
+        EnemyPlayer enemy = new EnemyPlayer(gamePanel, new Point(100, EnemyPlayer.ENEMYPLAYERYPOS));
         enemy.start();
         enemyList.add(enemy);
 
@@ -204,6 +238,10 @@ public class SinglePlayer extends Thread implements KeyListener {
                         sleep(DELAY_TIME);
                     } catch (InterruptedException e) {
                     }
+                    if (keyPress_A)
+                        player.translate(-MOVE_BY);
+                    if (keyPress_D)
+                        player.translate(MOVE_BY);
 
                     gamePanel.repaint();
                 }
@@ -234,26 +272,10 @@ public class SinglePlayer extends Thread implements KeyListener {
         Point currentPosPlayer1 = player.getPlayerCenter();
 
         // Moves the player depending on which button is pressed
-        if (e.getKeyCode() == KeyEvent.VK_A &&
-                currentPosPlayer1.x > (5 + Player.PLAYERSIZE / 2)) {
-            player.translate(-MOVE_BY);
-            currentPosPlayer1 = player.getPlayerCenter();
-            // If the player is moving and wants to shoot
-            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                PlayerBullet bullet = new PlayerBullet(gamePanel, currentPosPlayer1);
-                bullet.start();
-                bulletList.add(bullet);
-            }
-        } else if (e.getKeyCode() == KeyEvent.VK_D &&
-                currentPosPlayer1.x < GAME_PANEL_WIDTH - (2 * Player.PLAYERSIZE)) {
-            player.translate(MOVE_BY);
-            currentPosPlayer1 = player.getPlayerCenter();
-            // If the player is moving and wants to shoot
-            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                PlayerBullet bullet = new PlayerBullet(gamePanel, currentPosPlayer1);
-                bullet.start();
-                bulletList.add(bullet);
-            }
+        if (e.getKeyCode() == KeyEvent.VK_A) {
+            keyPress_A = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_D) {
+            keyPress_D = true;
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             PlayerBullet bullet = new PlayerBullet(gamePanel, currentPosPlayer1);
             bullet.start();
@@ -265,6 +287,11 @@ public class SinglePlayer extends Thread implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_A) {
+            keyPress_A = false;
+        } else if (e.getKeyCode() == KeyEvent.VK_D) {
+            keyPress_D = false;
+        }
     }
 
 }
