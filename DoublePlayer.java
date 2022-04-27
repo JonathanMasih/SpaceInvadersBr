@@ -208,8 +208,8 @@ public class DoublePlayer extends Thread implements KeyListener  {
         } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             keyPress_LEFT = true;
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            //keyPress_RIGHT = true;
-            player2.rotate(true);
+            keyPress_RIGHT = true;
+            //player2.rotate(true);
         } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             player2.fireBullet(gamePanel);
         } else {
