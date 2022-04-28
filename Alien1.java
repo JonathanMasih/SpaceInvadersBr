@@ -6,7 +6,7 @@ import java.awt.*;
  */
 public class Alien1 extends Alien{
     
-    protected static Image alienImage;
+    //protected static Image alienImage;
     public Alien1(Point upperLeft){
         super(upperLeft);
     }
@@ -22,11 +22,12 @@ public class Alien1 extends Alien{
         }
     }
 
-    /**
+     /**
      * Set the Image to be used by the Alien Object
      */
-    public static void loadAlien1Pic() {
+    public static void loadAlienPic() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         alienImage = toolkit.getImage("Alien.png");
     }
+
 }

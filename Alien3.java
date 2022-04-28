@@ -5,7 +5,7 @@ import java.awt.*;
  * 
  */
 public class Alien3 extends Alien{
-    protected static Image alienImage;
+   // protected static Image alienImage;
 
     public Alien3(Point upperLeft){
         super(upperLeft);

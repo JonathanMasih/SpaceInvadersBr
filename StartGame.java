@@ -21,10 +21,9 @@ public class StartGame implements ActionListener, Runnable{
     private static Image backgroundImage;
     private JFrame frame;
     private Clip clip;
-    protected static final int FRAMEHEIGHT = 1100;
-    protected static final int FRAMEWIDTH = 850;
-
-
+    protected static final int  FRAMEWIDTH = 1100;
+    protected static final int FRAMEHEIGHT = 850;
+    
     /**
      * The run method to set up the graphical user interface
      */
@@ -34,7 +33,7 @@ public class StartGame implements ActionListener, Runnable{
         // tiny GUI, and give the window a name
 
         frame = new JFrame("Welcome to Space Invaders!");
-        frame.setPreferredSize(new Dimension(FRAMEHEIGHT,FRAMEWIDTH));
+        frame.setPreferredSize(new Dimension(FRAMEWIDTH,FRAMEHEIGHT));
 
         // tell the JFrame that when someone closes the
         // window, the application should terminate
@@ -163,8 +162,7 @@ public class StartGame implements ActionListener, Runnable{
         EnemyPlayer.loadEnemyPic();
         Player2.loadEnemyPic();
         //loads the image of the alien
-        Alien.loadAlienPic();
-        Alien1.loadAlien1Pic();
+        Alien1.loadAlienPic();
         Alien2.loadAlien2Pic();
         Alien3.loadAlien3Pic();
 

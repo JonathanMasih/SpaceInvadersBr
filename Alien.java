@@ -12,6 +12,7 @@ public abstract class Alien {
     protected Point upperLeftOfAlien;
     protected Point centerOfAlien;
     protected boolean alienHit;
+    protected static int point = 50;
     protected static final int ALIENSIZE = 50;
     protected static final int ALIENYPOS1 = 400;
     protected static final int ALIENYPOS2 = 300;
@@ -63,12 +64,5 @@ public abstract class Alien {
     public Point getUpperLeft() {
         return upperLeftOfAlien;
     }
-     /**
-     * Set the Image to be used by the Alien Object
-     */
-    public static void loadAlienPic() {
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        alienImage = toolkit.getImage("Alien.png");
-    }
-
+    
 }

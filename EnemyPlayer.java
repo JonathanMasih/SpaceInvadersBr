@@ -10,6 +10,7 @@ public class  EnemyPlayer extends Thread {
     protected final static int ENEMYPLAYERYPOS = 50;
     protected final static int ENEMEYHEALTH = 5;
     protected int hits;
+    protected static int point;
     protected static ArrayList<EnemyBullet> enemiesBulletsList = new ArrayList<>();
 
     public  EnemyPlayer(Component panel, Point startPos) {

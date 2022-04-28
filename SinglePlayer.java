@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.sound.sampled.*;
 
 /**
@@ -29,6 +30,13 @@ public class SinglePlayer extends Thread implements KeyListener {
     private ArrayList<Alien> alienList;
     private ArrayList<EnemyPlayer> enemyList;
 
+    //current point of the player
+    private static int playerPoints = 0;
+    //Jlabel for points
+    private  JLabel playerPointLabel;
+    //Counter to slow down the shooting and stop spaming of player
+    private int shootCounter = 5;
+
     private boolean keyPress_A = false;
     private boolean keyPress_D = false;
 
@@ -46,7 +54,7 @@ public class SinglePlayer extends Thread implements KeyListener {
         this.alienList = new ArrayList<Alien>();
         // Creating array list of enemy players
         this.enemyList = new ArrayList<EnemyPlayer>();
-
+        //player points equal to 0 in the begining of the game
     }
 
     /**
@@ -104,7 +112,7 @@ public class SinglePlayer extends Thread implements KeyListener {
                 super.paintComponent(g);
                 g.setColor(Color.WHITE);
                 // draws the border for the game
-                g.drawRect(0, 0,  GAME_PANEL_WIDTH , GAME_PANEL_HEIGHT);
+                g.drawRect(0, 0,  GAME_PANEL_WIDTH -2 , GAME_PANEL_HEIGHT);
                 // draw the player
                 player.paint(g);
 
@@ -164,6 +172,8 @@ public class SinglePlayer extends Thread implements KeyListener {
                             alienList.get(j).hitAlien();
                             bulletList.get(m).bulletHit();
                             bulletList.remove(m);
+                            playerPoints += Alien.point;
+                            playerPointLabel.setText("Player Point: " + playerPoints);
                         }
                     }
                     if (a.isAlienHit()) {
@@ -188,6 +198,8 @@ public class SinglePlayer extends Thread implements KeyListener {
                             enemyList.get(p).hitEnemy();
                             bulletList.get(z).bulletHit();
                             bulletList.remove(z);
+                            playerPoints += EnemyPlayer.point;
+                            playerPointLabel.setText("Player Point: " + playerPoints);
                         }
                     }
                     if (e.getEnemyHitCount() == EnemyPlayer.ENEMEYHEALTH) {
@@ -239,6 +251,10 @@ public class SinglePlayer extends Thread implements KeyListener {
                         sleep(DELAY_TIME);
                     } catch (InterruptedException e) {
                     }
+                    //decrement so the player can shoot
+                    if(shootCounter > 0 ){
+                        shootCounter--;
+                    }
                     if (keyPress_A)
                         player.translate(-MOVE_BY);
                     if (keyPress_D)
@@ -251,7 +267,28 @@ public class SinglePlayer extends Thread implements KeyListener {
         // sets the size of the game panel
         gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
         gamePanel.setOpaque(false);
-        backGroundPanel.add(gamePanel);
+        
+        //scoreboards panel 
+        JPanel scoreboardPanel= new JPanel(new BorderLayout());
+        //scoreboardPanel.setLayout(new  BoxLayout( scoreboardPanel ,BoxLayout.Y_AXIS));
+        JPanel centerPanelForScoreboardPanel = new JPanel();
+        centerPanelForScoreboardPanel.setLayout(new  BoxLayout( centerPanelForScoreboardPanel ,BoxLayout.Y_AXIS));
+        
+        scoreboardPanel.setLayout(new BorderLayout());
+        scoreboardPanel.setOpaque(false);
+        scoreboardPanel.setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - 
+        GAME_PANEL_WIDTH -50, GAME_PANEL_HEIGHT));
+        playerPointLabel = new JLabel("Player Point: " + playerPoints);
+        playerPointLabel.setForeground(Color.WHITE);
+        centerPanelForScoreboardPanel.add(playerPointLabel);
+        centerPanelForScoreboardPanel.setOpaque(false);
+        scoreboardPanel.add( centerPanelForScoreboardPanel , BorderLayout.EAST);
+
+
+        
+        backGroundPanel.setLayout(new BorderLayout());
+        backGroundPanel.add(gamePanel , BorderLayout.WEST);
+        backGroundPanel.add(scoreboardPanel, BorderLayout.EAST);
 
         frame.add(backGroundPanel);
         // Checks if any key is pressed
@@ -278,9 +315,13 @@ public class SinglePlayer extends Thread implements KeyListener {
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
             keyPress_D = true;
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            if( shootCounter == 0){
             PlayerBullet bullet = new PlayerBullet(gamePanel, currentPosPlayer1);
             bullet.start();
             bulletList.add(bullet);
+            shootCounter = 5;
+            }
+            return;
         } else {
             return;
         }
