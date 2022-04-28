@@ -21,6 +21,9 @@ public class StartGame implements ActionListener, Runnable{
     private static Image backgroundImage;
     private JFrame frame;
     private Clip clip;
+    protected static final int FRAMEHEIGHT = 1100;
+    protected static final int FRAMEWIDTH = 850;
+
 
     /**
      * The run method to set up the graphical user interface
@@ -31,7 +34,7 @@ public class StartGame implements ActionListener, Runnable{
         // tiny GUI, and give the window a name
 
         frame = new JFrame("Welcome to Space Invaders!");
-        frame.setPreferredSize(new Dimension(1000,850));
+        frame.setPreferredSize(new Dimension(FRAMEHEIGHT,FRAMEWIDTH));
 
         // tell the JFrame that when someone closes the
         // window, the application should terminate
