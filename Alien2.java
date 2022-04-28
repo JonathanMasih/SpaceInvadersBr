@@ -28,6 +28,6 @@ public class Alien2 extends Alien{
      */
     public static void loadAlien2Pic() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        alienImage = toolkit.getImage("Alien.png");
+        alienImage = toolkit.getImage("Alien2.png");
     }
 }
