@@ -161,6 +161,10 @@ public class StartGame implements ActionListener, Runnable{
         Player2.loadEnemyPic();
         //loads the image of the alien
         Alien.loadAlienPic();
+        Alien1.loadAlien1Pic();
+        Alien2.loadAlien2Pic();
+        Alien3.loadAlien3Pic();
+
 
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();

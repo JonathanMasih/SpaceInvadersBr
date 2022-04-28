@@ -77,23 +77,24 @@ public class SinglePlayer extends Thread implements KeyListener {
         clip.loop(Clip.LOOP_CONTINUOUSLY);
 
         // making sheilds
-        Shield sheild1 = new Shield(new Point(100, Shield.SHIELDPOS));
-        Shield sheild2 = new Shield(new Point(500, Shield.SHIELDPOS));
+        Shield sheild1 = new Shield(new Point(130, Shield.SHIELDPOS));
+        Shield sheild2 = new Shield(new Point(540, Shield.SHIELDPOS));
         shieldList.add(sheild1);
         shieldList.add(sheild2);
 
         // Making aliens
-        Alien alien1 = new Alien(new Point(100, Alien.ALIENYPOS1));
-        Alien alien12 = new Alien(new Point(200, Alien.ALIENYPOS1));
-        Alien alien2 = new Alien(new Point(300, Alien.ALIENYPOS1));
-        Alien alien3 = new Alien(new Point(400, Alien.ALIENYPOS1));
-        Alien alien4 = new Alien(new Point(500, Alien.ALIENYPOS1));
-        alienList.add(alien1);
-        alienList.add(alien12);
-        alienList.add(alien2);
-        alienList.add(alien3);
-        alienList.add(alien4);
-        alienList.add(alien4);
+        alienList.add(new Alien1(new Point(150, Alien.ALIENYPOS1)));
+        alienList.add(new Alien1(new Point(350, Alien.ALIENYPOS1)));
+        alienList.add (new Alien1(new Point(550, Alien.ALIENYPOS1)));
+
+        alienList.add(new Alien2(new Point(150, Alien.ALIENYPOS2)));
+        alienList.add(new Alien2(new Point(350, Alien.ALIENYPOS2)));
+        alienList.add(new Alien2(new Point(550, Alien.ALIENYPOS2)));
+       
+        alienList.add(new Alien3(new Point(150, Alien.ALIENYPOS3)));
+        alienList.add(new Alien3(new Point(350, Alien.ALIENYPOS3)));
+        alienList.add(new Alien3(new Point(550, Alien.ALIENYPOS3)));
+
 
         gamePanel = new JPanel() {
             @Override
@@ -103,7 +104,7 @@ public class SinglePlayer extends Thread implements KeyListener {
                 super.paintComponent(g);
                 g.setColor(Color.WHITE);
                 // draws the border for the game
-                g.drawRect(0, 0, 700, GAME_PANEL_HEIGHT);
+                g.drawRect(0, 0,  GAME_PANEL_WIDTH , GAME_PANEL_HEIGHT);
                 // draw the player
                 player.paint(g);
 

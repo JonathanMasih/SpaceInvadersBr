@@ -51,8 +51,8 @@ public class  EnemyPlayer extends Thread {
         if (upperLeftOfEnemyPlayer.x < 0) {
             upperLeftOfEnemyPlayer.x = 0;
         }
-        if (upperLeftOfEnemyPlayer.x > SinglePlayer.GAME_PANEL_WIDTH - 5 * (Player.PLAYERSIZE / 2)) {
-            upperLeftOfEnemyPlayer.x = SinglePlayer.GAME_PANEL_WIDTH - 5 * (Player.PLAYERSIZE / 2);
+        if (upperLeftOfEnemyPlayer.x > SinglePlayer.GAME_PANEL_WIDTH - Player.PLAYERSIZE ) {
+            upperLeftOfEnemyPlayer.x = SinglePlayer.GAME_PANEL_WIDTH - Player.PLAYERSIZE;
         }
         centerOfEnemyPlayer = new Point(upperLeftOfEnemyPlayer.x + (Player.PLAYERSIZE / 2),
                 upperLeftOfEnemyPlayer.y + (Player.PLAYERSIZE / 2));
@@ -88,7 +88,7 @@ public class  EnemyPlayer extends Thread {
             if (upperLeftOfEnemyPlayer.x == 0) {
                 movementSpeedx += rand.nextInt(11);
             }
-            if (upperLeftOfEnemyPlayer.x == SinglePlayer.GAME_PANEL_WIDTH - 5 * (Player.PLAYERSIZE / 2)) {
+            if (upperLeftOfEnemyPlayer.x == SinglePlayer.GAME_PANEL_WIDTH -  Player.PLAYERSIZE) {
                 movementSpeedx -= rand.nextInt(11);
             }
             translate(movementSpeedx);

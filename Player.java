@@ -31,8 +31,8 @@ public class Player {
         if (upperLeftOfPLayer.x < 0) {
             upperLeftOfPLayer.x = 0;
         }
-        if (upperLeftOfPLayer.x  > SinglePlayer.GAME_PANEL_WIDTH - (5 * (Player.PLAYERSIZE / 2))) {
-            upperLeftOfPLayer.x = SinglePlayer.GAME_PANEL_WIDTH - (5 * (Player.PLAYERSIZE / 2));
+        if (upperLeftOfPLayer.x  > SinglePlayer.GAME_PANEL_WIDTH -  (Player.PLAYERSIZE)) {
+            upperLeftOfPLayer.x = SinglePlayer.GAME_PANEL_WIDTH - (Player.PLAYERSIZE);
         }
         centerOfPlayer = new Point(upperLeftOfPLayer.x + (PLAYERSIZE/2), upperLeftOfPLayer.y +(PLAYERSIZE/2));
     }

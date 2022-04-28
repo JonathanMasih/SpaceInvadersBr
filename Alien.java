@@ -7,14 +7,15 @@ import java.awt.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class Alien {
-    private static Image alienImage;
-    private Point upperLeftOfAlien;
-    private Point centerOfAlien;
-    private boolean alienHit;
+public abstract class Alien {
+    protected static Image alienImage;
+    protected Point upperLeftOfAlien;
+    protected Point centerOfAlien;
+    protected boolean alienHit;
     protected static final int ALIENSIZE = 50;
-    protected static final int ALIENYPOS1 = 300;
-    protected static final int ALIENYPOS2 = 400;
+    protected static final int ALIENYPOS1 = 400;
+    protected static final int ALIENYPOS2 = 300;
+    protected static final int ALIENYPOS3 = 200;
 
     public Alien(Point upperLeft) {
         this.upperLeftOfAlien = upperLeft;
@@ -23,12 +24,6 @@ public class Alien {
 
         this.alienHit = false;
     }
-
-    /**
-     * paint this object onto the given Graphics area
-     * 
-     * @param g the Graphics object where the shape should be drawn
-     */
     public void paint(Graphics g) {
         if (!alienHit) {
             g.drawImage(alienImage, upperLeftOfAlien.x, upperLeftOfAlien.y, ALIENSIZE, ALIENSIZE, null);
@@ -68,15 +63,12 @@ public class Alien {
     public Point getUpperLeft() {
         return upperLeftOfAlien;
     }
-
-
-
-    /**
+     /**
      * Set the Image to be used by the Alien Object
      */
     public static void loadAlienPic() {
-
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Alien.alienImage = toolkit.getImage("Alien.png");
+        alienImage = toolkit.getImage("Alien.png");
     }
+
 }
