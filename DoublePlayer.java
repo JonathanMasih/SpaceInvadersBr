@@ -6,11 +6,10 @@ import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
 /**
- * This GUI will be set up to show one player attemoting to shoot aliends and
- * other ships
- * while avoiding their lasers as well.
- * 
- * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
+ * This setup is for two players to shoot at each other
+ * Unlike Single Player, these players move similar to the game Astroids
+ *
+ * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio, Tyler Streithorst
  * @version Spring 2022
  */
 public class DoublePlayer extends Thread implements KeyListener  {
@@ -24,26 +23,28 @@ public class DoublePlayer extends Thread implements KeyListener  {
     private Image backgroundImage;
     private Clip clip;
     protected static JPanel gamePanel;
-    private Player player1;
-    private Player2 player2;
+    private MultiPlayer1 player1;
+    private MultiPlayer2 player2;
     private ArrayList<PlayerBullet> bulletList;
     private ArrayList<Shield> shieldList;
     private ArrayList<Alien> alienList;
 
+    private boolean keyPress_W = false;
     private boolean keyPress_A = false;
+    private boolean keyPress_S = false;
     private boolean keyPress_D = false;
+    private boolean keyPress_UP = false;
+    private boolean keyPress_DOWN = false;
     private boolean keyPress_LEFT = false;
     private boolean keyPress_RIGHT = false;
-
-    Point currentPosPlayer1;
 
     public DoublePlayer(JFrame frame, Image img, Clip clip){
         this.frame = frame;
         this.backgroundImage = img;
         this.clip = clip;
         // Creates the players when the game starts
-        this.player1 = new Player(new Point(350, Player.PLAYERYPOS));
-        this.player2 = new Player2(new Point(350, Player2.PLAYER2YPOS));
+        this.player1 = new MultiPlayer1(new Point(350, Player.PLAYERYPOS));
+        this.player2 = new MultiPlayer2(new Point(350, MultiPlayer2.PLAYER2YPOS));
         // creates the ArrayList<Bullet>
         this.bulletList = new ArrayList<PlayerBullet>();
         // Makes the Arraylist shields
@@ -89,6 +90,7 @@ public class DoublePlayer extends Thread implements KeyListener  {
         gamePanel = new JPanel() {
             @Override
             public void paintComponent (Graphics g) {
+                //g = (Graphics2D)g;
                 // first, we should call the paintComponent method we are
                 // overriding in JPanel
                 super.paintComponent(g);
@@ -128,28 +130,15 @@ public class DoublePlayer extends Thread implements KeyListener  {
                 
                 // draws the bullets
                 int k = 0;
-                while (k < bulletList.size()) {
-                    Bullet b = bulletList.get(k);
+                while (k < MultiPlayer1.playerBulletsList.size()) {
+                    MultiPlayerBullet b = MultiPlayer1.playerBulletsList.get(k);
                     if (b.isOffPanel()) {
-                        bulletList.remove(k);
+                        MultiPlayer1.playerBulletsList.remove(k);
                     } else {
                         b.paint(g);
                         k++;
                     }
                 }
-
-                // draws enemy the bullets
-                int l = 0;
-                while (l < EnemyPlayer.enemiesBulletsList.size()) {
-                    Bullet b = EnemyPlayer.enemiesBulletsList.get(l);
-                    if (b.isOffPanel()) {
-                        EnemyPlayer.enemiesBulletsList.remove(l);
-                    } else {
-                        b.paint(g);
-                        l++;
-                    }
-                }
-
             }
         };
 
@@ -161,16 +150,39 @@ public class DoublePlayer extends Thread implements KeyListener  {
                         sleep(DELAY_TIME);
                     } catch (InterruptedException e) {
                     }
+                    // Rotate Player 1
                     if(keyPress_A)
-                        player1.translate(-MOVE_BY);
+                        player1.rotate(false); //false for counterclockwise
                     if(keyPress_D)
-                        player1.translate(MOVE_BY);
+                        player1.rotate(true); //true for clockwise
+                    // Move Player 1
+                    if(keyPress_W)
+                        player1.modifySpeed(0.1);
+                    else if (player1.getSpeed() > 0.1)
+                        player1.modifySpeed(-0.05);
+                    if(keyPress_S)
+                        player1.modifySpeed(-0.1);
+                    else if (player1.getSpeed() < -0.1)
+                        player1.modifySpeed(0.05);
+                    player1.translate(MOVE_BY);
+
+                    // Rotate Player 2
                     if(keyPress_LEFT)
-                        player2.translate(-MOVE_BY);
+                        player2.rotate(false); //false for counterclockwise
                     if(keyPress_RIGHT)
-                        player2.translate(MOVE_BY);
-                        //player2.rotate(gamePanel, true);
-                    currentPosPlayer1 = player1.getPlayerCenter();
+                        player2.rotate(true); //true for clockwise
+                    // Move Player 2
+                    if(keyPress_UP)
+                        player2.modifySpeed(0.1);
+                    else if (!keyPress_UP && player2.getSpeed() > 0.1)
+                        player2.modifySpeed(-0.05);
+                    if(keyPress_DOWN)
+                        player2.modifySpeed(-0.1);
+                    else if (!keyPress_DOWN && player2.getSpeed() < -0.1)
+                        player2.modifySpeed(0.05);
+                    player2.translate(MOVE_BY);
+
+                    // Finally, Repaint
                     gamePanel.repaint();
                 }
             }
@@ -193,23 +205,26 @@ public class DoublePlayer extends Thread implements KeyListener  {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        currentPosPlayer1 = player1.getPlayerCenter();
-        Point currentPosPlayer2 = player2.getPlayer2Center();
-
-        // Moves the player depending on which button is pressed
-        if (e.getKeyCode() == KeyEvent.VK_A) {
+        // Sets the booleans to true when a move key is pressed
+        // Fires when the appropriate key is pressed
+        if (e.getKeyCode() == KeyEvent.VK_W) {
+            keyPress_W = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_A) {
             keyPress_A = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_S) {
+            keyPress_S = true;
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
             keyPress_D = true;
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            PlayerBullet bullet = new PlayerBullet(gamePanel, currentPosPlayer1);
-            bullet.start();
-            bulletList.add(bullet);
+            player1.fireBullet(gamePanel);
+        } else if (e.getKeyCode() == KeyEvent.VK_UP) {
+            keyPress_UP = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            keyPress_DOWN = true;
         } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             keyPress_LEFT = true;
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             keyPress_RIGHT = true;
-            //player2.rotate(true);
         } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             player2.fireBullet(gamePanel);
         } else {
@@ -219,10 +234,18 @@ public class DoublePlayer extends Thread implements KeyListener  {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_A) {
+        if (e.getKeyCode() == KeyEvent.VK_W) {
+            keyPress_W = false;
+        } else if (e.getKeyCode() == KeyEvent.VK_A) {
             keyPress_A = false;
+        } else if (e.getKeyCode() == KeyEvent.VK_S) {
+            keyPress_S = false;
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
             keyPress_D = false;
+        } else if (e.getKeyCode() == KeyEvent.VK_UP) {
+            keyPress_UP = false;
+        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            keyPress_DOWN = false;
         } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             keyPress_LEFT = false;
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
