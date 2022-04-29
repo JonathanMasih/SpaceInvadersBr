@@ -14,14 +14,14 @@ public class MultiPlayer1 {
     protected final static int PLAYER1YPOS = 50;
     protected int lives;
     protected double speed;
-    protected static ArrayList<MultiPlayerBullet> playerBulletsList = new ArrayList<>();
+    protected static ArrayList<MultiPlayerBullet> player1BulletsList = new ArrayList<>();
     protected boolean rotatingClockwise = false;
     protected int rotation = 0;
 
     public MultiPlayer1(Point startPos) {
         this.lives = 5;
         this.speed = 0;
-        this.upperLeftOfPlayer1 = new Point(startPos.x-32, startPos.y-34);
+        this.upperLeftOfPlayer1 = new Point(startPos.x, startPos.y);
         this.centerOfPlayer1 = new Point(startPos.x + (Player.PLAYERSIZE / 2),
                 upperLeftOfPlayer1.y + (Player.PLAYERSIZE / 2));
     }
@@ -42,9 +42,15 @@ public class MultiPlayer1 {
      * @param g the Graphics object where the shape should be drawn
      */
     public void paint(Graphics g) {
-        g.drawImage(player1Image, upperLeftOfPlayer1.x, upperLeftOfPlayer1.y, Player.PLAYERSIZE+32,
-                Player.PLAYERSIZE+34, null);
+        g.drawImage(player1Image, upperLeftOfPlayer1.x, upperLeftOfPlayer1.y, Player.PLAYERSIZE,
+                Player.PLAYERSIZE, null);
+        if(DoublePlayer.debugMode) {
+            g.setColor(Color.WHITE);
+            g.drawString("X: " + Integer.toString(centerOfPlayer1.x) + ",  Y: " + Integer.toString(centerOfPlayer1.y), 600, 670);
+            g.drawString("Rotation: " + Integer.toString(rotation), 600, 685);
+            g.drawString("Blue Bullets: " + player1BulletsList.size(), 600, 700);
         }
+    }
 
     public void rotate(boolean clockwise) {
         // Get Dimensions of image
@@ -98,15 +104,15 @@ public class MultiPlayer1 {
         if (upperLeftOfPlayer1.x < 0) {
             upperLeftOfPlayer1.x = 0;
         }
-        else if (upperLeftOfPlayer1.x > SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE + 6) / 2)) {
-            upperLeftOfPlayer1.x = SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE + 6) / 2);
+        else if (upperLeftOfPlayer1.x > SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE) / 2)) {
+            upperLeftOfPlayer1.x = SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE) / 2);
         }
         if (upperLeftOfPlayer1.y < 0)
             upperLeftOfPlayer1.y = 0;
-        else if(upperLeftOfPlayer1.y > SinglePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE-32)
-            upperLeftOfPlayer1.y = SinglePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE-32;
-        centerOfPlayer1 = new Point(upperLeftOfPlayer1.x + ((Player.PLAYERSIZE + 32) / 2),
-                upperLeftOfPlayer1.y + ((Player.PLAYERSIZE + 34) / 2));
+        else if(upperLeftOfPlayer1.y > SinglePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE)
+            upperLeftOfPlayer1.y = SinglePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE;
+        centerOfPlayer1 = new Point(upperLeftOfPlayer1.x + ((Player.PLAYERSIZE) / 2),
+                upperLeftOfPlayer1.y + ((Player.PLAYERSIZE) / 2));
     }
 
     /**
@@ -147,10 +153,10 @@ public class MultiPlayer1 {
      */
     public void fireBullet(Component c){
         MultiPlayerBullet bullet = new MultiPlayerBullet(c ,
-        new Point (centerOfPlayer1.x + (int)(50*Math.cos(Math.toRadians(rotation-90)))
-            , centerOfPlayer1.y + (int)(50*Math.sin(Math.toRadians(rotation-90)))), rotation);
+        new Point (centerOfPlayer1.x + (int)(40*Math.cos(Math.toRadians(rotation-90)))
+            , centerOfPlayer1.y + (int)(40*Math.sin(Math.toRadians(rotation-90)))), rotation);
         bullet.start();
-        playerBulletsList.add(bullet);
+        player1BulletsList.add(bullet);
     }
 
 }
