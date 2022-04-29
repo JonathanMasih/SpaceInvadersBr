@@ -13,11 +13,11 @@ import javax.sound.sampled.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class SinglePlayer extends Thread implements KeyListener {
+public class SinglePlayer extends Thread implements KeyListener , ActionListener {
     protected final static int GAME_PANEL_WIDTH = 800;
     protected final static int GAME_PANEL_HEIGHT = 850;
     // amount to the move player on each key press
-    protected static final int MOVE_BY = 10;
+    protected static final int MOVE_BY = 15;
     // for repaint thread
     private static final int DELAY_TIME = 33;
     private JFrame frame;
@@ -36,6 +36,11 @@ public class SinglePlayer extends Thread implements KeyListener {
     private  JLabel playerPointLabel;
     //Counter to slow down the shooting and stop spaming of player
     private int shootCounter = 5;
+    //Keeps track of if the game is over or not.
+    private boolean gameOver;
+    //button to start and restart the game
+    private JButton currentButton;
+    private boolean gameStarted;
 
     private boolean keyPress_A = false;
     private boolean keyPress_D = false;
@@ -44,6 +49,7 @@ public class SinglePlayer extends Thread implements KeyListener {
         this.frame = frame;
         this.backgroundImage = img;
         this.clip = clip;
+        this.gameOver = false;
         // Creates a player when the game started
         this.player = new Player(new Point(350, Player.PLAYERYPOS));
         // creates the ArrayList<Bullet>
@@ -54,7 +60,7 @@ public class SinglePlayer extends Thread implements KeyListener {
         this.alienList = new ArrayList<Alien>();
         // Creating array list of enemy players
         this.enemyList = new ArrayList<EnemyPlayer>();
-        //player points equal to 0 in the begining of the game
+        this.gameStarted = false;
     }
 
     /**
@@ -115,7 +121,12 @@ public class SinglePlayer extends Thread implements KeyListener {
                 g.drawRect(0, 0,  GAME_PANEL_WIDTH -2 , GAME_PANEL_HEIGHT);
                 // draw the player
                 player.paint(g);
-
+                
+             // if(gameOver == false && gameStarted == true){
+                    //meaning player is dead
+                if(player.getPlayerLives() == 0){
+                      gameOver = true;
+                    }
                 // collision between the player and enemybullet
                 int l = 0;
                 while (l < EnemyPlayer.enemiesBulletsList.size()) {
@@ -231,8 +242,8 @@ public class SinglePlayer extends Thread implements KeyListener {
                         b.paint(g);
                         q++;
                     }
-                }
-
+                 }
+               // }
             }
         };
         // Making an enemies
@@ -250,6 +261,9 @@ public class SinglePlayer extends Thread implements KeyListener {
                     try {
                         sleep(DELAY_TIME);
                     } catch (InterruptedException e) {
+                    }
+                    if(enemyList.size() == 0 && alienList.size() == 0 ){
+
                     }
                     //decrement so the player can shoot
                     if(shootCounter > 0 ){
@@ -282,6 +296,10 @@ public class SinglePlayer extends Thread implements KeyListener {
         playerPointLabel.setForeground(Color.WHITE);
         centerPanelForScoreboardPanel.add(playerPointLabel);
         centerPanelForScoreboardPanel.setOpaque(false);
+        //button to start the game and restart game
+        currentButton = new JButton("Start Game");
+        currentButton.addActionListener(this);
+        centerPanelForScoreboardPanel.add( currentButton);
         scoreboardPanel.add( centerPanelForScoreboardPanel , BorderLayout.EAST);
 
 
@@ -299,6 +317,24 @@ public class SinglePlayer extends Thread implements KeyListener {
         // display the window we've created
         frame.pack();
         frame.setVisible(true);
+    }
+    
+    /**
+     * Method called when the player has killed all the aliens and
+     * enemey ships to move the player into the next live if the player 
+     * is still Alive 
+     * 
+     */
+    public void nextLevel(){
+
+
+    }
+    /**
+     *Restarts the game.
+     * 
+     */
+    public void restartGame(){
+
     }
 
     @Override
@@ -334,6 +370,19 @@ public class SinglePlayer extends Thread implements KeyListener {
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
             keyPress_D = false;
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        JButton temp = (JButton) e.getSource();
+        if(temp.getText().equals("Start Game")){
+            gameStarted = true;
+            gamePanel.requestFocus();
+            currentButton.setText("Restart Game");
+       }else if(temp.getText().equals("Restart Game")){
+       
+       }
+        
     }
 
 }
