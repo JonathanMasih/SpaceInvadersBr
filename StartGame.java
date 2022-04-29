@@ -160,7 +160,9 @@ public class StartGame implements ActionListener, Runnable{
         Player.loadPlayerPic();
         //loads the image of the enemy
         EnemyPlayer.loadEnemyPic();
-        Player2.loadEnemyPic();
+        // Load both scaled multiplayer images
+        MultiPlayer1.loadPlayerPic();
+        MultiPlayer2.loadEnemyPic();
         //loads the image of the alien
         Alien1.loadAlienPic();
         Alien2.loadAlien2Pic();
