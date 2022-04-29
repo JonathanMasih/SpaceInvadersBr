@@ -17,12 +17,17 @@ public class MultiPlayerBullet extends Bullet {
         centerPoint = new Point(currentPos.x, currentPos.y) ;
     }
 
+    @Override
+    public Point getUpperLeft() {
+        return new Point(centerPoint.x-10, centerPoint.y-10);
+    }
+
      /**
      * Run method to define the life of this bullet.
      */
     @Override
     public void run() {
-        while (centerPoint.x > 0 && centerPoint.x < SinglePlayer.GAME_PANEL_WIDTH-Player.PLAYERSIZE-32 && centerPoint.y < SinglePlayer.GAME_PANEL_HEIGHT  && centerPoint.x > 0) {
+        while (centerPoint.x > 0 && centerPoint.x < SinglePlayer.GAME_PANEL_WIDTH-Player.PLAYERSIZE-32 && centerPoint.y < SinglePlayer.GAME_PANEL_HEIGHT  && centerPoint.y > 0) {
             // every 30 ms or so, we move the coordinates of bullet
             sleepWithCatch(DELAY_TIME);
             centerPoint.translate((int)(10*Math.cos(Math.toRadians(rotationInt-90))), (int)(10*Math.sin(Math.toRadians(rotationInt-90))));
