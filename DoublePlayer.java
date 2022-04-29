@@ -12,9 +12,10 @@ import javax.sound.sampled.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio, Tyler Streithorst
  * @version Spring 2022
  */
-public class DoublePlayer extends Thread implements KeyListener  {
+public class DoublePlayer extends Thread implements KeyListener, ActionListener  {
     protected final static int GAME_PANEL_WIDTH = 800;
-    protected final static int GAME_PANEL_HEIGHT = 850;
+    protected final static int GAME_PANEL_HEIGHT = 750;
+    protected static boolean debugMode = true;
     // amount to the move player on each key press
     protected static final int MOVE_BY = 5;
     // for repaint thread
@@ -23,6 +24,7 @@ public class DoublePlayer extends Thread implements KeyListener  {
     private Image backgroundImage;
     private Clip clip;
     protected static JPanel gamePanel;
+    protected JLabel scoresLabel;
     private MultiPlayer1 player1;
     private MultiPlayer2 player2;
     private ArrayList<PlayerBullet> bulletList;
@@ -97,9 +99,6 @@ public class DoublePlayer extends Thread implements KeyListener  {
                 g.setColor(Color.WHITE);
                 // draws the border for the game
                 g.drawRect(0, 0, 700, GAME_PANEL_HEIGHT);
-                // draw the player
-                player1.paint(g);
-                player2.paint(g);
                 // draws the shields
                 int i = 0;
                 while (i < shieldList.size()) {
@@ -113,32 +112,65 @@ public class DoublePlayer extends Thread implements KeyListener  {
                 }
  
                 //draws Player 2 after checking to see if it was hit
-                // This should be replicated for player 1
-                for (int z = 0; z < bulletList.size(); z++) {
-                    Point upperLeftBullet = bulletList.get(z).getUpperLeft();
-                    Point upperLeftEnemy =  player2.getUpperLeft();
-                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, Bullet.bulletWidth, Bullet.bulletHeight,
-                    upperLeftEnemy.x, upperLeftEnemy.y, Player.PLAYERSIZE, Player.PLAYERSIZE)) {
-                        player2.hitPlayer() ;
-                        bulletList.get(z).bulletHit();
-                        bulletList.remove(z);
+                // The calculation uses BulletSpeed because that will calculate an encompassing square around the polygon
+                for (int j = 0; j < MultiPlayer1.player1BulletsList.size(); j++) {
+                    Point upperLeftBullet = MultiPlayer1.player1BulletsList.get(j).getUpperLeft();
+                    Point P2UpperLeft =  player2.getUpperLeft();
+                    
+                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 10, 10,
+                    P2UpperLeft.x, P2UpperLeft.y, Player.PLAYERSIZE, Player.PLAYERSIZE)) {
+                        player2.hitPlayer();
+                        MultiPlayer1.player1BulletsList.get(j).bulletHit();
+                        MultiPlayer1.player1BulletsList.remove(j);
+                        scoresLabel.setText("Blue: " + player1.getPlayer1Lives() + "  Red: " + player2.getPlayer2Lives());
                     }
                 }
                 if (player2.getPlayer2Lives() > 0) {
                     player2.paint(g);
                 }
-                
-                // draws the bullets
-                int k = 0;
-                while (k < MultiPlayer1.playerBulletsList.size()) {
-                    MultiPlayerBullet b = MultiPlayer1.playerBulletsList.get(k);
-                    if (b.isOffPanel()) {
-                        MultiPlayer1.playerBulletsList.remove(k);
-                    } else {
-                        b.paint(g);
-                        k++;
+
+                for (int k = 0; k < MultiPlayer2.player2BulletsList.size(); k++) {
+                    Point upperLeftBullet = MultiPlayer2.player2BulletsList.get(k).getUpperLeft();
+                    Point P1UpperLeft = player1.getUpperLeft();
+                    
+                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 10, 10,
+                    P1UpperLeft.x, P1UpperLeft.y, Player.PLAYERSIZE, Player.PLAYERSIZE)) {
+                        player1.hitPlayer() ;
+                        MultiPlayer2.player2BulletsList.get(k).bulletHit();
+                        MultiPlayer2.player2BulletsList.remove(k);
+                        scoresLabel.setText("Blue: " + player1.getPlayer1Lives() + "  Red: " + player2.getPlayer2Lives());
                     }
                 }
+                if (player1.getPlayer1Lives() > 0) {
+                    player1.paint(g);
+                }
+                
+                // draws the bullets
+                int z = 0;
+                while (z < MultiPlayer1.player1BulletsList.size()) {
+                    MultiPlayerBullet b = MultiPlayer1.player1BulletsList.get(z);
+                    if (b.isOffPanel()) {
+                        MultiPlayer1.player1BulletsList.remove(z);
+                    } else {
+                        b.paint(g);
+                        z++;
+                    }
+                }
+                z = 0;
+                while (z < MultiPlayer2.player2BulletsList.size()) {
+                    MultiPlayerBullet b = MultiPlayer2.player2BulletsList.get(z);
+                    if (b.isOffPanel()) {
+                        MultiPlayer2.player2BulletsList.remove(z);
+                    } else {
+                        b.paint(g);
+                        z++;
+                    }
+                }
+
+                //if(debugMode) {
+                    //g.setColor(Color.WHITE);
+                    //g.drawString("Blue Bullets: " + MultiPlayer1.player1BulletsList.size() + "\nRed Bullets: " + MultiPlayer2.player2BulletsList.size(), 600, 760);
+                //}
             }
         };
 
@@ -190,7 +222,37 @@ public class DoublePlayer extends Thread implements KeyListener  {
         // sets the size of the game panel
         gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
         gamePanel.setOpaque(false);
-        backGroundPanel.add(gamePanel);
+
+
+        //scoreboards panel 
+
+        JPanel scoreboardPanel= new JPanel(new BorderLayout());
+        //scoreboardPanel.setLayout(new  BoxLayout( scoreboardPanel ,BoxLayout.Y_AXIS));
+        JPanel centerPanelForScoreboardPanel = new JPanel();
+        centerPanelForScoreboardPanel.setLayout(new  BoxLayout( centerPanelForScoreboardPanel ,BoxLayout.Y_AXIS));
+        
+        scoreboardPanel.setLayout(new BorderLayout());
+        scoreboardPanel.setOpaque(false);
+        scoreboardPanel.setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - 
+        GAME_PANEL_WIDTH -50, GAME_PANEL_HEIGHT));
+        scoresLabel = new JLabel("Blue: " + player1.getPlayer1Lives() + "  Red: " + player2.getPlayer2Lives());
+        scoresLabel.setForeground(Color.WHITE);
+        centerPanelForScoreboardPanel.add(scoresLabel);
+        JLabel controlsLabel = new JLabel("<html><br>Controls<br>Blue<br>W, A, S, D to move<br>SPACE to shoot<br><br>Red<br>Arrow Keys to move<br>ENTER to shoot</html>");
+        controlsLabel.setForeground(Color.WHITE);
+        centerPanelForScoreboardPanel.add(controlsLabel);
+        centerPanelForScoreboardPanel.setOpaque(false);
+        //button to start the game and restart game
+        JButton currentButton = new JButton("Start Game");
+        currentButton.addActionListener(this);
+        centerPanelForScoreboardPanel.add( currentButton);
+        scoreboardPanel.add( centerPanelForScoreboardPanel , BorderLayout.EAST);
+
+
+        
+        backGroundPanel.setLayout(new BorderLayout());
+        backGroundPanel.add(gamePanel , BorderLayout.WEST);
+        backGroundPanel.add(scoreboardPanel, BorderLayout.EAST);
 
         frame.add(backGroundPanel);
         // Checks if any key is pressed
@@ -259,5 +321,10 @@ public class DoublePlayer extends Thread implements KeyListener  {
     public void keyTyped(KeyEvent e) {
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Ill do this later
     }
 }
