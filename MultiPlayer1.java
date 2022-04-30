@@ -17,6 +17,7 @@ public class MultiPlayer1 {
     protected static ArrayList<MultiPlayerBullet> player1BulletsList = new ArrayList<>();
     protected boolean rotatingClockwise = false;
     protected int rotation = 0;
+    private int shotCooldown;
 
     public MultiPlayer1(Point startPos) {
         this.lives = 5;
@@ -24,6 +25,7 @@ public class MultiPlayer1 {
         this.upperLeftOfPlayer1 = new Point(startPos.x, startPos.y);
         this.centerOfPlayer1 = new Point(startPos.x + (Player.PLAYERSIZE / 2),
                 upperLeftOfPlayer1.y + (Player.PLAYERSIZE / 2));
+        shotCooldown = 0;
     }
 
     /**
@@ -49,6 +51,7 @@ public class MultiPlayer1 {
             g.drawString("X: " + Integer.toString(centerOfPlayer1.x) + ",  Y: " + Integer.toString(centerOfPlayer1.y), 600, 670);
             g.drawString("Rotation: " + Integer.toString(rotation), 600, 685);
             g.drawString("Blue Bullets: " + player1BulletsList.size(), 600, 700);
+            g.drawRect(upperLeftOfPlayer1.x, upperLeftOfPlayer1.y, Player.PLAYERSIZE, Player.PLAYERSIZE);
         }
     }
 
@@ -148,6 +151,18 @@ public class MultiPlayer1 {
     public void hitPlayer(){
         lives--;
     }
+
+    public int getShotCooldown() {
+        return shotCooldown;
+    }
+    public void setCooldown(int n) {
+        shotCooldown = n;
+    }
+    public void cooldown() {
+        if(shotCooldown > 0)
+            shotCooldown--;
+    }
+
         /**
      * Run method to define the life of this bullet.
      */

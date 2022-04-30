@@ -111,13 +111,13 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                     }
                 }
  
-                //draws Player 2 after checking to see if it was hit
-                // The calculation uses BulletSpeed because that will calculate an encompassing square around the polygon
+                //draws Players after checking to see if it was hit
+                // The calculation uses 6 as the width/height of the hitbox
                 for (int j = 0; j < MultiPlayer1.player1BulletsList.size(); j++) {
                     Point upperLeftBullet = MultiPlayer1.player1BulletsList.get(j).getUpperLeft();
                     Point P2UpperLeft =  player2.getUpperLeft();
                     
-                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 10, 10,
+                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 6, 6,
                     P2UpperLeft.x, P2UpperLeft.y, Player.PLAYERSIZE, Player.PLAYERSIZE)) {
                         player2.hitPlayer();
                         MultiPlayer1.player1BulletsList.get(j).bulletHit();
@@ -133,7 +133,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                     Point upperLeftBullet = MultiPlayer2.player2BulletsList.get(k).getUpperLeft();
                     Point P1UpperLeft = player1.getUpperLeft();
                     
-                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 10, 10,
+                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 6, 6,
                     P1UpperLeft.x, P1UpperLeft.y, Player.PLAYERSIZE, Player.PLAYERSIZE)) {
                         player1.hitPlayer() ;
                         MultiPlayer2.player2BulletsList.get(k).bulletHit();
@@ -182,6 +182,10 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                         sleep(DELAY_TIME);
                     } catch (InterruptedException e) {
                     }
+                    // Decrease cooldown
+                    player1.cooldown();
+                    player2.cooldown();
+
                     // Rotate Player 1
                     if(keyPress_A)
                         player1.rotate(false); //false for counterclockwise
@@ -233,8 +237,8 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         
         scoreboardPanel.setLayout(new BorderLayout());
         scoreboardPanel.setOpaque(false);
-        scoreboardPanel.setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - 
-        GAME_PANEL_WIDTH -50, GAME_PANEL_HEIGHT));
+        scoreboardPanel.setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - GAME_PANEL_WIDTH -50, GAME_PANEL_HEIGHT));
+        
         scoresLabel = new JLabel("Blue: " + player1.getPlayer1Lives() + "  Red: " + player2.getPlayer2Lives());
         scoresLabel.setForeground(Color.WHITE);
         centerPanelForScoreboardPanel.add(scoresLabel);
@@ -245,8 +249,8 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         //button to start the game and restart game
         JButton currentButton = new JButton("Start Game");
         currentButton.addActionListener(this);
-        centerPanelForScoreboardPanel.add( currentButton);
-        scoreboardPanel.add( centerPanelForScoreboardPanel , BorderLayout.EAST);
+        centerPanelForScoreboardPanel.add(currentButton);
+        scoreboardPanel.add(centerPanelForScoreboardPanel , BorderLayout.EAST);
 
 
         
@@ -278,7 +282,10 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
             keyPress_D = true;
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            player1.fireBullet(gamePanel);
+            if(player1.getShotCooldown() == 0) {
+                player1.fireBullet(gamePanel);
+                player1.setCooldown(4);
+            }
         } else if (e.getKeyCode() == KeyEvent.VK_UP) {
             keyPress_UP = true;
         } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -288,7 +295,10 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             keyPress_RIGHT = true;
         } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            player2.fireBullet(gamePanel);
+            if(player1.getShotCooldown() == 0) {
+                player2.fireBullet(gamePanel);
+                player2.setCooldown(4);
+            }
         } else {
             return;
         }
@@ -326,5 +336,6 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
     @Override
     public void actionPerformed(ActionEvent e) {
         // Ill do this later
+        frame.requestFocus();
     }
 }

@@ -17,12 +17,14 @@ public class MultiPlayer2 {
     protected boolean rotatingClockwise = false;
     protected int rotation = 180;
     protected double speed;
+    private int shotCooldown;
 
     public MultiPlayer2(Point startPos) {
         this.lives = 5;
         this.upperLeftOfPlayer2 = new Point(startPos.x, startPos.y);
         this.centerOfPlayer2 = new Point(startPos.x + ((Player.PLAYERSIZE) / 2),
                 upperLeftOfPlayer2.y + ((Player.PLAYERSIZE) / 2));
+        shotCooldown = 0;
     }
 
     /**
@@ -49,6 +51,7 @@ public class MultiPlayer2 {
             g.drawString("X: " + Integer.toString(centerOfPlayer2.x) + ",  Y: " + Integer.toString(centerOfPlayer2.y), 600, 715);
             g.drawString("Rotation: " + Integer.toString(rotation), 600, 730);
             g.drawString("Blue Bullets: " + player2BulletsList.size(), 600, 745);
+            g.drawRect(upperLeftOfPlayer2.x, upperLeftOfPlayer2.y, Player.PLAYERSIZE, Player.PLAYERSIZE);
         }
     }
 
@@ -147,6 +150,18 @@ public class MultiPlayer2 {
     public void hitPlayer(){
         lives--;
     }
+
+    public int getShotCooldown() {
+        return shotCooldown;
+    }
+    public void setCooldown(int n) {
+        shotCooldown = n;
+    }
+    public void cooldown() {
+        if(shotCooldown > 0)
+            shotCooldown--;
+    }
+
         /**
      * Run method to define the life of this bullet.
      */
