@@ -39,13 +39,13 @@ public class MultiPlayerBullet extends Bullet {
     public void paint(Graphics g) {
         g.setColor(Color.WHITE);
         // The offest of one is more a more accurate allignment with the hitbox
-        int[] Xs = {(int)(centerPoint.x-6*Math.cos(Math.toRadians(rotationInt-90-30)))-1, (int)(centerPoint.x-6*Math.cos(Math.toRadians(rotationInt-90+30)))-1,
-            (int)(centerPoint.x-6*Math.cos(Math.toRadians(rotationInt+90-30)))-1, (int)(centerPoint.x-6*Math.cos(Math.toRadians(rotationInt+90+30)))-1};
-        int[] Ys = {(int)(centerPoint.y-6*Math.sin(Math.toRadians(rotationInt-90-30)))-1, (int)(centerPoint.y-6*Math.sin(Math.toRadians(rotationInt-90+30)))-1,
-            (int)(centerPoint.y-6*Math.sin(Math.toRadians(rotationInt+90-30)))-1, (int)(centerPoint.y-6*Math.sin(Math.toRadians(rotationInt+90+30)))-1};
+        int[] Xs = {(int)(centerPoint.x-6*Math.cos(Math.toRadians(rotationInt-90-30))), (int)(centerPoint.x-6*Math.cos(Math.toRadians(rotationInt-90+30))),
+            (int)(centerPoint.x-6*Math.cos(Math.toRadians(rotationInt+90-30))), (int)(centerPoint.x-6*Math.cos(Math.toRadians(rotationInt+90+30)))};
+        int[] Ys = {(int)(centerPoint.y-6*Math.sin(Math.toRadians(rotationInt-90-30))), (int)(centerPoint.y-6*Math.sin(Math.toRadians(rotationInt-90+30))),
+            (int)(centerPoint.y-6*Math.sin(Math.toRadians(rotationInt+90-30))), (int)(centerPoint.y-6*Math.sin(Math.toRadians(rotationInt+90+30)))};
         g.fillPolygon(Xs, Ys, 4);
         if(DoublePlayer.debugMode)
-            g.drawRect(centerPoint.x-6, centerPoint.y-6, 6, 6);
+            g.drawRect(centerPoint.x-5, centerPoint.y-5, 5, 5);
     }
 
 }

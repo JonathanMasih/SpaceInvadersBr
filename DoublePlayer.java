@@ -112,12 +112,12 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                 }
  
                 //draws Players after checking to see if it was hit
-                // The calculation uses 6 as the width/height of the hitbox
+                // The calculation uses 5 as the width/height of the hitbox to apporximate the trigonometry
                 for (int j = 0; j < MultiPlayer1.player1BulletsList.size(); j++) {
                     Point upperLeftBullet = MultiPlayer1.player1BulletsList.get(j).getUpperLeft();
                     Point P2UpperLeft =  player2.getUpperLeft();
                     
-                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 6, 6,
+                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 5, 5,
                     P2UpperLeft.x, P2UpperLeft.y, Player.PLAYERSIZE, Player.PLAYERSIZE)) {
                         player2.hitPlayer();
                         MultiPlayer1.player1BulletsList.get(j).bulletHit();
@@ -133,7 +133,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                     Point upperLeftBullet = MultiPlayer2.player2BulletsList.get(k).getUpperLeft();
                     Point P1UpperLeft = player1.getUpperLeft();
                     
-                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 6, 6,
+                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 5, 5,
                     P1UpperLeft.x, P1UpperLeft.y, Player.PLAYERSIZE, Player.PLAYERSIZE)) {
                         player1.hitPlayer() ;
                         MultiPlayer2.player2BulletsList.get(k).bulletHit();
