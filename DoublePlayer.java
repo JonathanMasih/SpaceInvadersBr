@@ -34,6 +34,8 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
     private ArrayList<Alien> alienList;
     private boolean gameStarted;
     private JButton currentButton;
+    private JComboBox<String> mapSelect;
+    private String map; // This will be a string that is only updated when the 'Restart Game' button is pressed
 
     private boolean keyPress_W = false;
     private boolean keyPress_A = false;
@@ -156,7 +158,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                     player2.paint(g);
                 }
                 else {
-                    player2Score++;
+                    player1Score++;
                     newGame();
                 }
 
@@ -176,7 +178,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                     player1.paint(g);
                 }
                 else {
-                    player1Score++;
+                    player2Score++;
                     newGame();
                 }
                 
@@ -279,14 +281,34 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         scoresLabel.setForeground(Color.WHITE);
         scoresLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         centerPanelForScoreboardPanel.add(scoresLabel);
-        JLabel controlsLabel = new JLabel("<html><p align=\"center\"><br><br>Controls<br><br>Blue<br>W, A, S, D to move<br>SPACE to shoot<br><br>Red<br>Arrow Keys to move<br>ENTER to shoot</p></html>");
+        JLabel controlsLabel = new JLabel("<html><p align=\"center\"><br><br>Controls<br><br>Blue<br>W, A, S, D to move<br>SPACE to shoot<br><br>Red<br>Arrow Keys to move<br>ENTER to shoot<br><br></p></html>");
         controlsLabel.setForeground(Color.WHITE);
         controlsLabel.setFont(new Font(controlsLabel.getFont().getFontName(), controlsLabel.getFont().getStyle(), 16));
         controlsLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         centerPanelForScoreboardPanel.add(controlsLabel, BorderLayout.SOUTH);
         centerPanelForScoreboardPanel.setOpaque(false);
+        
+        // Add map selector and Jlabel
+        JLabel mapLabel = new JLabel("Map Select");
+        mapLabel.setForeground(Color.WHITE);
+        mapLabel.setFont(new Font(mapLabel.getFont().getFontName(), mapLabel.getFont().getStyle(), 16));
+        mapLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        centerPanelForScoreboardPanel.add(mapLabel, BorderLayout.SOUTH);
+        mapSelect = new JComboBox<String>();
+        mapSelect.addItem("Default");
+        mapSelect.addItem("Test");
+        mapSelect.addItem("The Wall");
+        mapSelect.addItem("No Shields");
+        mapSelect.setSelectedItem("Default");
+        mapSelect.setMaximumSize(new Dimension(100, 25));
+        centerPanelForScoreboardPanel.add(mapSelect);
+        map = "Default";
+        
+        // Space
+        centerPanelForScoreboardPanel.add(new JLabel(" "), BorderLayout.SOUTH);
+
         //button to start the game and restart game
-        currentButton = new JButton("Start Game");
+        currentButton = new JButton("Restart Game");
         currentButton.addActionListener(this);
         currentButton.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         centerPanelForScoreboardPanel.add(currentButton);
@@ -373,14 +395,11 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        gameStarted = true;
-        currentButton.setText("Restart Game");
         frame.requestFocus();
-
+        map = mapSelect.getSelectedItem().toString();
         player1Score = 0;
         player2Score = 0;
         newGame();
-
     }
     public void newGame() {
         // Update Scoreboard
@@ -394,17 +413,46 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         keyPress_DOWN = false;
         keyPress_LEFT = false;
         keyPress_RIGHT = false;
-        // Call reset methods of the players, resetting speed, location, and rotation
-        player1.reset();
-        player2.reset();
         MultiPlayer1.player1BulletsList.clear();
         MultiPlayer2.player2BulletsList.clear();
-        // Clear and re-add the shields
+
+        // Clear and re-add the shields based on the selected map
+        // Also call reset methods of the players, resetting speed, location, and rotation
         multiPlayerShieldList.clear();
-        multiPlayerShieldList.add(new Shield(new Point(100, Shield.SHIELDPOS-50)));
-        multiPlayerShieldList.add(new Shield(new Point(500, Shield.SHIELDPOS-50)));
-        multiPlayerShieldList.add(new Shield(new Point(100, 150)));
-        multiPlayerShieldList.add(new Shield(new Point(500, 150)));
+        if(map.equals("Default")) {
+            player1.reset(new Point(100, MultiPlayer1.PLAYER1YPOS));
+            player2.reset(new Point(530, MultiPlayer2.PLAYER2YPOS));
+            multiPlayerShieldList.add(new Shield(new Point(100, Shield.SHIELDPOS-50)));
+            multiPlayerShieldList.add(new Shield(new Point(500, Shield.SHIELDPOS-50)));
+            multiPlayerShieldList.add(new Shield(new Point(100, 150)));
+            multiPlayerShieldList.add(new Shield(new Point(500, 150)));
+        }
+        else if (map.equals("Test")) {
+            player1.reset(new Point(50, MultiPlayer1.PLAYER1YPOS));
+            player2.reset(new Point(580, MultiPlayer2.PLAYER2YPOS));
+            multiPlayerShieldList.add(new Shield(new Point(0, Shield.SHIELDPOS-50)));
+            multiPlayerShieldList.add(new Shield(new Point(150, Shield.SHIELDPOS-50)));
+            multiPlayerShieldList.add(new Shield(new Point(300, Shield.SHIELDPOS-50)));
+            multiPlayerShieldList.add(new Shield(new Point(300, 150)));
+            multiPlayerShieldList.add(new Shield(new Point(450, 150)));
+            multiPlayerShieldList.add(new Shield(new Point(600, 150)));
+        }
+        else if(map.equals("The Wall")) {
+            player1.reset(new Point(200, MultiPlayer1.PLAYER1YPOS));
+            player2.reset(new Point(430, MultiPlayer2.PLAYER2YPOS));
+            multiPlayerShieldList.add(new Shield(new Point(0, 375)));
+            multiPlayerShieldList.add(new Shield(new Point(100, 375)));
+            multiPlayerShieldList.add(new Shield(new Point(200, 375)));
+            multiPlayerShieldList.add(new Shield(new Point(300, 375)));
+            multiPlayerShieldList.add(new Shield(new Point(400, 375)));
+            multiPlayerShieldList.add(new Shield(new Point(500, 375)));
+            multiPlayerShieldList.add(new Shield(new Point(600, 375)));
+        }
+        else {
+            player1.reset(new Point(100, MultiPlayer1.PLAYER1YPOS));
+            player2.reset(new Point(530, MultiPlayer2.PLAYER2YPOS));
+        }
+ 
         gamePanel.repaint();
     }
 }
