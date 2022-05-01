@@ -15,7 +15,7 @@ import javax.sound.sampled.*;
 public class DoublePlayer extends Thread implements KeyListener, ActionListener  {
     protected final static int GAME_PANEL_WIDTH = 800;
     protected final static int GAME_PANEL_HEIGHT = 750;
-    protected static boolean debugMode = false;
+    protected static boolean debugMode = true;
     // amount to the move player on each key press
     protected static final int MOVE_BY = 5;
     // for repaint thread
@@ -149,6 +149,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                     if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 5, 5,
                     P2UpperLeft.x, P2UpperLeft.y, Player.PLAYERSIZE, Player.PLAYERSIZE)) {
                         player2.hitPlayer();
+                        player1Score = player1Score + 10;
                         MultiPlayer1.player1BulletsList.get(j).bulletHit();
                         MultiPlayer1.player1BulletsList.remove(j);
                         scoresLabel.setText("Blue: " + player1Score + "  Red: " + player2Score);
@@ -158,7 +159,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                     player2.paint(g);
                 }
                 else {
-                    player1Score++;
+                    player1Score = player1Score + 50;
                     newGame();
                 }
 
@@ -168,7 +169,8 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                     
                     if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 5, 5,
                     P1UpperLeft.x, P1UpperLeft.y, Player.PLAYERSIZE, Player.PLAYERSIZE)) {
-                        player1.hitPlayer() ;
+                        player1.hitPlayer();
+                        player2Score = player2Score + 10;
                         MultiPlayer2.player2BulletsList.get(k).bulletHit();
                         MultiPlayer2.player2BulletsList.remove(k);
                         scoresLabel.setText("Blue: " + player1Score + "  Red: " + player2Score);
@@ -178,7 +180,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                     player1.paint(g);
                 }
                 else {
-                    player2Score++;
+                    player2Score = player2Score + 50;
                     newGame();
                 }
                 
@@ -262,57 +264,52 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         }.start();
         // sets the size of the game panel
         gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
-        gamePanel.setOpaque(false);
+        gamePanel.setOpaque(true);
 
 
         //scoreboards panel 
-
-        JPanel scoreboardPanel= new JPanel(new BorderLayout());
-        //scoreboardPanel.setLayout(new  BoxLayout( scoreboardPanel ,BoxLayout.Y_AXIS));
-        JPanel centerPanelForScoreboardPanel = new JPanel();
-        centerPanelForScoreboardPanel.setLayout(new  BoxLayout( centerPanelForScoreboardPanel ,BoxLayout.Y_AXIS));
-        
-        scoreboardPanel.setLayout(new BorderLayout());
-        scoreboardPanel.setOpaque(false);
-        scoreboardPanel.setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - GAME_PANEL_WIDTH -50, GAME_PANEL_HEIGHT));
+        JPanel scoreboardPanel = new JPanel();
+        scoreboardPanel.setLayout(null);
+        scoreboardPanel.setBounds(GAME_PANEL_WIDTH, 0, FRAMEWIDTH - GAME_PANEL_WIDTH, FRAMEHEIGHT);
+        scoreboardPanel.setOpaque(true);
         
         scoresLabel = new JLabel("Blue: " + player1Score + "  Red: " + player2Score);
         scoresLabel.setFont(new Font(scoresLabel.getFont().getFontName(), scoresLabel.getFont().getStyle(), 20));
         scoresLabel.setForeground(Color.WHITE);
-        scoresLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        centerPanelForScoreboardPanel.add(scoresLabel);
-        JLabel controlsLabel = new JLabel("<html><p align=\"center\"><br><br>Controls<br><br>Blue<br>W, A, S, D to move<br>SPACE to shoot<br><br>Red<br>Arrow Keys to move<br>ENTER to shoot<br><br></p></html>");
-        controlsLabel.setForeground(Color.WHITE);
-        controlsLabel.setFont(new Font(controlsLabel.getFont().getFontName(), controlsLabel.getFont().getStyle(), 16));
-        controlsLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        centerPanelForScoreboardPanel.add(controlsLabel, BorderLayout.SOUTH);
-        centerPanelForScoreboardPanel.setOpaque(false);
+        scoresLabel.setBounds(scoreboardPanel.getWidth() / 3, 0, 150, 50);
+        scoreboardPanel.add(scoresLabel);
         
         // Add map selector and Jlabel
         JLabel mapLabel = new JLabel("Map Select");
         mapLabel.setForeground(Color.WHITE);
         mapLabel.setFont(new Font(mapLabel.getFont().getFontName(), mapLabel.getFont().getStyle(), 16));
-        mapLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        centerPanelForScoreboardPanel.add(mapLabel, BorderLayout.SOUTH);
+        mapLabel.setBounds(scoreboardPanel.getWidth() / 2 - 20, 70, 80, 20);
+        scoreboardPanel.add(mapLabel);
         mapSelect = new JComboBox<String>();
         mapSelect.addItem("Default");
         mapSelect.addItem("Test");
         mapSelect.addItem("The Wall");
         mapSelect.addItem("No Shields");
         mapSelect.setSelectedItem("Default");
-        mapSelect.setMaximumSize(new Dimension(100, 25));
-        centerPanelForScoreboardPanel.add(mapSelect);
+        mapSelect.setBounds(scoreboardPanel.getWidth() / 3, mapLabel.getY() + 30, 70, 20)
+        scoreboardPanel.add(mapSelect);
         map = "Default";
         
         // Space
-        centerPanelForScoreboardPanel.add(new JLabel(" "), BorderLayout.SOUTH);
+        scoreboardPanel.add(new JLabel(" "));
 
         //button to start the game and restart game
         currentButton = new JButton("Restart Game");
         currentButton.addActionListener(this);
-        currentButton.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        centerPanelForScoreboardPanel.add(currentButton);
-        scoreboardPanel.add(centerPanelForScoreboardPanel , BorderLayout.EAST);
+        currentButton.setBounds(scoreBoardPanel.getWidth() / 3, mapSelect.getY() + 30, 70, 20);
+        scoreboardPanel.add(currentButton);
+
+        // Controls
+        JLabel controlsLabel = new JLabel("<html><p align=\"center\"><br><br><br><br><br><br><br><br>Controls<br><br>Blue<br>W, A, S, D to move<br>SPACE to shoot<br><br>Red<br>Arrow Keys to move<br>ENTER to shoot<br><br></p></html>");
+        controlsLabel.setForeground(Color.WHITE);
+        controlsLabel.setFont(new Font(controlsLabel.getFont().getFontName(), controlsLabel.getFont().getStyle(), 16));
+        controlsLabel.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+        scoreboardPanel.add(controlsLabel);
 
         backGroundPanel.setLayout(new BorderLayout());
         backGroundPanel.add(gamePanel , BorderLayout.WEST);
