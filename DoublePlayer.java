@@ -15,7 +15,7 @@ import javax.sound.sampled.*;
 public class DoublePlayer extends Thread implements KeyListener, ActionListener  {
     protected final static int GAME_PANEL_WIDTH = 800;
     protected final static int GAME_PANEL_HEIGHT = 750;
-    protected static boolean debugMode = true;
+    protected static boolean debugMode = false;
     // amount to the move player on each key press
     protected static final int MOVE_BY = 5;
     // for repaint thread
@@ -139,7 +139,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                 }
  
                 //draws Players after checking to see if it was hit
-                // The calculation uses 5 as the width/height of the hitbox to apporximate the trigonometry
+                // The calculation uses 5 as the width/height of the hitbox to approximate the trigonometry
                 for (int j = 0; j < MultiPlayer1.player1BulletsList.size(); j++) {
                     Point upperLeftBullet = MultiPlayer1.player1BulletsList.get(j).getUpperLeft();
                     Point P2UpperLeft =  player2.getUpperLeft();
@@ -275,17 +275,20 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         scoreboardPanel.setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - GAME_PANEL_WIDTH -50, GAME_PANEL_HEIGHT));
         
         scoresLabel = new JLabel("Blue: " + player1Score + "  Red: " + player2Score);
+        scoresLabel.setFont(new Font(scoresLabel.getFont().getFontName(), scoresLabel.getFont().getStyle(), 20));
         scoresLabel.setForeground(Color.WHITE);
         scoresLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         centerPanelForScoreboardPanel.add(scoresLabel);
-        JLabel controlsLabel = new JLabel("<html><br>Controls<br>Blue<br>W, A, S, D to move<br>SPACE to shoot<br><br>Red<br>Arrow Keys to move<br>ENTER to shoot</html>");
+        JLabel controlsLabel = new JLabel("<html><p align=\"center\"><br><br>Controls<br><br>Blue<br>W, A, S, D to move<br>SPACE to shoot<br><br>Red<br>Arrow Keys to move<br>ENTER to shoot</p></html>");
         controlsLabel.setForeground(Color.WHITE);
+        controlsLabel.setFont(new Font(controlsLabel.getFont().getFontName(), controlsLabel.getFont().getStyle(), 16));
         controlsLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         centerPanelForScoreboardPanel.add(controlsLabel, BorderLayout.SOUTH);
         centerPanelForScoreboardPanel.setOpaque(false);
         //button to start the game and restart game
         currentButton = new JButton("Start Game");
         currentButton.addActionListener(this);
+        currentButton.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         centerPanelForScoreboardPanel.add(currentButton);
         scoreboardPanel.add(centerPanelForScoreboardPanel , BorderLayout.EAST);
 
