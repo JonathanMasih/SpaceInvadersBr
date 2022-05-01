@@ -27,9 +27,13 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
     protected JLabel scoresLabel;
     private MultiPlayer1 player1;
     private MultiPlayer2 player2;
+    private int player1Score = 0;
+    private int player2Score = 0;
     private ArrayList<PlayerBullet> bulletList;
-    private ArrayList<Shield> shieldList;
+    protected static ArrayList<Shield> multiPlayerShieldList;
     private ArrayList<Alien> alienList;
+    private boolean gameStarted;
+    private JButton currentButton;
 
     private boolean keyPress_W = false;
     private boolean keyPress_A = false;
@@ -45,12 +49,12 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         this.backgroundImage = img;
         this.clip = clip;
         // Creates the players when the game starts
-        this.player1 = new MultiPlayer1(new Point(350, Player.PLAYERYPOS));
-        this.player2 = new MultiPlayer2(new Point(350, MultiPlayer2.PLAYER2YPOS));
+        this.player1 = new MultiPlayer1(new Point(100, MultiPlayer1.PLAYER1YPOS));
+        this.player2 = new MultiPlayer2(new Point(530, MultiPlayer2.PLAYER2YPOS));
         // creates the ArrayList<Bullet>
         this.bulletList = new ArrayList<PlayerBullet>();
         // Makes the Arraylist shields
-        this.shieldList = new ArrayList<Shield>();
+        multiPlayerShieldList = new ArrayList<Shield>();
     }
     
      /**
@@ -84,10 +88,10 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
             clip.loop(Clip.LOOP_CONTINUOUSLY);
 
         // making sheilds
-        shieldList.add(new Shield(new Point(100, Shield.SHIELDPOS)));
-        shieldList.add(new Shield(new Point(500, Shield.SHIELDPOS)));
-        shieldList.add(new Shield(new Point(100, 150)));
-        shieldList.add(new Shield(new Point(500, 150)));
+        multiPlayerShieldList.add(new Shield(new Point(100, Shield.SHIELDPOS-50)));
+        multiPlayerShieldList.add(new Shield(new Point(500, Shield.SHIELDPOS-50)));
+        multiPlayerShieldList.add(new Shield(new Point(100, 150)));
+        multiPlayerShieldList.add(new Shield(new Point(500, 150)));
 
         gamePanel = new JPanel() {
             @Override
@@ -99,15 +103,38 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                 g.setColor(Color.WHITE);
                 // draws the border for the game
                 g.drawRect(0, 0, 700, GAME_PANEL_HEIGHT);
-                // draws the shields
-                int i = 0;
-                while (i < shieldList.size()) {
-                    Shield s = shieldList.get(i);
+                // draws the shields, checking for collision
+                for(int i = 0; i < multiPlayerShieldList.size(); i++) {
+                    Shield s = multiPlayerShieldList.get(i);
+                    for (int  m = 0;  m  < MultiPlayer1.player1BulletsList.size();  m++) {
+                        Point upperLeftEnemyBullet = MultiPlayer1.player1BulletsList.get(m).getUpperLeft();
+                        Point upperLeftShield = s.getShieldUpperLeft();
+                        if (Collision.bulletOverlapsObject(upperLeftEnemyBullet.x, upperLeftEnemyBullet.y,
+                                Bullet.bulletWidth, Bullet.bulletHeight,
+                                upperLeftShield.x, upperLeftShield.y,
+                                Shield.SHIELDSIZEW, Shield.SHIELDSIZEL)) {
+                            s.hitSheild();
+                            MultiPlayer1.player1BulletsList.get(m).bulletHit();
+                            MultiPlayer1.player1BulletsList.remove(m);
+                        }
+                    }
+                    for (int  n = 0;  n  < MultiPlayer2.player2BulletsList.size();  n++) {
+                        Point upperLeftEnemyBullet = MultiPlayer2.player2BulletsList.get(n).getUpperLeft();
+                        Point upperLeftShield = s.getShieldUpperLeft();
+                        if (Collision.bulletOverlapsObject(upperLeftEnemyBullet.x, upperLeftEnemyBullet.y,
+                                Bullet.bulletWidth, Bullet.bulletHeight,
+                                upperLeftShield.x, upperLeftShield.y,
+                                Shield.SHIELDSIZEW, Shield.SHIELDSIZEL)) {
+                            s.hitSheild();
+                            MultiPlayer2.player2BulletsList.get(n).bulletHit();
+                            MultiPlayer2.player2BulletsList.remove(n);
+                        }
+                    }
                     if (s.isSheildBroken()) {
-                        bulletList.remove(i);
+                        multiPlayerShieldList.remove(i);
+                        i--;
                     } else {
                         s.paint(g);
-                        i++;
                     }
                 }
  
@@ -122,11 +149,15 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                         player2.hitPlayer();
                         MultiPlayer1.player1BulletsList.get(j).bulletHit();
                         MultiPlayer1.player1BulletsList.remove(j);
-                        scoresLabel.setText("Blue: " + player1.getPlayer1Lives() + "  Red: " + player2.getPlayer2Lives());
+                        scoresLabel.setText("Blue: " + player1Score + "  Red: " + player2Score);
                     }
                 }
                 if (player2.getPlayer2Lives() > 0) {
                     player2.paint(g);
+                }
+                else {
+                    player2Score++;
+                    newGame();
                 }
 
                 for (int k = 0; k < MultiPlayer2.player2BulletsList.size(); k++) {
@@ -138,11 +169,15 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                         player1.hitPlayer() ;
                         MultiPlayer2.player2BulletsList.get(k).bulletHit();
                         MultiPlayer2.player2BulletsList.remove(k);
-                        scoresLabel.setText("Blue: " + player1.getPlayer1Lives() + "  Red: " + player2.getPlayer2Lives());
+                        scoresLabel.setText("Blue: " + player1Score + "  Red: " + player2Score);
                     }
                 }
                 if (player1.getPlayer1Lives() > 0) {
                     player1.paint(g);
+                }
+                else {
+                    player1Score++;
+                    newGame();
                 }
                 
                 // draws the bullets
@@ -239,21 +274,21 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         scoreboardPanel.setOpaque(false);
         scoreboardPanel.setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - GAME_PANEL_WIDTH -50, GAME_PANEL_HEIGHT));
         
-        scoresLabel = new JLabel("Blue: " + player1.getPlayer1Lives() + "  Red: " + player2.getPlayer2Lives());
+        scoresLabel = new JLabel("Blue: " + player1Score + "  Red: " + player2Score);
         scoresLabel.setForeground(Color.WHITE);
+        scoresLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         centerPanelForScoreboardPanel.add(scoresLabel);
         JLabel controlsLabel = new JLabel("<html><br>Controls<br>Blue<br>W, A, S, D to move<br>SPACE to shoot<br><br>Red<br>Arrow Keys to move<br>ENTER to shoot</html>");
         controlsLabel.setForeground(Color.WHITE);
-        centerPanelForScoreboardPanel.add(controlsLabel);
+        controlsLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        centerPanelForScoreboardPanel.add(controlsLabel, BorderLayout.SOUTH);
         centerPanelForScoreboardPanel.setOpaque(false);
         //button to start the game and restart game
-        JButton currentButton = new JButton("Start Game");
+        currentButton = new JButton("Start Game");
         currentButton.addActionListener(this);
         centerPanelForScoreboardPanel.add(currentButton);
         scoreboardPanel.add(centerPanelForScoreboardPanel , BorderLayout.EAST);
 
-
-        
         backGroundPanel.setLayout(new BorderLayout());
         backGroundPanel.add(gamePanel , BorderLayout.WEST);
         backGroundPanel.add(scoreboardPanel, BorderLayout.EAST);
@@ -335,7 +370,38 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Ill do this later
+        gameStarted = true;
+        currentButton.setText("Restart Game");
         frame.requestFocus();
+
+        player1Score = 0;
+        player2Score = 0;
+        newGame();
+
+    }
+    public void newGame() {
+        // Update Scoreboard
+        scoresLabel.setText("Blue: " + player1Score + "   Red: " + player2Score);
+        // Reset all controls booleans
+        keyPress_W = false;
+        keyPress_A = false;
+        keyPress_S = false;
+        keyPress_D = false;
+        keyPress_UP = false;
+        keyPress_DOWN = false;
+        keyPress_LEFT = false;
+        keyPress_RIGHT = false;
+        // Call reset methods of the players, resetting speed, location, and rotation
+        player1.reset();
+        player2.reset();
+        MultiPlayer1.player1BulletsList.clear();
+        MultiPlayer2.player2BulletsList.clear();
+        // Clear and re-add the shields
+        multiPlayerShieldList.clear();
+        multiPlayerShieldList.add(new Shield(new Point(100, Shield.SHIELDPOS-50)));
+        multiPlayerShieldList.add(new Shield(new Point(500, Shield.SHIELDPOS-50)));
+        multiPlayerShieldList.add(new Shield(new Point(100, 150)));
+        multiPlayerShieldList.add(new Shield(new Point(500, 150)));
+        gamePanel.repaint();
     }
 }

@@ -96,6 +96,14 @@ public class MultiPlayer2 {
             speed = 0;
     }
 
+    public void reset() {
+        speed = 0;
+        rotation = 183;
+        rotate(false); // resets to 0
+        upperLeftOfPlayer2 = new Point(530, PLAYER2YPOS);
+        lives = 5;
+    }
+
     /**
      * A relative move of this object.
      * 
@@ -148,7 +156,8 @@ public class MultiPlayer2 {
      * 
      */
     public void hitPlayer(){
-        lives--;
+        if(lives > 0)
+            lives--;
     }
 
     public int getShotCooldown() {
@@ -166,11 +175,13 @@ public class MultiPlayer2 {
      * Run method to define the life of this bullet.
      */
     public void fireBullet(Component c){
-        MultiPlayerBullet bullet = new MultiPlayerBullet(c ,
-        new Point (centerOfPlayer2.x + (int)(40*Math.cos(Math.toRadians(rotation-90)))
-            , centerOfPlayer2.y + (int)(40*Math.sin(Math.toRadians(rotation-90)))), rotation);
-        bullet.start();
-        MultiPlayer2.player2BulletsList.add(bullet);
+        if(lives > 0) {
+            MultiPlayerBullet bullet = new MultiPlayerBullet(c ,
+            new Point (centerOfPlayer2.x + (int)(40*Math.cos(Math.toRadians(rotation-90)))
+                , centerOfPlayer2.y + (int)(40*Math.sin(Math.toRadians(rotation-90)))), rotation);
+            bullet.start();
+            MultiPlayer2.player2BulletsList.add(bullet);
+        }
     }
 
 }

@@ -11,7 +11,7 @@ public class MultiPlayer1 {
     protected  Point centerOfPlayer1;
     protected static BufferedImage player1Image;
     protected static BufferedImage originalPlayer1Image;
-    protected final static int PLAYER1YPOS = 50;
+    protected final static int PLAYER1YPOS = 650;
     protected int lives;
     protected double speed;
     protected static ArrayList<MultiPlayerBullet> player1BulletsList = new ArrayList<>();
@@ -97,25 +97,33 @@ public class MultiPlayer1 {
             speed = 0;
     }
 
+    public void reset() {
+        speed = 0;
+        rotation = 3;
+        rotate(false); // resets to 0
+        upperLeftOfPlayer1 = new Point(100, PLAYER1YPOS);
+        lives = 5;
+    }
+
     /**
      * A relative move of this object.
      * 
      * @param dx amount to translate in x
      */
     public void translate(int dx) {
-        upperLeftOfPlayer1.translate((int)(speed*dx*Math.cos(Math.toRadians(rotation-90))), (int)(speed*dx*Math.sin(Math.toRadians(rotation-90))));
-        if (upperLeftOfPlayer1.x < 0) {
-            upperLeftOfPlayer1.x = 0;
-        }
-        else if (upperLeftOfPlayer1.x > SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE) / 2)) {
-            upperLeftOfPlayer1.x = SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE) / 2);
-        }
-        if (upperLeftOfPlayer1.y < 0)
-            upperLeftOfPlayer1.y = 0;
-        else if(upperLeftOfPlayer1.y > SinglePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE)
-            upperLeftOfPlayer1.y = SinglePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE;
-        centerOfPlayer1 = new Point(upperLeftOfPlayer1.x + ((Player.PLAYERSIZE) / 2),
-                upperLeftOfPlayer1.y + ((Player.PLAYERSIZE) / 2));
+            upperLeftOfPlayer1.translate((int)(speed*dx*Math.cos(Math.toRadians(rotation-90))), (int)(speed*dx*Math.sin(Math.toRadians(rotation-90))));
+            if (upperLeftOfPlayer1.x < 0) {
+                upperLeftOfPlayer1.x = 0;
+            }
+            else if (upperLeftOfPlayer1.x > SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE) / 2)) {
+                upperLeftOfPlayer1.x = SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE) / 2);
+            }
+            if (upperLeftOfPlayer1.y < 0)
+                upperLeftOfPlayer1.y = 0;
+            else if(upperLeftOfPlayer1.y > SinglePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE)
+                upperLeftOfPlayer1.y = SinglePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE;
+            centerOfPlayer1 = new Point(upperLeftOfPlayer1.x + ((Player.PLAYERSIZE) / 2),
+                    upperLeftOfPlayer1.y + ((Player.PLAYERSIZE) / 2));
     }
 
     /**
@@ -149,7 +157,8 @@ public class MultiPlayer1 {
      * 
      */
     public void hitPlayer(){
-        lives--;
+        if(lives > 0)
+            lives--;
     }
 
     public int getShotCooldown() {
@@ -167,11 +176,13 @@ public class MultiPlayer1 {
      * Run method to define the life of this bullet.
      */
     public void fireBullet(Component c){
-        MultiPlayerBullet bullet = new MultiPlayerBullet(c ,
-        new Point (centerOfPlayer1.x + (int)(40*Math.cos(Math.toRadians(rotation-90)))
-            , centerOfPlayer1.y + (int)(40*Math.sin(Math.toRadians(rotation-90)))), rotation);
-        bullet.start();
-        player1BulletsList.add(bullet);
+        if(lives > 0) {
+            MultiPlayerBullet bullet = new MultiPlayerBullet(c ,
+            new Point (centerOfPlayer1.x + (int)(40*Math.cos(Math.toRadians(rotation-90)))
+                , centerOfPlayer1.y + (int)(40*Math.sin(Math.toRadians(rotation-90)))), rotation);
+            bullet.start();
+            player1BulletsList.add(bullet);
+        }
     }
 
 }
