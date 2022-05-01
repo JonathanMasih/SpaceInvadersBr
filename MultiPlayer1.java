@@ -97,11 +97,11 @@ public class MultiPlayer1 {
             speed = 0;
     }
 
-    public void reset() {
+    public void reset(Point p) {
         speed = 0;
         rotation = 3;
         rotate(false); // resets to 0
-        upperLeftOfPlayer1 = new Point(100, PLAYER1YPOS);
+        upperLeftOfPlayer1 = p;
         lives = 5;
     }
 

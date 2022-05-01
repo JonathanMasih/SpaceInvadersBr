@@ -96,11 +96,11 @@ public class MultiPlayer2 {
             speed = 0;
     }
 
-    public void reset() {
+    public void reset(Point p) {
         speed = 0;
         rotation = 183;
         rotate(false); // resets to 0
-        upperLeftOfPlayer2 = new Point(530, PLAYER2YPOS);
+        upperLeftOfPlayer2 = p;
         lives = 5;
     }
 
