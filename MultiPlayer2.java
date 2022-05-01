@@ -114,8 +114,8 @@ public class MultiPlayer2 {
         if (upperLeftOfPlayer2.x < 0) {
             upperLeftOfPlayer2.x = 0;
         }
-        else if (upperLeftOfPlayer2.x > SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE) / 2)) {
-            upperLeftOfPlayer2.x = SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE) / 2);
+        else if (upperLeftOfPlayer2.x > SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE - 1) / 2)) {
+            upperLeftOfPlayer2.x = SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE - 1) / 2);
         }
         if (upperLeftOfPlayer2.y < 0)
             upperLeftOfPlayer2.y = 0;
