@@ -18,9 +18,6 @@ public class Player {
 
     public Player(Point startPos) {
         //Setting player name and score
-        this.playerName = playerName;
-        this.score = score;
-
         this.upperLeftOfPLayer = startPos;
         this.centerOfPlayer = new Point(startPos.x + (PLAYERSIZE / 2),
                 upperLeftOfPLayer.y + (PLAYERSIZE / 2));

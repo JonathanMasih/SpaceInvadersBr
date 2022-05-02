@@ -45,6 +45,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
     private boolean gameStarted;
     private int level = 1;
     private JLabel levelLabel;
+    private JLabel currentGameStatus;
 
     // Arraylist to keep track of players once the program starts
     // and labels for players
@@ -87,6 +88,8 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         frame.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
         // window, the application should terminate
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.setResizable(false);
         // Setting the background of the frame
         JPanel backGroundPanel = new JPanel() {
             @Override
@@ -133,187 +136,191 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                 // draw the player
                 player.paint(g);
 
-                // if(gameOver == false && gameStarted == true){
                 // meaning player is dead
                 if (player.getPlayerLives() == 0) {
                     gameOver = true;
+                    currentGameStatus.setText("Please press Restart Game to restart.");
                 }
                 // collision between the player and enemybullet
-                int l = 0;
-                while (l < EnemyPlayer.enemiesBulletsList.size()) {
-                    EnemyBullet bullet = EnemyPlayer.enemiesBulletsList.get(l);
-                    Point upperLeftBullet = bullet.getUpperLeft();
-                    Point upperLeftPlayer = player.getPlayerUpperLeft();
-                    if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y,
-                            Bullet.bulletWidth, Bullet.bulletHeight,
-                            upperLeftPlayer.x, upperLeftPlayer.y,
-                            Player.PLAYERSIZE, Player.PLAYERSIZE)) {
-                        player.hitPlayer();
-                        bullet.bulletHit();
-                        EnemyPlayer.enemiesBulletsList.remove(l);
-                    } else {
-                        bullet.paint(g);
-                        l++;
-                    }
-                }
-                // draws the shields and checks the collsion
-                int i = 0;
-                while (i < shieldList.size()) {
-                    Shield s = shieldList.get(i);
-                    for (int o = 0; o < EnemyPlayer.enemiesBulletsList.size(); o++) {
-                        Point upperLeftEnemyBullet = EnemyPlayer.enemiesBulletsList.get(o).getUpperLeft();
-                        Point upperLeftShield = s.getShieldUpperLeft();
-                        if (Collision.bulletOverlapsObject(upperLeftEnemyBullet.x, upperLeftEnemyBullet.y,
-                                Bullet.bulletWidth, Bullet.bulletHeight,
-                                upperLeftShield.x, upperLeftShield.y,
-                                Shield.SHIELDSIZEW, Shield.SHIELDSIZEL)) {
-                            s.hitSheild();
-                            EnemyPlayer.enemiesBulletsList.get(o).bulletHit();
-                            EnemyPlayer.enemiesBulletsList.remove(o);
-                        }
-                    }
-                    if (s.isSheildBroken()) {
-                        shieldList.remove(i);
-                    } else {
-                        s.paint(g);
-                        i++;
-                    }
-                }
-
-                // draws the aliens
-                int j = 0;
-                while (j < alienList.size()) {
-                    Alien a = alienList.get(j);
-                    for (int m = 0; m < bulletList.size(); m++) {
-                        Point upperLeftBullet = bulletList.get(m).getUpperLeft();
-                        Point upperLeftAlien = alienList.get(j).getUpperLeft();
+                if (!gameOver) {
+                    int l = 0;
+                    while (l < EnemyPlayer.enemiesBulletsList.size()) {
+                        EnemyBullet bullet = EnemyPlayer.enemiesBulletsList.get(l);
+                        Point upperLeftBullet = bullet.getUpperLeft();
+                        Point upperLeftPlayer = player.getPlayerUpperLeft();
                         if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y,
                                 Bullet.bulletWidth, Bullet.bulletHeight,
-                                upperLeftAlien.x, upperLeftAlien.y,
-                                Alien.ALIENSIZE, Alien.ALIENSIZE)) {
-                            alienList.get(j).hitAlien();
-                            bulletList.get(m).bulletHit();
-                            bulletList.remove(m);
-                            playerPoints += Alien.point;
-                            playerPointLabel.setText("Player Point: " + playerPoints);
-                        }
-                    }
-                    if (a.isAlienHit()) {
-                        alienList.remove(j);
-                        getPointAmount();
-
-                    } else {
-                        a.paint(g);
-                        j++;
-                    }
-                }
-
-                // draws the EnemyShip and collion
-                int p = 0;
-                while (p < enemyList.size()) {
-                    EnemyPlayer e = enemyList.get(p);
-                    for (int z = 0; z < bulletList.size(); z++) {
-                        Point upperLeftBullet = bulletList.get(z).getUpperLeft();
-                        Point upperLeftEnemy = enemyList.get(p).getUpperLeft();
-                        if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y,
-                                Bullet.bulletWidth, Bullet.bulletHeight,
-                                upperLeftEnemy.x, upperLeftEnemy.y,
+                                upperLeftPlayer.x, upperLeftPlayer.y,
                                 Player.PLAYERSIZE, Player.PLAYERSIZE)) {
-                            enemyList.get(p).hitEnemy();
-                            bulletList.get(z).bulletHit();
-                            bulletList.remove(z);
-                            playerPoints += EnemyPlayer.point;
-                            playerPointLabel.setText("Player Point: " + playerPoints);
+                            player.hitPlayer();
+                            bullet.bulletHit();
+                            EnemyPlayer.enemiesBulletsList.remove(l);
+                        } else {
+                            bullet.paint(g);
+                            l++;
                         }
                     }
-                    if (e.getEnemyHitCount() == EnemyPlayer.ENEMEYHEALTH) {
-                        enemyList.remove(p);
-                        getPointAmount();
-                    } else {
-                        e.paint(g);
-                        p++;
-                    }
-                }
-                // draws the bullets
-                int k = 0;
-                while (k < bulletList.size()) {
-                    Bullet b = bulletList.get(k);
-                    if (b.isOffPanel()) {
-                        bulletList.remove(k);
-                    } else {
-                        b.paint(g);
-                        k++;
-                    }
-                }
 
-                // draws enemy the bullets
-                int q = 0;
-                while (q < EnemyPlayer.enemiesBulletsList.size()) {
-                    Bullet b = EnemyPlayer.enemiesBulletsList.get(q);
-                    if (b.isOffPanel() || b.isHit()) {
-                        EnemyPlayer.enemiesBulletsList.remove(q);
-                    } else {
-                        b.paint(g);
-                        q++;
-                    }
-                }
-                // }
-
-                if (gameOver) {
-                    gameStarted = false;
-                    // When shots run out the button changes to play again
-                    currentButton.setText("Restart Game");
-
-                    // If the highscore panel already has 5 players the 6th player will replace
-                    // the player with the least amount of points
-                    if (playersList.size() == 5) {
-                        int leastPoints = playersList.get(0).score;
-                        int leastPointIndex = 0;
-                        // Varible to see if the current points are greater then any
-                        // other points on the highscore board
-                        boolean minFound = false;
-                        for (int r = 0; r < playersList.size(); r++) {
-                            if (playersList.get(r).score < leastPoints && playersList.get(r).score < playerPoints) {
-                                leastPoints = playersList.get(r).score;
-                                leastPointIndex = r;
-                                minFound = true;
+                    // draws the shields and checks the collsion
+                    int i = 0;
+                    while (i < shieldList.size()) {
+                        Shield s = shieldList.get(i);
+                        for (int o = 0; o < EnemyPlayer.enemiesBulletsList.size(); o++) {
+                            Point upperLeftEnemyBullet = EnemyPlayer.enemiesBulletsList.get(o).getUpperLeft();
+                            Point upperLeftShield = s.getShieldUpperLeft();
+                            if (Collision.bulletOverlapsObject(upperLeftEnemyBullet.x, upperLeftEnemyBullet.y,
+                                    Bullet.bulletWidth, Bullet.bulletHeight,
+                                    upperLeftShield.x, upperLeftShield.y,
+                                    Shield.SHIELDSIZEW, Shield.SHIELDSIZEL)) {
+                                s.hitSheild();
+                                EnemyPlayer.enemiesBulletsList.get(o).bulletHit();
+                                EnemyPlayer.enemiesBulletsList.remove(o);
                             }
                         }
-
-                        // Replaces the player with the least amount of points.
-                        // if there is aleast one score that is less then the current
-                        // player score.
-                        if (minFound == true) {
-                            playersList.set(leastPointIndex, new Player(playerName.getText(), playerPoints));
-                            playerLabels.get(leastPointIndex).setText(playerName.getText() + ": " + playerPoints);
+                        if (s.isSheildBroken()) {
+                            shieldList.remove(i);
+                        } else {
+                            s.paint(g);
+                            i++;
                         }
-                    } else {
-                        // If there less then 5 players it adds a new player
-                        playersList.add(new Player(playerName.getText(), playerPoints));
-                        playerLabels.add(new JLabel(playerName.getText() + ": " + playerPoints));
-                        // adds the players to the highscore panel
-                        JPanel playerPanel = new JPanel();
-                        playerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-                        playerPanel.add(playerLabels.get(playerLabels.size() - 1));
-                        highScorePanel.add(playerPanel);
                     }
-                    // Writes the current high score board to the file or updates it
-                    // if it has 5 players already.
-                    try {
-                        FileWriter myWriter = new FileWriter("GameResults.txt");
-                        for (int w = 0; w < playerLabels.size(); w++) {
-                            myWriter.write(playerLabels.get(w).getText() + "\n");
 
+                    // draws the aliens
+                    int j = 0;
+                    while (j < alienList.size()) {
+                        Alien a = alienList.get(j);
+                        for (int m = 0; m < bulletList.size(); m++) {
+                            Point upperLeftBullet = bulletList.get(m).getUpperLeft();
+                            Point upperLeftAlien = alienList.get(j).getUpperLeft();
+                            if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y,
+                                    Bullet.bulletWidth, Bullet.bulletHeight,
+                                    upperLeftAlien.x, upperLeftAlien.y,
+                                    Alien.ALIENSIZE, Alien.ALIENSIZE)) {
+                                alienList.get(j).hitAlien();
+                                bulletList.get(m).bulletHit();
+                                bulletList.remove(m);
+                                playerPoints += Alien.point;
+                                playerPointLabel.setText("Player Point: " + playerPoints);
+                            }
                         }
-                        myWriter.close();
-                    } catch (IOException e1) {
-                        System.out.println("An error occurred.");
-                        e1.printStackTrace();
+                        if (a.isAlienHit()) {
+                            alienList.remove(j);
+
+                        } else {
+                            a.paint(g);
+                            j++;
+                        }
                     }
-                
+
+                    // draws the EnemyShip and collion
+                    int p = 0;
+                    while (p < enemyList.size()) {
+                        EnemyPlayer e = enemyList.get(p);
+                        for (int z = 0; z < bulletList.size(); z++) {
+                            Point upperLeftBullet = bulletList.get(z).getUpperLeft();
+                            Point upperLeftEnemy = enemyList.get(p).getUpperLeft();
+                            if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y,
+                                    Bullet.bulletWidth, Bullet.bulletHeight,
+                                    upperLeftEnemy.x, upperLeftEnemy.y,
+                                    Player.PLAYERSIZE, Player.PLAYERSIZE)) {
+                                enemyList.get(p).hitEnemy();
+                                bulletList.get(z).bulletHit();
+                                bulletList.remove(z);
+                                playerPoints += EnemyPlayer.point;
+                                playerPointLabel.setText("Player Point: " + playerPoints);
+                            }
+                        }
+                        if (e.getEnemyHitCount() == EnemyPlayer.ENEMEYHEALTH) {
+                            enemyList.remove(p);
+            
+                        } else {
+                            e.paint(g);
+                            p++;
+                        }
+                    }
+                    // draws the bullets
+                    int k = 0;
+                    while (k < bulletList.size()) {
+                        Bullet b = bulletList.get(k);
+                        if (b.isOffPanel()) {
+                            bulletList.remove(k);
+                        } else {
+                            b.paint(g);
+                            k++;
+                        }
+                    }
+
+                    // draws enemy the bullets
+                    int q = 0;
+                    while (q < EnemyPlayer.enemiesBulletsList.size()) {
+                        Bullet b = EnemyPlayer.enemiesBulletsList.get(q);
+                        if (b.isOffPanel() || b.isHit()) {
+                            EnemyPlayer.enemiesBulletsList.remove(q);
+                        } else {
+                            b.paint(g);
+                            q++;
+                        }
+                    }
+                    // }
+
+                    // After game
+                    if (gameOver) {
+                        gameStarted = false;
+                        // When shots run out the button changes to play again
+                        currentButton.setText("Restart Game");
+
+                        // If the highscore panel already has 5 players the 6th player will replace
+                        // the player with the least amount of points
+                        if (playersList.size() == 5) {
+                            int leastPoints = playersList.get(0).score;
+                            int leastPointIndex = 0;
+                            // Varible to see if the current points are greater then any
+                            // other points on the highscore board
+                            boolean minFound = false;
+                            for (int r = 0; r < playersList.size(); r++) {
+                                if (playersList.get(r).score < leastPoints && playersList.get(r).score < playerPoints) {
+                                    leastPoints = playersList.get(r).score;
+                                    leastPointIndex = r;
+                                    minFound = true;
+                                }
+                            }
+
+                            // Replaces the player with the least amount of points.
+                            // if there is aleast one score that is less then the current
+                            // player score.
+                            if (minFound == true) {
+                                playersList.set(leastPointIndex, new Player(playerName.getText(), playerPoints));
+                                playerLabels.get(leastPointIndex).setText(playerName.getText() + ": " + playerPoints);
+                            }
+                        } else {
+                            // If there less then 5 players it adds a new player
+                            playersList.add(new Player(playerName.getText(), playerPoints));
+                            playerLabels.add(new JLabel(playerName.getText() + ": " + playerPoints));
+                            // adds the players to the highscore panel
+                            JPanel playerPanel = new JPanel();
+                            playerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+                            playerPanel.add(playerLabels.get(playerLabels.size() - 1));
+                            highScorePanel.add(playerPanel);
+                        }
+                        // Writes the current high score board to the file or updates it
+                        // if it has 5 players already.
+                        try {
+                            FileWriter myWriter = new FileWriter("GameResults.txt");
+                            for (int w = 0; w < playerLabels.size(); w++) {
+                                myWriter.write(playerLabels.get(w).getText() + "\n");
+
+                            }
+                            myWriter.close();
+                        } catch (IOException e1) {
+                            System.out.println("An error occurred.");
+                            e1.printStackTrace();
+                        }
+                    }
                 }
             }
+
         };
+
         // Making an enemies
         EnemyPlayer enemy = new EnemyPlayer(gamePanel, new Point(100, EnemyPlayer.ENEMYPLAYERYPOS));
         enemy.start();
@@ -352,6 +359,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
         gamePanel.setOpaque(false);
 
+        currentGameStatus = new JLabel("Space to shoot, A and D to move.");
         // scoreboards panel
         JPanel scoreboardPanel = new JPanel(new BorderLayout());
         // scoreboardPanel.setLayout(new BoxLayout( scoreboardPanel ,BoxLayout.Y_AXIS));
@@ -366,13 +374,26 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         levelLabel.setForeground(Color.WHITE);
         playerPointLabel = new JLabel("Player Point: " + playerPoints);
         playerPointLabel.setForeground(Color.WHITE);
+        centerPanelForScoreboardPanel.add(currentGameStatus);
         centerPanelForScoreboardPanel.add(playerPointLabel);
         centerPanelForScoreboardPanel.add(levelLabel);
         centerPanelForScoreboardPanel.setOpaque(false);
         // button to start the game and restart game
-        currentButton = new JButton("Start Game");
+
+        currentButton = new JButton("Restart Game");
+        currentButton.setSize(100, 100);
         currentButton.addActionListener(this);
         centerPanelForScoreboardPanel.add(currentButton);
+
+        // the playerName (required field)
+        JPanel playerNamePanel = new JPanel();
+        JLabel playerNameLabel = new JLabel("Player Name: ");
+        playerNameLabel.setForeground(Color.WHITE);
+        playerNamePanel.add(playerNameLabel);
+        playerName = new JTextField("", 5);
+        playerNamePanel.add(playerName);
+        playerNamePanel.setOpaque(false);
+        centerPanelForScoreboardPanel.add(playerNamePanel);
         scoreboardPanel.add(centerPanelForScoreboardPanel, BorderLayout.EAST);
 
         backGroundPanel.setLayout(new BorderLayout());
@@ -398,6 +419,48 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
      */
     public void nextLevel() {
         level++;
+        //Clear the bullet lists.
+        bulletList.clear();
+        EnemyPlayer.enemiesBulletsList.clear();
+
+        levelLabel.setText("Level: " + level);
+        if (level % 2 == 0) {
+            shieldList.clear();
+            // making sheilds
+            Shield sheild1 = new Shield(new Point(130, Shield.SHIELDPOS));
+            Shield sheild2 = new Shield(new Point(540, Shield.SHIELDPOS));
+            shieldList.add(sheild1);
+            shieldList.add(sheild2);
+        }
+        Alien.point += 10;
+        EnemyPlayer.point += 10;
+        if(  EnemyPlayer.fireRate == 11 ){
+            EnemyPlayer.fireRate -= 2;
+        }else if (EnemyPlayer.fireRate  == 5){
+            //no more increase fireRate
+        }else{
+            EnemyPlayer.fireRate -= 10;
+        }
+        
+       
+        for (int i = 0; i < level; i++) {
+            EnemyPlayer enemy = new EnemyPlayer(gamePanel, new Point(100, EnemyPlayer.ENEMYPLAYERYPOS));
+            enemy.start();
+            enemyList.add(enemy);
+        }
+        // Making aliens for each new level and increasing their point value
+        Alien.point += 10;
+        alienList.add(new Alien1(new Point(150, Alien.ALIENYPOS1)));
+        alienList.add(new Alien1(new Point(350, Alien.ALIENYPOS1)));
+        alienList.add(new Alien1(new Point(550, Alien.ALIENYPOS1)));
+
+        alienList.add(new Alien2(new Point(150, Alien.ALIENYPOS2)));
+        alienList.add(new Alien2(new Point(350, Alien.ALIENYPOS2)));
+        alienList.add(new Alien2(new Point(550, Alien.ALIENYPOS2)));
+
+        alienList.add(new Alien3(new Point(150, Alien.ALIENYPOS3)));
+        alienList.add(new Alien3(new Point(350, Alien.ALIENYPOS3)));
+        alienList.add(new Alien3(new Point(550, Alien.ALIENYPOS3)));
     }
 
     /**
@@ -406,19 +469,10 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
      */
     public void restartGame() {
         level = 1;
-        currentButton.setText("Start Game");
         playerPoints = 0;
         playerPointLabel.setText("Player Point: " + playerPoints);
     }
 
-    /**
-     * Returns the amount of points the aliens are worth
-     * 
-     * @return returns the amount of points the alien is worth
-     */
-    public int getPointAmount() {
-        return this.playerPoints;
-    }
 
     @Override
     public void keyTyped(KeyEvent e) {

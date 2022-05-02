@@ -14,7 +14,7 @@ public abstract class Bullet extends Thread {
    protected  Component panel;
    protected Point upperLeft;
    protected boolean  offPanel;
-   private boolean hit;
+   protected boolean hit;
    protected static final int bulletHeight = 10;
    protected static final int bulletWidth = 6;
    protected final int bulletSPEED = 10;
