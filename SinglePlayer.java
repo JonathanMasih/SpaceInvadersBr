@@ -212,7 +212,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                         }
                     }
 
-                    // draws the EnemyShip and collion
+                    // draws the EnemyShip and collision
                     int p = 0;
                     while (p < enemyList.size()) {
                         EnemyPlayer e = enemyList.get(p);
@@ -393,6 +393,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         playerNamePanel.add(playerName);
         playerNamePanel.setOpaque(false);
         centerPanelForScoreboardPanel.add(playerNamePanel);
+        centerPanelForScoreboardPanel.add(highScorePanel);
         scoreboardPanel.add(centerPanelForScoreboardPanel, BorderLayout.EAST);
 
         backGroundPanel.setLayout(new BorderLayout());
