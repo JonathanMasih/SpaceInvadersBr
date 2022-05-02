@@ -42,6 +42,8 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
     private JButton currentButton;
     private boolean gameStarted;
 
+    private JPanel scorePanel;
+
     private boolean keyPress_A = false;
     private boolean keyPress_D = false;
 
