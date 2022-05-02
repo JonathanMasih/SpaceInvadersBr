@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -13,7 +15,7 @@ import javax.sound.sampled.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public class SinglePlayer extends Thread implements KeyListener , ActionListener {
+public class SinglePlayer extends Thread implements KeyListener, ActionListener {
     protected final static int GAME_PANEL_WIDTH = 800;
     protected final static int GAME_PANEL_HEIGHT = 850;
     // amount to the move player on each key press
@@ -30,19 +32,27 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
     private ArrayList<Alien> alienList;
     private ArrayList<EnemyPlayer> enemyList;
 
-    //current point of the player
+    // current point of the player
     private static int playerPoints = 0;
-    //Jlabel for points
-    private  JLabel playerPointLabel;
-    //Counter to slow down the shooting and stop spaming of player
+    // Jlabel for points
+    private JLabel playerPointLabel;
+    // Counter to slow down the shooting and stop spaming of player
     private int shootCounter = 5;
-    //Keeps track of if the game is over or not.
+    // Keeps track of if the game is over or not.
     private boolean gameOver;
-    //button to start and restart the game
+    // button to start and restart the game
     private JButton currentButton;
     private boolean gameStarted;
+    private int level = 1;
+    private JLabel levelLabel;
 
-    private JPanel scorePanel;
+    // Arraylist to keep track of players once the program starts
+    // and labels for players
+    private ArrayList<Player> playersList = new ArrayList<Player>();
+    private ArrayList<JLabel> playerLabels = new ArrayList<JLabel>();
+    // User High variable
+    private JPanel highScorePanel = new JPanel();
+    private JTextField playerName;
 
     private boolean keyPress_A = false;
     private boolean keyPress_D = false;
@@ -101,16 +111,15 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
         // Making aliens
         alienList.add(new Alien1(new Point(150, Alien.ALIENYPOS1)));
         alienList.add(new Alien1(new Point(350, Alien.ALIENYPOS1)));
-        alienList.add (new Alien1(new Point(550, Alien.ALIENYPOS1)));
+        alienList.add(new Alien1(new Point(550, Alien.ALIENYPOS1)));
 
         alienList.add(new Alien2(new Point(150, Alien.ALIENYPOS2)));
         alienList.add(new Alien2(new Point(350, Alien.ALIENYPOS2)));
         alienList.add(new Alien2(new Point(550, Alien.ALIENYPOS2)));
-       
+
         alienList.add(new Alien3(new Point(150, Alien.ALIENYPOS3)));
         alienList.add(new Alien3(new Point(350, Alien.ALIENYPOS3)));
         alienList.add(new Alien3(new Point(550, Alien.ALIENYPOS3)));
-
 
         gamePanel = new JPanel() {
             @Override
@@ -120,15 +129,15 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
                 super.paintComponent(g);
                 g.setColor(Color.WHITE);
                 // draws the border for the game
-                g.drawRect(0, 0,  GAME_PANEL_WIDTH -2 , GAME_PANEL_HEIGHT);
+                g.drawRect(0, 0, GAME_PANEL_WIDTH - 2, GAME_PANEL_HEIGHT);
                 // draw the player
                 player.paint(g);
-                
-             // if(gameOver == false && gameStarted == true){
-                    //meaning player is dead
-                if(player.getPlayerLives() == 0){
-                      gameOver = true;
-                    }
+
+                // if(gameOver == false && gameStarted == true){
+                // meaning player is dead
+                if (player.getPlayerLives() == 0) {
+                    gameOver = true;
+                }
                 // collision between the player and enemybullet
                 int l = 0;
                 while (l < EnemyPlayer.enemiesBulletsList.size()) {
@@ -151,7 +160,7 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
                 int i = 0;
                 while (i < shieldList.size()) {
                     Shield s = shieldList.get(i);
-                    for (int  o = 0;  o  < EnemyPlayer.enemiesBulletsList.size();  o++) {
+                    for (int o = 0; o < EnemyPlayer.enemiesBulletsList.size(); o++) {
                         Point upperLeftEnemyBullet = EnemyPlayer.enemiesBulletsList.get(o).getUpperLeft();
                         Point upperLeftShield = s.getShieldUpperLeft();
                         if (Collision.bulletOverlapsObject(upperLeftEnemyBullet.x, upperLeftEnemyBullet.y,
@@ -191,6 +200,8 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
                     }
                     if (a.isAlienHit()) {
                         alienList.remove(j);
+                        getPointAmount();
+
                     } else {
                         a.paint(g);
                         j++;
@@ -217,6 +228,7 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
                     }
                     if (e.getEnemyHitCount() == EnemyPlayer.ENEMEYHEALTH) {
                         enemyList.remove(p);
+                        getPointAmount();
                     } else {
                         e.paint(g);
                         p++;
@@ -244,8 +256,62 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
                         b.paint(g);
                         q++;
                     }
-                 }
-               // }
+                }
+                // }
+
+                if (gameOver) {
+                    gameStarted = false;
+                    // When shots run out the button changes to play again
+                    currentButton.setText("Restart Game");
+
+                    // If the highscore panel already has 5 players the 6th player will replace
+                    // the player with the least amount of points
+                    if (playersList.size() == 5) {
+                        int leastPoints = playersList.get(0).score;
+                        int leastPointIndex = 0;
+                        // Varible to see if the current points are greater then any
+                        // other points on the highscore board
+                        boolean minFound = false;
+                        for (int r = 0; r < playersList.size(); r++) {
+                            if (playersList.get(r).score < leastPoints && playersList.get(r).score < playerPoints) {
+                                leastPoints = playersList.get(r).score;
+                                leastPointIndex = r;
+                                minFound = true;
+                            }
+                        }
+
+                        // Replaces the player with the least amount of points.
+                        // if there is aleast one score that is less then the current
+                        // player score.
+                        if (minFound == true) {
+                            playersList.set(leastPointIndex, new Player(playerName.getText(), playerPoints));
+                            playerLabels.get(leastPointIndex).setText(playerName.getText() + ": " + playerPoints);
+                        }
+                    } else {
+                        // If there less then 5 players it adds a new player
+                        playersList.add(new Player(playerName.getText(), playerPoints));
+                        playerLabels.add(new JLabel(playerName.getText() + ": " + playerPoints));
+                        // adds the players to the highscore panel
+                        JPanel playerPanel = new JPanel();
+                        playerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+                        playerPanel.add(playerLabels.get(playerLabels.size() - 1));
+                        highScorePanel.add(playerPanel);
+                    }
+                    // Writes the current high score board to the file or updates it
+                    // if it has 5 players already.
+                    try {
+                        FileWriter myWriter = new FileWriter("GameResults.txt");
+                        for (int w = 0; w < playerLabels.size(); w++) {
+                            myWriter.write(playerLabels.get(w).getText() + "\n");
+
+                        }
+                        myWriter.close();
+                    } catch (IOException e1) {
+                        System.out.println("An error occurred.");
+                        e1.printStackTrace();
+                    }
+                
+                }
             }
         };
         // Making an enemies
@@ -257,6 +323,7 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
         // active to call gamePanel.repaint() about 30 times per second, so individual
         // game objects do not need to do so.
         new Thread() {
+
             @Override
             public void run() {
                 while (true) {
@@ -264,18 +331,19 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
                         sleep(DELAY_TIME);
                     } catch (InterruptedException e) {
                     }
-                    if(enemyList.size() == 0 && alienList.size() == 0 ){
-
+                    if (enemyList.isEmpty() && alienList.isEmpty()) {
+                        nextLevel();
                     }
-                    //decrement so the player can shoot
-                    if(shootCounter > 0 ){
+                    // decrement so the player can shoot
+                    if (shootCounter > 0) {
                         shootCounter--;
                     }
-                    if (keyPress_A)
+                    if (keyPress_A) {
                         player.translate(-MOVE_BY);
-                    if (keyPress_D)
+                    }
+                    if (keyPress_D) {
                         player.translate(MOVE_BY);
-
+                    }
                     gamePanel.repaint();
                 }
             }
@@ -283,31 +351,32 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
         // sets the size of the game panel
         gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
         gamePanel.setOpaque(false);
-        
-        //scoreboards panel 
-        JPanel scoreboardPanel= new JPanel(new BorderLayout());
-        //scoreboardPanel.setLayout(new  BoxLayout( scoreboardPanel ,BoxLayout.Y_AXIS));
+
+        // scoreboards panel
+        JPanel scoreboardPanel = new JPanel(new BorderLayout());
+        // scoreboardPanel.setLayout(new BoxLayout( scoreboardPanel ,BoxLayout.Y_AXIS));
         JPanel centerPanelForScoreboardPanel = new JPanel();
-        centerPanelForScoreboardPanel.setLayout(new  BoxLayout( centerPanelForScoreboardPanel ,BoxLayout.Y_AXIS));
-        
+        centerPanelForScoreboardPanel.setLayout(new BoxLayout(centerPanelForScoreboardPanel, BoxLayout.Y_AXIS));
+
         scoreboardPanel.setLayout(new BorderLayout());
         scoreboardPanel.setOpaque(false);
-        scoreboardPanel.setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - 
-        GAME_PANEL_WIDTH -50, GAME_PANEL_HEIGHT));
+        scoreboardPanel
+                .setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - GAME_PANEL_WIDTH - 50, GAME_PANEL_HEIGHT));
+        levelLabel = new JLabel("Level: " + level);
+        levelLabel.setForeground(Color.WHITE);
         playerPointLabel = new JLabel("Player Point: " + playerPoints);
         playerPointLabel.setForeground(Color.WHITE);
         centerPanelForScoreboardPanel.add(playerPointLabel);
+        centerPanelForScoreboardPanel.add(levelLabel);
         centerPanelForScoreboardPanel.setOpaque(false);
-        //button to start the game and restart game
+        // button to start the game and restart game
         currentButton = new JButton("Start Game");
         currentButton.addActionListener(this);
-        centerPanelForScoreboardPanel.add( currentButton);
-        scoreboardPanel.add( centerPanelForScoreboardPanel , BorderLayout.EAST);
+        centerPanelForScoreboardPanel.add(currentButton);
+        scoreboardPanel.add(centerPanelForScoreboardPanel, BorderLayout.EAST);
 
-
-        
         backGroundPanel.setLayout(new BorderLayout());
-        backGroundPanel.add(gamePanel , BorderLayout.WEST);
+        backGroundPanel.add(gamePanel, BorderLayout.WEST);
         backGroundPanel.add(scoreboardPanel, BorderLayout.EAST);
 
         frame.add(backGroundPanel);
@@ -320,23 +389,35 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
         frame.pack();
         frame.setVisible(true);
     }
-    
+
     /**
      * Method called when the player has killed all the aliens and
-     * enemey ships to move the player into the next live if the player 
-     * is still Alive 
+     * enemey ships to move the player into the next life if the player
+     * is still alive
      * 
      */
-    public void nextLevel(){
-
-
+    public void nextLevel() {
+        level++;
     }
+
     /**
-     *Restarts the game.
+     * Restarts the game.
      * 
      */
-    public void restartGame(){
+    public void restartGame() {
+        level = 1;
+        currentButton.setText("Start Game");
+        playerPoints = 0;
+        playerPointLabel.setText("Player Point: " + playerPoints);
+    }
 
+    /**
+     * Returns the amount of points the aliens are worth
+     * 
+     * @return returns the amount of points the alien is worth
+     */
+    public int getPointAmount() {
+        return this.playerPoints;
     }
 
     @Override
@@ -353,11 +434,11 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
             keyPress_D = true;
         } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            if( shootCounter == 0){
-            PlayerBullet bullet = new PlayerBullet(gamePanel, currentPosPlayer1);
-            bullet.start();
-            bulletList.add(bullet);
-            shootCounter = 5;
+            if (shootCounter == 0) {
+                PlayerBullet bullet = new PlayerBullet(gamePanel, currentPosPlayer1);
+                bullet.start();
+                bulletList.add(bullet);
+                shootCounter = 5;
             }
             return;
         } else {
@@ -377,14 +458,14 @@ public class SinglePlayer extends Thread implements KeyListener , ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton temp = (JButton) e.getSource();
-        if(temp.getText().equals("Start Game")){
+        if (temp.getText().equals("Start Game")) {
             gameStarted = true;
             gamePanel.requestFocus();
             currentButton.setText("Restart Game");
-       }else if(temp.getText().equals("Restart Game")){
-       
-       }
-        
+        } else if (temp.getText().equals("Restart Game")) {
+            restartGame();
+        }
+
     }
 
 }

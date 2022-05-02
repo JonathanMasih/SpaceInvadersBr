@@ -13,12 +13,31 @@ public class Player {
     protected final static int PLAYERSIZE = 70;
     protected final static int PLAYERYPOS = 700;
     private int playerLives = 5;
+    protected String playerName;
+    protected int score;
 
     public Player(Point startPos) {
+        //Setting player name and score
+        this.playerName = playerName;
+        this.score = score;
+
         this.upperLeftOfPLayer = startPos;
-        this.centerOfPlayer = new Point(startPos.x+(PLAYERSIZE /2 ),
-        upperLeftOfPLayer.y + (PLAYERSIZE /2 )
-                                        );
+        this.centerOfPlayer = new Point(startPos.x + (PLAYERSIZE / 2),
+                upperLeftOfPLayer.y + (PLAYERSIZE / 2));
+    }
+
+    public Player(String playerName, int score){
+        this.playerName = playerName;
+        this.score = score;
+    }
+    /**
+     * Sets the score of the player
+     * 
+     * @param the score of the player
+     */
+    public void setScore(int score) {
+        this.score = score;
+
     }
 
     /**
@@ -27,14 +46,14 @@ public class Player {
      * @param dx amount to translate in x
      */
     public void translate(int dx) {
-        upperLeftOfPLayer.translate(dx,0);
+        upperLeftOfPLayer.translate(dx, 0);
         if (upperLeftOfPLayer.x < 0) {
             upperLeftOfPLayer.x = 0;
         }
-        if (upperLeftOfPLayer.x  > SinglePlayer.GAME_PANEL_WIDTH -  (Player.PLAYERSIZE)) {
+        if (upperLeftOfPLayer.x > SinglePlayer.GAME_PANEL_WIDTH - (Player.PLAYERSIZE)) {
             upperLeftOfPLayer.x = SinglePlayer.GAME_PANEL_WIDTH - (Player.PLAYERSIZE);
         }
-        centerOfPlayer = new Point(upperLeftOfPLayer.x + (PLAYERSIZE/2), upperLeftOfPLayer.y +(PLAYERSIZE/2));
+        centerOfPlayer = new Point(upperLeftOfPLayer.x + (PLAYERSIZE / 2), upperLeftOfPLayer.y + (PLAYERSIZE / 2));
     }
 
     /**
@@ -43,8 +62,8 @@ public class Player {
      * @param g the Graphics object where the shape should be drawn
      */
     public void paint(Graphics g) {
-        if(playerLives != 0){
-        g.drawImage(playerImage, upperLeftOfPLayer.x,PLAYERYPOS, PLAYERSIZE, PLAYERSIZE,null);
+        if (playerLives != 0) {
+            g.drawImage(playerImage, upperLeftOfPLayer.x, PLAYERYPOS, PLAYERSIZE, PLAYERSIZE, null);
         }
     }
 
@@ -59,29 +78,29 @@ public class Player {
     /**
      * Return the number of player lives
      */
-    public int getPlayerLives(){
+    public int getPlayerLives() {
         return playerLives;
     }
 
     /**
      * Return the number of center of the player
      */
-    public Point  getPlayerCenter(){
-        return  centerOfPlayer;
+    public Point getPlayerCenter() {
+        return centerOfPlayer;
     }
 
-     /**
+    /**
      * Decrements lives by 1 each time the player is hit
      * 
      */
-    public void hitPlayer(){
-        playerLives --;
+    public void hitPlayer() {
+        playerLives--;
     }
 
-      /**
-     * Set the Image to be used by the player Object 
+    /**
+     * Set the Image to be used by the player Object
      */
-     public static void loadPlayerPic() {
+    public static void loadPlayerPic() {
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         playerImage = toolkit.getImage("PlayerOne.png");
