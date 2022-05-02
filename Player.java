@@ -12,15 +12,12 @@ public class Player {
     protected static Image playerImage;
     protected final static int PLAYERSIZE = 70;
     protected final static int PLAYERYPOS = 700;
-    private int playerLives = 5;
+    protected static int playerLives = 5;
     protected String playerName;
     protected int score;
 
     public Player(Point startPos) {
         //Setting player name and score
-        this.playerName = playerName;
-        this.score = score;
-
         this.upperLeftOfPLayer = startPos;
         this.centerOfPlayer = new Point(startPos.x + (PLAYERSIZE / 2),
                 upperLeftOfPLayer.y + (PLAYERSIZE / 2));

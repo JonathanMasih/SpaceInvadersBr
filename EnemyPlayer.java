@@ -10,6 +10,7 @@ public class  EnemyPlayer extends Thread {
     protected final static int ENEMYPLAYERYPOS = 50;
     protected final static int ENEMEYHEALTH = 5;
     protected int hits;
+    protected static int fireRate = 51;
     protected static int point = 50;
     protected static ArrayList<EnemyBullet> enemiesBulletsList = new ArrayList<>();
 
@@ -93,13 +94,22 @@ public class  EnemyPlayer extends Thread {
                 movementSpeedx -= rand.nextInt(11);
             }
             translate(movementSpeedx);
-            int fireBullet =  rand.nextInt(51);
-            if( fireBullet % 51== 0 ){
+            int fireBullet =  rand.nextInt(fireRate);
+            if( fireBullet % fireRate == 0 ){
                 fireBullet();
             }
-
+           
         }
     }
+
+     /**
+     * Returns the if the enemy is hit;
+     * 
+     */
+    public void killEnemyPlayer(){
+        hits = 5;
+    }
+
 
      /**
      * Returns the if the enemy is hit;

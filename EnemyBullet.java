@@ -25,6 +25,16 @@ public class EnemyBullet extends Bullet {
             upperLeft.translate(0, bulletSPEED );
         }
         offPanel = true;
+    } 
+    /**
+    * Run method to define the life of this bullet.
+    */
+   @Override
+    public void paint(Graphics g) {
+        if( !hit || !offPanel){
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect(upperLeft.x, upperLeft.y, bulletWidth,  bulletHeight);
+        }
     }
 
 }
