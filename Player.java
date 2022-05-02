@@ -12,7 +12,7 @@ public class Player {
     protected static Image playerImage;
     protected final static int PLAYERSIZE = 70;
     protected final static int PLAYERYPOS = 700;
-    private int playerLives = 5;
+    protected static int playerLives = 5;
     protected String playerName;
     protected int score;
 

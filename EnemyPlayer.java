@@ -106,6 +106,15 @@ public class  EnemyPlayer extends Thread {
      * Returns the if the enemy is hit;
      * 
      */
+    public void killEnemyPlayer(){
+        hits = 5;
+    }
+
+
+     /**
+     * Returns the if the enemy is hit;
+     * 
+     */
     public int getEnemyHitCount() {
         return hits;
     }
