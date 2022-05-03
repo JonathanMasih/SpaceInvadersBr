@@ -14,7 +14,6 @@ public class MultiPlayer2 {
     protected final static int PLAYER2YPOS = 50;
     protected int lives;
     protected static ArrayList<MultiPlayerBullet> player2BulletsList = new ArrayList<>();
-    protected boolean rotatingClockwise = false;
     protected int rotation = 180;
     protected double speed;
     private int shotCooldown;
@@ -28,7 +27,7 @@ public class MultiPlayer2 {
     }
 
     /**
-     * Set the Image to be used by the Enemy player Object
+     * Set the Image to be used by the MultiPlayer2 Object
      */
     public static void loadEnemyPic() {
         try {
@@ -43,18 +42,22 @@ public class MultiPlayer2 {
      * @param g the Graphics object where the shape should be drawn
      */
     public void paint(Graphics g) {
-        //Graphics2D g2d = (Graphics2D)g;
         g.drawImage(enemyPlayerImage, upperLeftOfPlayer2.x, upperLeftOfPlayer2.y, Player.PLAYERSIZE,
                 Player.PLAYERSIZE, null);
         if(DoublePlayer.debugMode) {
             g.setColor(Color.WHITE);
-            g.drawString("X: " + Integer.toString(centerOfPlayer2.x) + ",  Y: " + Integer.toString(centerOfPlayer2.y), 600, 715);
-            g.drawString("Rotation: " + Integer.toString(rotation), 600, 730);
-            g.drawString("Blue Bullets: " + player2BulletsList.size(), 600, 745);
+            g.drawString("X: " + Integer.toString(centerOfPlayer2.x) + ",  Y: " + Integer.toString(centerOfPlayer2.y), 700, 715);
+            g.drawString("Rotation: " + Integer.toString(rotation), 700, 730);
+            g.drawString("Blue Bullets: " + player2BulletsList.size(), 700, 745);
             g.drawRect(upperLeftOfPlayer2.x, upperLeftOfPlayer2.y, Player.PLAYERSIZE, Player.PLAYERSIZE);
         }
     }
 
+    /*
+     * Creates a new image by rotating the original image
+     * This is to prevent distorting the image by changing a changed image many times
+     * Uses a Graphics2D Object to use the rotate() method
+     */
     public void rotate(boolean clockwise) {
         // Get Dimensions of image
         int width = enemyPlayerImage.getWidth();
@@ -81,10 +84,13 @@ public class MultiPlayer2 {
         return;
     }
     
+    // Returns current speed
     public double getSpeed(){
         return speed;
     }
 
+    // There is a max speed of 3 / -3
+    // Also, due to rounding errors with doubles, speed above +-3 and under +-0.1 are accounted for
     public void modifySpeed(double mod) {
         if(speed > -3 && speed < 3)
             speed += mod;
@@ -96,10 +102,11 @@ public class MultiPlayer2 {
             speed = 0;
     }
 
+    // Resets the player to original values, at the specified point
     public void reset(Point p) {
         speed = 0;
-        rotation = 183;
-        rotate(false); // resets to 0
+        rotation = 180;
+        enemyPlayerImage = originalEnemyPlayerImage; // resets to original
         upperLeftOfPlayer2 = p;
         lives = 5;
     }
@@ -114,13 +121,13 @@ public class MultiPlayer2 {
         if (upperLeftOfPlayer2.x < 0) {
             upperLeftOfPlayer2.x = 0;
         }
-        else if (upperLeftOfPlayer2.x > SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE - 1) / 2)) {
-            upperLeftOfPlayer2.x = SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE - 1) / 2);
+        else if (upperLeftOfPlayer2.x > DoublePlayer.GAME_PANEL_WIDTH - Player.PLAYERSIZE) {
+            upperLeftOfPlayer2.x = DoublePlayer.GAME_PANEL_WIDTH - Player.PLAYERSIZE;
         }
         if (upperLeftOfPlayer2.y < 0)
             upperLeftOfPlayer2.y = 0;
-        else if(upperLeftOfPlayer2.y > SinglePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE)
-            upperLeftOfPlayer2.y = SinglePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE;
+        else if(upperLeftOfPlayer2.y > DoublePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE)
+            upperLeftOfPlayer2.y = DoublePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE;
         centerOfPlayer2 = new Point(upperLeftOfPlayer2.x + ((Player.PLAYERSIZE) / 2),
                 upperLeftOfPlayer2.y + ((Player.PLAYERSIZE) / 2));
     }
@@ -143,7 +150,7 @@ public class MultiPlayer2 {
     }
 
      /**
-     * Returns the if the enemy is hit;
+     * Returns the number of lives the player has
      * 
      */
     public int getPlayer2Lives() {
@@ -152,27 +159,31 @@ public class MultiPlayer2 {
     
     
      /**
-     * Increamts hits by 1 each time the enemy is hit
-     * 
+     * Decrements lives if lives is greater than 0
      */
     public void hitPlayer(){
         if(lives > 0)
             lives--;
     }
 
+    /* These methods relate to the shot cooldown
+     * The shot cooldown prevent each player from 'spamming' the shoot button
+     */
     public int getShotCooldown() {
         return shotCooldown;
     }
+    // This is reset when the player shoots
     public void setCooldown(int n) {
         shotCooldown = n;
     }
+    // The cooldown is decremented down to zero every repaint
     public void cooldown() {
         if(shotCooldown > 0)
             shotCooldown--;
     }
 
-        /**
-     * Run method to define the life of this bullet.
+    /**
+     * Creates a bullet at the current rotation about 40 pixels out from the center of the player
      */
     public void fireBullet(Component c){
         if(lives > 0) {

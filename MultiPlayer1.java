@@ -15,7 +15,6 @@ public class MultiPlayer1 {
     protected int lives;
     protected double speed;
     protected static ArrayList<MultiPlayerBullet> player1BulletsList = new ArrayList<>();
-    protected boolean rotatingClockwise = false;
     protected int rotation = 0;
     private int shotCooldown;
 
@@ -29,7 +28,7 @@ public class MultiPlayer1 {
     }
 
     /**
-     * Set the Image to be used by the Enemy player Object
+     * Set the Image to be used by the MultiPlayer1 Object
      */
     public static void loadPlayerPic() {
         try {
@@ -48,9 +47,9 @@ public class MultiPlayer1 {
                 Player.PLAYERSIZE, null);
         if(DoublePlayer.debugMode) {
             g.setColor(Color.WHITE);
-            g.drawString("X: " + Integer.toString(centerOfPlayer1.x) + ",  Y: " + Integer.toString(centerOfPlayer1.y), 600, 670);
-            g.drawString("Rotation: " + Integer.toString(rotation), 600, 685);
-            g.drawString("Blue Bullets: " + player1BulletsList.size(), 600, 700);
+            g.drawString("X: " + Integer.toString(centerOfPlayer1.x) + ",  Y: " + Integer.toString(centerOfPlayer1.y), 700, 670);
+            g.drawString("Rotation: " + Integer.toString(rotation), 700, 685);
+            g.drawString("Blue Bullets: " + player1BulletsList.size(), 700, 700);
             g.drawRect(upperLeftOfPlayer1.x, upperLeftOfPlayer1.y, Player.PLAYERSIZE, Player.PLAYERSIZE);
         }
     }
@@ -82,10 +81,13 @@ public class MultiPlayer1 {
         return;
     }
     
+    // Returns current speed
     public double getSpeed(){
         return speed;
     }
 
+    // There is a max speed of 3 / -3
+    // Also, due to rounding errors with doubles, speed above +-3 and under +-0.1 are accounted for
     public void modifySpeed(double mod) {
         if(speed > -3 && speed < 3)
             speed += mod;
@@ -97,10 +99,11 @@ public class MultiPlayer1 {
             speed = 0;
     }
 
+    // Resets the player to original values, at the specified point
     public void reset(Point p) {
         speed = 0;
-        rotation = 3;
-        rotate(false); // resets to 0
+        rotation = 0;
+        player1Image = originalPlayer1Image; // resets to original
         upperLeftOfPlayer1 = p;
         lives = 5;
     }
@@ -115,13 +118,13 @@ public class MultiPlayer1 {
             if (upperLeftOfPlayer1.x < 0) {
                 upperLeftOfPlayer1.x = 0;
             }
-            else if (upperLeftOfPlayer1.x > SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE - 1) / 2)) {
-                upperLeftOfPlayer1.x = SinglePlayer.GAME_PANEL_WIDTH - 5 * ((Player.PLAYERSIZE - 1) / 2);
+            else if (upperLeftOfPlayer1.x > DoublePlayer.GAME_PANEL_WIDTH - Player.PLAYERSIZE) {
+                upperLeftOfPlayer1.x = DoublePlayer.GAME_PANEL_WIDTH - Player.PLAYERSIZE;
             }
             if (upperLeftOfPlayer1.y < 0)
                 upperLeftOfPlayer1.y = 0;
-            else if(upperLeftOfPlayer1.y > SinglePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE)
-                upperLeftOfPlayer1.y = SinglePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE;
+            else if(upperLeftOfPlayer1.y > DoublePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE)
+                upperLeftOfPlayer1.y = DoublePlayer.GAME_PANEL_HEIGHT-Player.PLAYERSIZE;
             centerOfPlayer1 = new Point(upperLeftOfPlayer1.x + ((Player.PLAYERSIZE) / 2),
                     upperLeftOfPlayer1.y + ((Player.PLAYERSIZE) / 2));
     }
@@ -144,7 +147,7 @@ public class MultiPlayer1 {
     }
 
      /**
-     * Returns the if the enemy is hit;
+     * Returns the number of lives the player has
      * 
      */
     public int getPlayer1Lives() {
@@ -153,27 +156,31 @@ public class MultiPlayer1 {
     
     
      /**
-     * Increamts hits by 1 each time the enemy is hit
-     * 
+     * Decrements lives if lives is greater than 0
      */
     public void hitPlayer(){
         if(lives > 0)
             lives--;
     }
 
+    /* These methods relate to the shot cooldown
+     * The shot cooldown prevent each player from 'spamming' the shoot button
+     */
     public int getShotCooldown() {
         return shotCooldown;
     }
+    // This is reset when the player shoots
     public void setCooldown(int n) {
         shotCooldown = n;
     }
+    // The cooldown is decremented down to zero every repaint
     public void cooldown() {
         if(shotCooldown > 0)
             shotCooldown--;
     }
 
-        /**
-     * Run method to define the life of this bullet.
+    /**
+     * Creates a bullet at the current rotation about 40 pixels out from the center of the player
      */
     public void fireBullet(Component c){
         if(lives > 0) {

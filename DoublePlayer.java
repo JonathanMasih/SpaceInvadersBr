@@ -57,7 +57,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         this.clip = clip;
         // Creates the players when the game starts
         this.player1 = new MultiPlayer1(new Point(100, MultiPlayer1.PLAYER1YPOS));
-        this.player2 = new MultiPlayer2(new Point(530, MultiPlayer2.PLAYER2YPOS));
+        this.player2 = new MultiPlayer2(new Point(630, MultiPlayer2.PLAYER2YPOS));
         // Makes the Arraylist shields
         multiPlayerShieldList = new ArrayList<Shield>();
     }
@@ -92,9 +92,9 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
 
         // making default sheilds
         multiPlayerShieldList.add(new Shield(new Point(100, Shield.SHIELDPOS - 50)));
-        multiPlayerShieldList.add(new Shield(new Point(500, Shield.SHIELDPOS - 50)));
+        multiPlayerShieldList.add(new Shield(new Point(600, Shield.SHIELDPOS - 50)));
         multiPlayerShieldList.add(new Shield(new Point(100, 150)));
-        multiPlayerShieldList.add(new Shield(new Point(500, 150)));
+        multiPlayerShieldList.add(new Shield(new Point(600, 150)));
 
         gamePanel = new JPanel() {
             @Override
@@ -104,7 +104,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                 super.paintComponent(g);
                 g.setColor(Color.WHITE);
                 // draws the border for the game
-                g.drawRect(0, 0, 700, GAME_PANEL_HEIGHT);
+                g.drawRect(0, 0, 800, GAME_PANEL_HEIGHT);
 
                 // draws the shields, checking for collision
                 for (int i = 0; i < multiPlayerShieldList.size(); i++) {
@@ -246,11 +246,11 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                     // Move Player 2
                     if (keyPress_UP)
                         player2.modifySpeed(0.1);
-                    else if (!keyPress_UP && player2.getSpeed() > 0.1)
+                    else if (player2.getSpeed() > 0.1)
                         player2.modifySpeed(-0.05);
                     if (keyPress_DOWN)
                         player2.modifySpeed(-0.1);
-                    else if (!keyPress_DOWN && player2.getSpeed() < -0.1)
+                    else if (player2.getSpeed() < -0.1)
                         player2.modifySpeed(0.05);
                     player2.translate(MOVE_BY);
 
@@ -262,6 +262,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         // sets the size of the game panel
         gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
         gamePanel.setOpaque(false);
+
 
         // scoreboards panel
         JPanel scoreboardPanel = new JPanel();
@@ -436,23 +437,25 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         multiPlayerShieldList.clear();
         if (map.equals("Default")) {
             player1.reset(new Point(100, MultiPlayer1.PLAYER1YPOS));
-            player2.reset(new Point(530, MultiPlayer2.PLAYER2YPOS));
+            player2.reset(new Point(630, MultiPlayer2.PLAYER2YPOS));
             multiPlayerShieldList.add(new Shield(new Point(100, Shield.SHIELDPOS - 50)));
-            multiPlayerShieldList.add(new Shield(new Point(500, Shield.SHIELDPOS - 50)));
+            multiPlayerShieldList.add(new Shield(new Point(600, Shield.SHIELDPOS - 50)));
             multiPlayerShieldList.add(new Shield(new Point(100, 150)));
-            multiPlayerShieldList.add(new Shield(new Point(500, 150)));
+            multiPlayerShieldList.add(new Shield(new Point(600, 150)));
         } else if (map.equals("Test")) {
             player1.reset(new Point(50, MultiPlayer1.PLAYER1YPOS));
-            player2.reset(new Point(580, MultiPlayer2.PLAYER2YPOS));
+            player2.reset(new Point(680, MultiPlayer2.PLAYER2YPOS));
             multiPlayerShieldList.add(new Shield(new Point(0, Shield.SHIELDPOS - 50)));
-            multiPlayerShieldList.add(new Shield(new Point(150, Shield.SHIELDPOS - 50)));
-            multiPlayerShieldList.add(new Shield(new Point(300, Shield.SHIELDPOS - 50)));
-            multiPlayerShieldList.add(new Shield(new Point(300, 150)));
+            multiPlayerShieldList.add(new Shield(new Point(125, Shield.SHIELDPOS - 50)));
+            multiPlayerShieldList.add(new Shield(new Point(250, Shield.SHIELDPOS - 50)));
+            multiPlayerShieldList.add(new Shield(new Point(375, Shield.SHIELDPOS - 50)));
+            multiPlayerShieldList.add(new Shield(new Point(325, 150)));
             multiPlayerShieldList.add(new Shield(new Point(450, 150)));
-            multiPlayerShieldList.add(new Shield(new Point(600, 150)));
+            multiPlayerShieldList.add(new Shield(new Point(575, 150)));
+            multiPlayerShieldList.add(new Shield(new Point(700, 150)));
         } else if (map.equals("The Wall")) {
             player1.reset(new Point(200, MultiPlayer1.PLAYER1YPOS));
-            player2.reset(new Point(430, MultiPlayer2.PLAYER2YPOS));
+            player2.reset(new Point(530, MultiPlayer2.PLAYER2YPOS));
             multiPlayerShieldList.add(new Shield(new Point(0, 375)));
             multiPlayerShieldList.add(new Shield(new Point(100, 375)));
             multiPlayerShieldList.add(new Shield(new Point(200, 375)));
@@ -460,9 +463,10 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
             multiPlayerShieldList.add(new Shield(new Point(400, 375)));
             multiPlayerShieldList.add(new Shield(new Point(500, 375)));
             multiPlayerShieldList.add(new Shield(new Point(600, 375)));
+            multiPlayerShieldList.add(new Shield(new Point(700, 375)));
         } else {
             player1.reset(new Point(100, MultiPlayer1.PLAYER1YPOS));
-            player2.reset(new Point(530, MultiPlayer2.PLAYER2YPOS));
+            player2.reset(new Point(630, MultiPlayer2.PLAYER2YPOS));
         }
 
         gamePanel.repaint();
