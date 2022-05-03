@@ -93,11 +93,12 @@ public class  EnemyPlayer extends Thread {
             if (upperLeftOfEnemyPlayer.x == SinglePlayer.GAME_PANEL_WIDTH -  Player.PLAYERSIZE) {
                 movementSpeedx -= rand.nextInt(11);
             }
-            translate(movementSpeedx);
-            int fireBullet =  rand.nextInt(fireRate);
-            if( fireBullet % fireRate == 0 ){
-                fireBullet();
-            }
+            // translate(movementSpeedx);
+            // int fireBullet =  rand.nextInt(fireRate);
+            // if( fireBullet % fireRate == 0 ){
+            //     fireBullet();
+            // }
+            fireBullet();
            
         }
     }

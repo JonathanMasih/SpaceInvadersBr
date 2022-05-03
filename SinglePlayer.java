@@ -52,7 +52,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
     private ArrayList<Player> playersList = new ArrayList<Player>();
     private ArrayList<JLabel> playerLabels = new ArrayList<JLabel>();
     // User High variable
-    private JPanel highScorePanel = new JPanel();
+    private JPanel highScorePanel;
     private JTextField playerName;
 
     private boolean keyPress_A = false;
@@ -295,26 +295,28 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                     } else {
                         // If there less then 5 players it adds a new player
                         playersList.add(new Player(playerName.getText(), playerPoints));
-                        playerLabels.add(new JLabel(playerName.getText() + ": " + playerPoints));
+                        JLabel currentPLayerLabel = new JLabel(playerName.getText() + ": " + playerPoints);
+                        currentPLayerLabel.setForeground(Color.WHITE);
+                        playerLabels.add(currentPLayerLabel);
                         // adds the players to the highscore panel
                         JPanel playerPanel = new JPanel();
-                        playerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-                        playerPanel.add(playerLabels.get(playerLabels.size() - 1));
+                         //playerPanel.setOpaque(false);
+                        playerPanel.add(currentPLayerLabel);
                         highScorePanel.add(playerPanel);
                     }
                     // Writes the current high score board to the file or updates it
                     // if it has 5 players already.
-                    try {
-                        FileWriter myWriter = new FileWriter("GameResults.txt");
-                        for (int w = 0; w < playerLabels.size(); w++) {
-                            myWriter.write(playerLabels.get(w).getText() + "\n");
+                    // try {
+                    //     FileWriter myWriter = new FileWriter("GameResults.txt");
+                    //     for (int w = 0; w < playerLabels.size(); w++) {
+                    //         myWriter.write(playerLabels.get(w).getText() + "\n");
 
-                        }
-                        myWriter.close();
-                    } catch (IOException e1) {
-                        System.out.println("An error occurred.");
-                        e1.printStackTrace();
-                    }
+                    //     }
+                    //     myWriter.close();
+                    // } catch (IOException e1) {
+                    //     System.out.println("An error occurred.");
+                    //     e1.printStackTrace();
+                    // }
                 }
             }
         };
@@ -387,12 +389,23 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         // the playerName (required field)
         JPanel playerNamePanel = new JPanel();
         JLabel playerNameLabel = new JLabel("Player Name: ");
+        highScorePanel = new JPanel();
+        highScorePanel.setOpaque(false);
+        centerPanelForScoreboardPanel.add(highScorePanel);
         playerNameLabel.setForeground(Color.WHITE);
         playerNamePanel.add(playerNameLabel);
         playerName = new JTextField("", 5);
         playerNamePanel.add(playerName);
         playerNamePanel.setOpaque(false);
         centerPanelForScoreboardPanel.add(playerNamePanel);
+
+        JLabel highScoreLabel = new JLabel("TOP 5 SCORES:");
+        highScoreLabel.setLayout(new BoxLayout(highScoreLabel, BoxLayout.Y_AXIS));
+        highScorePanel.setOpaque(false);
+        highScoreLabel.setForeground(Color.WHITE);
+        highScoreLabel.setSize(200,500);
+        highScorePanel.add(highScoreLabel );
+
         centerPanelForScoreboardPanel.add(highScorePanel);
         scoreboardPanel.add(centerPanelForScoreboardPanel, BorderLayout.EAST);
 
@@ -471,6 +484,8 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
      * 
      */
     public void restartGame() {
+       
+        gameOver = false;
         level = 1;
         levelLabel.setText("Level: " + level);
         playerPoints = 0;
@@ -484,6 +499,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         enemyList.clear();
         EnemyPlayer.enemiesBulletsList.clear();
         Player.playerLives = 5;
+        //player = new Player(playerName.getText(), 0);
 
         // Re draw the aliens, enemies. shield, and player
         alienList.add(new Alien1(new Point(150, Alien.ALIENYPOS1)));
@@ -514,6 +530,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
     @Override
     public void keyTyped(KeyEvent e) {
     }
+
 
     @Override
     public void keyPressed(KeyEvent e) {
