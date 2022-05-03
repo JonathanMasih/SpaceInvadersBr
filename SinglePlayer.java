@@ -3,6 +3,8 @@ import java.awt.event.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Flow;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.sound.sampled.*;
@@ -42,7 +44,6 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
     private boolean gameOver;
     // button to start and restart the game
     private JButton currentButton;
-    private boolean gameStarted;
     private int level = 1;
     private JLabel levelLabel;
     private JLabel currentGameStatus;
@@ -55,8 +56,12 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
     private JPanel highScorePanel;
     private JTextField playerName;
 
+    private boolean playerNameInserted = false;
+
     private boolean keyPress_A = false;
     private boolean keyPress_D = false;
+
+    private JPanel centerPanelForScoreboardPanel;
 
     public SinglePlayer(JFrame frame, Image img, Clip clip) {
         this.frame = frame;
@@ -73,7 +78,6 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         this.alienList = new ArrayList<Alien>();
         // Creating array list of enemy players
         this.enemyList = new ArrayList<EnemyPlayer>();
-        this.gameStarted = false;
     }
 
     /**
@@ -88,6 +92,9 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         frame.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
         // window, the application should terminate
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel centerPanelForScoreboardPanel = new JPanel();
+        centerPanelForScoreboardPanel.setLayout(new BoxLayout(centerPanelForScoreboardPanel, BoxLayout.Y_AXIS));
 
         frame.setResizable(false);
         // Setting the background of the frame
@@ -135,12 +142,14 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                 g.drawRect(0, 0, GAME_PANEL_WIDTH - 2, GAME_PANEL_HEIGHT);
                 // draw the player
                 player.paint(g);
-
                 // meaning player is dead
                 if (player.getPlayerLives() == 0) {
                     gameOver = true;
+                    Player.playerLives = 5;
                     currentGameStatus.setText("Please press Restart Game to restart.");
                 }
+                // After game
+
                 // collision between the player and enemybullet
                 if (!gameOver) {
                     int l = 0;
@@ -262,10 +271,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                         }
                     }
                 }
-
-                // After game
                 if (gameOver) {
-                    gameStarted = false;
                     // When shots run out the button changes to play again
                     currentButton.setText("Restart Game");
 
@@ -292,32 +298,33 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                             playersList.set(leastPointIndex, new Player(playerName.getText(), playerPoints));
                             playerLabels.get(leastPointIndex).setText(playerName.getText() + ": " + playerPoints);
                         }
-                    } else {
+                    } else if (playerNameInserted == false) {
+                        playerNameInserted = true;
                         // If there less then 5 players it adds a new player
                         playersList.add(new Player(playerName.getText(), playerPoints));
                         JLabel currentPLayerLabel = new JLabel(playerName.getText() + ": " + playerPoints);
                         currentPLayerLabel.setForeground(Color.WHITE);
                         playerLabels.add(currentPLayerLabel);
                         // adds the players to the highscore panel
-                        JPanel playerPanel = new JPanel();
-                         //playerPanel.setOpaque(false);
-                        playerPanel.add(currentPLayerLabel);
-                        highScorePanel.add(playerPanel);
+                        highScorePanel.add(currentPLayerLabel);
+
                     }
+            
                     // Writes the current high score board to the file or updates it
                     // if it has 5 players already.
                     // try {
-                    //     FileWriter myWriter = new FileWriter("GameResults.txt");
-                    //     for (int w = 0; w < playerLabels.size(); w++) {
-                    //         myWriter.write(playerLabels.get(w).getText() + "\n");
+                    // FileWriter myWriter = new FileWriter("GameResults.txt");
+                    // for (int w = 0; w < playerLabels.size(); w++) {
+                    // myWriter.write(playerLabels.get(w).getText() + "\n");
 
-                    //     }
-                    //     myWriter.close();
+                    // }
+                    // myWriter.close();
                     // } catch (IOException e1) {
-                    //     System.out.println("An error occurred.");
-                    //     e1.printStackTrace();
+                    // System.out.println("An error occurred.");
+                    // e1.printStackTrace();
                     // }
                 }
+
             }
         };
 
@@ -326,6 +333,77 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         enemy.start();
         enemyList.add(enemy);
 
+        // sets the size of the game panel
+        gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
+        gamePanel.setOpaque(false);
+
+        currentGameStatus = new JLabel("Space to shoot, A and D to move.");
+        // scoreboards panel
+        JPanel scoreboardPanel = new JPanel(new BorderLayout());
+        // scoreboardPanel.setLayout(new BoxLayout( scoreboardPanel ,BoxLayout.Y_AXIS));
+       
+
+        scoreboardPanel.setLayout(new BorderLayout());
+        scoreboardPanel.setOpaque(false);
+        scoreboardPanel
+                .setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - GAME_PANEL_WIDTH - 50, GAME_PANEL_HEIGHT));
+        levelLabel = new JLabel("Level: " + level);
+        levelLabel.setForeground(Color.WHITE);
+        playerPointLabel = new JLabel("Player Point: " + playerPoints);
+        playerPointLabel.setForeground(Color.WHITE);
+        centerPanelForScoreboardPanel.add(currentGameStatus);
+        centerPanelForScoreboardPanel.add(playerPointLabel);
+        centerPanelForScoreboardPanel.add(levelLabel);
+        centerPanelForScoreboardPanel.setOpaque(false);
+        // button to start the game and restart game
+
+        currentButton = new JButton("Restart Game");
+        currentButton.setSize(100, 100);
+        currentButton.addActionListener(this);
+        centerPanelForScoreboardPanel.add(currentButton);
+
+        //High Score
+        JLabel highScoreLabel = new JLabel("TOP 5 SCORES:");
+        highScoreLabel.setForeground(Color.WHITE);
+        highScorePanel = new JPanel();
+        highScorePanel.setLayout(new BoxLayout( highScorePanel, BoxLayout.Y_AXIS));
+        highScorePanel.setPreferredSize(new Dimension(100,500));
+        highScorePanel.setOpaque(false);
+        highScoreLabel.setForeground(Color.WHITE);
+        highScorePanel.add(highScoreLabel );
+
+        centerPanelForScoreboardPanel.add(highScoreLabel);
+
+        // the playerName (required field)
+        JPanel playerNamePanel = new JPanel();
+        JLabel playerNameLabel = new JLabel("Player Name: ");
+        playerName = new JTextField( 10);
+        playerNameLabel.setForeground(Color.WHITE);
+        playerNamePanel.add(playerNameLabel);
+        playerNamePanel.add(playerName);
+        playerNamePanel.setOpaque(false);
+    
+        centerPanelForScoreboardPanel.add(playerNamePanel);
+
+        
+        scoreboardPanel.add(centerPanelForScoreboardPanel, BorderLayout.EAST);
+
+        backGroundPanel.setLayout(new BorderLayout());
+        backGroundPanel.add(gamePanel, BorderLayout.WEST);
+        backGroundPanel.add(scoreboardPanel, BorderLayout.EAST);
+
+        // putting in JTextField action listener to it
+        playerName.addActionListener(this);
+
+        frame.add(backGroundPanel);
+        // Checks if any key is pressed
+        frame.addKeyListener(this);
+        // Sets the keyboard focus on this frame
+        frame.setFocusable(true);
+        frame.requestFocus();
+        // display the window we've created
+        frame.pack();
+        frame.setVisible(true);
         // construct and start a thread that will live as long as the program remains
         // active to call gamePanel.repaint() about 30 times per second, so individual
         // game objects do not need to do so.
@@ -356,75 +434,6 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                 }
             }
         }.start();
-        // sets the size of the game panel
-        gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
-        gamePanel.setOpaque(false);
-
-        currentGameStatus = new JLabel("Space to shoot, A and D to move.");
-        // scoreboards panel
-        JPanel scoreboardPanel = new JPanel(new BorderLayout());
-        // scoreboardPanel.setLayout(new BoxLayout( scoreboardPanel ,BoxLayout.Y_AXIS));
-        JPanel centerPanelForScoreboardPanel = new JPanel();
-        centerPanelForScoreboardPanel.setLayout(new BoxLayout(centerPanelForScoreboardPanel, BoxLayout.Y_AXIS));
-
-        scoreboardPanel.setLayout(new BorderLayout());
-        scoreboardPanel.setOpaque(false);
-        scoreboardPanel
-                .setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - GAME_PANEL_WIDTH - 50, GAME_PANEL_HEIGHT));
-        levelLabel = new JLabel("Level: " + level);
-        levelLabel.setForeground(Color.WHITE);
-        playerPointLabel = new JLabel("Player Point: " + playerPoints);
-        playerPointLabel.setForeground(Color.WHITE);
-        centerPanelForScoreboardPanel.add(currentGameStatus);
-        centerPanelForScoreboardPanel.add(playerPointLabel);
-        centerPanelForScoreboardPanel.add(levelLabel);
-        centerPanelForScoreboardPanel.setOpaque(false);
-        // button to start the game and restart game
-
-        currentButton = new JButton("Restart Game");
-        currentButton.setSize(100, 100);
-        currentButton.addActionListener(this);
-        centerPanelForScoreboardPanel.add(currentButton);
-
-        // the playerName (required field)
-        JPanel playerNamePanel = new JPanel();
-        JLabel playerNameLabel = new JLabel("Player Name: ");
-        highScorePanel = new JPanel();
-        highScorePanel.setOpaque(false);
-        centerPanelForScoreboardPanel.add(highScorePanel);
-        playerNameLabel.setForeground(Color.WHITE);
-        playerNamePanel.add(playerNameLabel);
-        playerName = new JTextField("", 5);
-        playerNamePanel.add(playerName);
-        playerNamePanel.setOpaque(false);
-        centerPanelForScoreboardPanel.add(playerNamePanel);
-
-        JLabel highScoreLabel = new JLabel("TOP 5 SCORES:");
-        highScoreLabel.setLayout(new BoxLayout(highScoreLabel, BoxLayout.Y_AXIS));
-        highScorePanel.setOpaque(false);
-        highScoreLabel.setForeground(Color.WHITE);
-        highScoreLabel.setSize(200,500);
-        highScorePanel.add(highScoreLabel );
-
-        centerPanelForScoreboardPanel.add(highScorePanel);
-        scoreboardPanel.add(centerPanelForScoreboardPanel, BorderLayout.EAST);
-
-        backGroundPanel.setLayout(new BorderLayout());
-        backGroundPanel.add(gamePanel, BorderLayout.WEST);
-        backGroundPanel.add(scoreboardPanel, BorderLayout.EAST);
-
-        // putting in JTextField action listener to it
-        playerName.addActionListener(this);
-
-        frame.add(backGroundPanel);
-        // Checks if any key is pressed
-        frame.addKeyListener(this);
-        // Sets the keyboard focus on this frame
-        frame.setFocusable(true);
-        frame.requestFocus();
-        // display the window we've created
-        frame.pack();
-        frame.setVisible(true);
     }
 
     /**
@@ -484,7 +493,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
      * 
      */
     public void restartGame() {
-       
+        playerNameInserted = false;
         gameOver = false;
         level = 1;
         levelLabel.setText("Level: " + level);
@@ -498,8 +507,8 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         }
         enemyList.clear();
         EnemyPlayer.enemiesBulletsList.clear();
-        Player.playerLives = 5;
-        //player = new Player(playerName.getText(), 0);
+        // Player.playerLives = 5;
+        // player = new Player(playerName.getText(), 0);
 
         // Re draw the aliens, enemies. shield, and player
         alienList.add(new Alien1(new Point(150, Alien.ALIENYPOS1)));
@@ -530,7 +539,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
     @Override
     public void keyTyped(KeyEvent e) {
     }
-
+    
 
     @Override
     public void keyPressed(KeyEvent e) {
