@@ -52,15 +52,12 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
     // and labels for players
     private ArrayList<Player> playersList;
     private ArrayList<JLabel> playerLabels;
+    private JLabel playerLivesLeft;
     // User High variable
-
     private JTextField playerName;
-
     private boolean playerNameInserted = false;
-
     private boolean keyPress_A = false;
     private boolean keyPress_D = false;
-
     private JPanel centerPanelForScoreboardPanel;
     private JPanel highScorePanel = new JPanel();
 
@@ -166,6 +163,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                                 Player.PLAYERSIZE, Player.PLAYERSIZE)) {
                             player.hitPlayer();
                             bullet.bulletHit();
+                            playerLivesLeft.setText("PlayerLives: " + Player.playerLives);
                             EnemyPlayer.enemiesBulletsList.remove(l);
                         } else {
                             bullet.paint(g);
@@ -302,6 +300,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                             playersList.set(leastPointIndex, new Player(playerName.getText(), playerPoints));
                             playerLabels.get(leastPointIndex).setText(playerName.getText() + ": " + playerPoints);
                         }
+                        highScorePanel.revalidate();
                     } else if (playerNameInserted == false) {
                         playerNameInserted = true;
                         // If there less then 5 players it adds a new player
@@ -345,6 +344,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         gamePanel.setOpaque(false);
 
         currentGameStatus = new JLabel("Space to shoot, A and D to move.");
+        currentGameStatus.setForeground(Color.WHITE);
         // scoreboards panel
         JPanel scoreboardPanel = new JPanel(new BorderLayout());
         // scoreboardPanel.setLayout(new BoxLayout( scoreboardPanel ,BoxLayout.Y_AXIS));
@@ -356,7 +356,11 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         levelLabel.setForeground(Color.WHITE);
         playerPointLabel = new JLabel("Player Point: " + playerPoints);
         playerPointLabel.setForeground(Color.WHITE);
+        playerLivesLeft = new JLabel("PlayerLives: " + Player.playerLives);
+        playerLivesLeft.setForeground(Color.WHITE);
+
         centerPanelForScoreboardPanel.add(currentGameStatus);
+        centerPanelForScoreboardPanel.add( playerLivesLeft );
         centerPanelForScoreboardPanel.add(playerPointLabel);
         centerPanelForScoreboardPanel.add(levelLabel);
         centerPanelForScoreboardPanel.setOpaque(false);
@@ -474,9 +478,9 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         }
         Alien.point += 10;
         EnemyPlayer.point += 10;
-        if (EnemyPlayer.fireRate == 11) {
+        if (EnemyPlayer.fireRate  <= 11) {
             EnemyPlayer.fireRate -= 2;
-        } else if (EnemyPlayer.fireRate == 5) {
+        } else if (EnemyPlayer.fireRate <= 6) {
             // no more increase fireRate
         } else {
             EnemyPlayer.fireRate -= 10;
@@ -522,8 +526,11 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         }
         enemyList.clear();
         EnemyPlayer.enemiesBulletsList.clear();
-        // Player.playerLives = 5;
+        Player.playerLives = 5;
+        playerLivesLeft.setText("PlayerLives: " + Player.playerLives);
         // player = new Player(playerName.getText(), 0);
+
+        currentGameStatus.setText("Space to shoot, A and D to move.");
 
         // Re draw the aliens, enemies. shield, and player
         alienList.add(new Alien1(new Point(150, Alien.ALIENYPOS1)));
@@ -557,8 +564,8 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if(!gameOver){
         Point currentPosPlayer1 = player.getPlayerCenter();
-
         // Moves the player depending on which button is pressed
         if (e.getKeyCode() == KeyEvent.VK_A) {
             keyPress_A = true;
@@ -575,6 +582,9 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         } else {
             return;
         }
+      } else{
+          return;
+      }
     }
 
     @Override
