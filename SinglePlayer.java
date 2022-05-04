@@ -145,10 +145,10 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                 // meaning player is dead
                 if (player.getPlayerLives() == 0) {
                     gameOver = true;
-                    Player.playerLives = 5;
                     currentGameStatus.setText("Please press Restart Game to restart.");
-                    // when the game is over kills all the enemy players so we don't have issues when we 
-                    //restart the game.
+                    // when the game is over kills all the enemy players so we don't have issues
+                    // when we
+                    // restart the game.
                     for (int i = 0; i < enemyList.size(); i++) {
                         enemyList.get(i).killEnemyPlayer();
                     }
@@ -284,8 +284,8 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
 
                     // If the highscore panel already has 5 players the 6th player will replace
                     // the player with the least amount of points
-                    if (playersList.size() == 5) {
-                     System.out.println(playersList.size());
+                    if (playersList.size() == 5 && playerNameInserted == false) {
+                        playerNameInserted = true;
                         int leastPoints = playersList.get(0).score;
                         int leastPointIndex = 0;
                         // Varible to see if the current points are greater then any
@@ -306,19 +306,22 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                             playersList.set(leastPointIndex, new Player(playerName.getText(), playerPoints));
                             playerLabels.get(leastPointIndex).setText(playerName.getText() + ": " + playerPoints);
                         }
-                        highScorePanel.revalidate();
+    
                     } else if (playerNameInserted == false) {
                         playerNameInserted = true;
                         // If there less then 5 players it adds a new player
                         playersList.add(new Player(playerName.getText(), playerPoints));
                         JLabel currentPlayerLabel = new JLabel(playerName.getText() + ": " + playerPoints);
                         currentPlayerLabel.setForeground(Color.WHITE);
+                        playerLabels.add(currentPlayerLabel);
+                        
+                        
                         // adds the players to the highscore panel
                         JPanel playerPanel = new JPanel();
                         playerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
                         playerPanel.setOpaque(false);
                         playerPanel.add(currentPlayerLabel);
-                        highScorePanel.add(  playerPanel);
+                        highScorePanel.add(playerPanel);
                         highScorePanel.revalidate();
                     }
 
@@ -366,7 +369,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         playerLivesLeft.setForeground(Color.WHITE);
 
         centerPanelForScoreboardPanel.add(currentGameStatus);
-        centerPanelForScoreboardPanel.add( playerLivesLeft );
+        centerPanelForScoreboardPanel.add(playerLivesLeft);
         centerPanelForScoreboardPanel.add(playerPointLabel);
         centerPanelForScoreboardPanel.add(levelLabel);
         centerPanelForScoreboardPanel.setOpaque(false);
@@ -380,20 +383,20 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
 
         // the customer's playerName (required field)
         JPanel playerNamePanel = new JPanel();
-        JLabel playerNameLabel =new JLabel("Player Name: ");
+        JLabel playerNameLabel = new JLabel("Player Name: ");
         playerNameLabel.setForeground(Color.WHITE);
-        playerNamePanel.add( playerNameLabel);
+        playerNamePanel.add(playerNameLabel);
         playerName = new JTextField("", 5);
         playerNamePanel.add(playerName);
         playerNamePanel.setOpaque(false);
         highScorePanel.setOpaque(false);
         highScorePanel.setLayout(new BoxLayout(highScorePanel, BoxLayout.Y_AXIS));
         highScorePanel.add(playerNamePanel);
-        
+
         JPanel highScoreCenter = new JPanel();
         highScoreCenter.setOpaque(false);
         highScoreCenter.setLayout(new FlowLayout(FlowLayout.CENTER));
-        JLabel highScoreLabel  = new JLabel("High Scores");
+        JLabel highScoreLabel = new JLabel("High Scores");
         highScoreLabel.setForeground(Color.WHITE);
         highScoreCenter.add(highScoreLabel);
         highScorePanel.add(highScoreCenter);
@@ -404,13 +407,12 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         scoreAndHighCenter.setOpaque(false);
         scoreAndHighCenter.setPreferredSize(new Dimension(185, scoreAndHighCenter.getHeight()));
 
-        JPanel masterPanelForScoresAndButtons= new JPanel();
-        masterPanelForScoresAndButtons.setLayout(new BoxLayout(  masterPanelForScoresAndButtons
-        , BoxLayout.Y_AXIS));
+        JPanel masterPanelForScoresAndButtons = new JPanel();
+        masterPanelForScoresAndButtons.setLayout(new BoxLayout(masterPanelForScoresAndButtons, BoxLayout.Y_AXIS));
         masterPanelForScoresAndButtons.setOpaque(false);
         scoreAndHighCenter.setOpaque(false);
         masterPanelForScoresAndButtons.add(centerPanelForScoreboardPanel);
-        masterPanelForScoresAndButtons.add( scoreAndHighCenter);
+        masterPanelForScoresAndButtons.add(scoreAndHighCenter);
 
         scoreboardPanel.add(masterPanelForScoresAndButtons);
 
@@ -484,7 +486,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         }
         Alien.point += 10;
         EnemyPlayer.point += 10;
-        if (EnemyPlayer.fireRate  <= 11) {
+        if (EnemyPlayer.fireRate <= 11) {
             EnemyPlayer.fireRate -= 2;
         } else if (EnemyPlayer.fireRate <= 6) {
             // no more increase fireRate
@@ -518,7 +520,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
      * 
      */
     public void restartGame() {
-        for (int i = 0; i< EnemyPlayer.enemiesBulletsList.size(); i++) {
+        for (int i = 0; i < EnemyPlayer.enemiesBulletsList.size(); i++) {
             EnemyPlayer.enemiesBulletsList.get(i).bulletHit();
         }
         EnemyPlayer.enemiesBulletsList.clear();
@@ -570,27 +572,27 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(!gameOver){
-        Point currentPosPlayer1 = player.getPlayerCenter();
-        // Moves the player depending on which button is pressed
-        if (e.getKeyCode() == KeyEvent.VK_A) {
-            keyPress_A = true;
-        } else if (e.getKeyCode() == KeyEvent.VK_D) {
-            keyPress_D = true;
-        } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            if (shootCounter == 0) {
-                PlayerBullet bullet = new PlayerBullet(gamePanel, currentPosPlayer1);
-                bullet.start();
-                bulletList.add(bullet);
-                shootCounter = 5;
+        if (!gameOver) {
+            Point currentPosPlayer1 = player.getPlayerCenter();
+            // Moves the player depending on which button is pressed
+            if (e.getKeyCode() == KeyEvent.VK_A) {
+                keyPress_A = true;
+            } else if (e.getKeyCode() == KeyEvent.VK_D) {
+                keyPress_D = true;
+            } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                if (shootCounter == 0) {
+                    PlayerBullet bullet = new PlayerBullet(gamePanel, currentPosPlayer1);
+                    bullet.start();
+                    bulletList.add(bullet);
+                    shootCounter = 5;
+                }
+                return;
+            } else {
+                return;
             }
-            return;
         } else {
             return;
         }
-      } else{
-          return;
-      }
     }
 
     @Override

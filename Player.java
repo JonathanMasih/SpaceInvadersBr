@@ -21,6 +21,7 @@ public class Player {
         this.upperLeftOfPLayer = startPos;
         this.centerOfPlayer = new Point(startPos.x + (PLAYERSIZE / 2),
                 upperLeftOfPLayer.y + (PLAYERSIZE / 2));
+               
     }
 
     public Player(String playerName, int score){
