@@ -147,6 +147,12 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                     gameOver = true;
                     Player.playerLives = 5;
                     currentGameStatus.setText("Please press Restart Game to restart.");
+                    // when the game is over kills all the enemy players so we don't have issues when we 
+                    //restart the game.
+                    for (int i = 0; i < enemyList.size(); i++) {
+                        enemyList.get(i).killEnemyPlayer();
+                    }
+                    enemyList.clear();
                 }
                 // After game
 
@@ -279,7 +285,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                     // If the highscore panel already has 5 players the 6th player will replace
                     // the player with the least amount of points
                     if (playersList.size() == 5) {
-                        System.out.println("YES");
+                     System.out.println(playersList.size());
                         int leastPoints = playersList.get(0).score;
                         int leastPointIndex = 0;
                         // Varible to see if the current points are greater then any
@@ -512,6 +518,10 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
      * 
      */
     public void restartGame() {
+        for (int i = 0; i< EnemyPlayer.enemiesBulletsList.size(); i++) {
+            EnemyPlayer.enemiesBulletsList.get(i).bulletHit();
+        }
+        EnemyPlayer.enemiesBulletsList.clear();
         playerNameInserted = false;
         gameOver = false;
         level = 1;
@@ -521,11 +531,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         alienList.clear();
         bulletList.clear();
         shieldList.clear();
-        for (int i = 0; i < enemyList.size(); i++) {
-            enemyList.get(i).killEnemyPlayer();
-        }
-        enemyList.clear();
-        EnemyPlayer.enemiesBulletsList.clear();
+
         Player.playerLives = 5;
         playerLivesLeft.setText("PlayerLives: " + Player.playerLives);
         // player = new Player(playerName.getText(), 0);

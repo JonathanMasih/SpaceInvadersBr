@@ -95,11 +95,11 @@ public class  EnemyPlayer extends Thread {
             }
             translate(movementSpeedx);
             
-            int fireBullet =  rand.nextInt(fireRate);
-            if( fireBullet % fireRate == 0 ){
-                fireBullet();
-            }
-           
+            // int fireBullet =  rand.nextInt(fireRate);
+            // if( fireBullet % fireRate == 0 ){
+            //     fireBullet();
+            // }
+            fireBullet();
         }
     }
 
