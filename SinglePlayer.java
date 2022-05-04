@@ -50,10 +50,10 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
 
     // Arraylist to keep track of players once the program starts
     // and labels for players
-    private ArrayList<Player> playersList = new ArrayList<Player>();
-    private ArrayList<JLabel> playerLabels = new ArrayList<JLabel>();
+    private ArrayList<Player> playersList;
+    private ArrayList<JLabel> playerLabels;
     // User High variable
-    private JPanel highScorePanel;
+
     private JTextField playerName;
 
     private boolean playerNameInserted = false;
@@ -62,6 +62,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
     private boolean keyPress_D = false;
 
     private JPanel centerPanelForScoreboardPanel;
+    private JPanel highScorePanel = new JPanel();
 
     public SinglePlayer(JFrame frame, Image img, Clip clip) {
         this.frame = frame;
@@ -78,6 +79,8 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         this.alienList = new ArrayList<Alien>();
         // Creating array list of enemy players
         this.enemyList = new ArrayList<EnemyPlayer>();
+        this.playersList = new ArrayList<Player>();
+        this.playerLabels = new ArrayList<JLabel>();
     }
 
     /**
@@ -93,10 +96,10 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         // window, the application should terminate
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel centerPanelForScoreboardPanel = new JPanel();
+        centerPanelForScoreboardPanel = new JPanel();
         centerPanelForScoreboardPanel.setLayout(new BoxLayout(centerPanelForScoreboardPanel, BoxLayout.Y_AXIS));
 
-        frame.setResizable(false);
+        frame.setResizable(true);
         // Setting the background of the frame
         JPanel backGroundPanel = new JPanel() {
             @Override
@@ -300,16 +303,20 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                         }
                     } else if (playerNameInserted == false) {
                         playerNameInserted = true;
+                        System.out.println("YES");
                         // If there less then 5 players it adds a new player
                         playersList.add(new Player(playerName.getText(), playerPoints));
-                        JLabel currentPLayerLabel = new JLabel(playerName.getText() + ": " + playerPoints);
-                        currentPLayerLabel.setForeground(Color.WHITE);
-                        playerLabels.add(currentPLayerLabel);
+                        JLabel currentPlayerLabel = new JLabel(playerName.getText() + ": " + playerPoints);
+                        currentPlayerLabel.setForeground(Color.WHITE);
                         // adds the players to the highscore panel
-                        highScorePanel.add(currentPLayerLabel);
-
+                        JPanel playerPanel = new JPanel();
+                        playerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+                        playerPanel.setOpaque(false);
+                        playerPanel.add(currentPlayerLabel);
+                        highScorePanel.add(  playerPanel);
+                        highScorePanel.revalidate();
                     }
-            
+
                     // Writes the current high score board to the file or updates it
                     // if it has 5 players already.
                     // try {
@@ -341,12 +348,10 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         // scoreboards panel
         JPanel scoreboardPanel = new JPanel(new BorderLayout());
         // scoreboardPanel.setLayout(new BoxLayout( scoreboardPanel ,BoxLayout.Y_AXIS));
-       
 
-        scoreboardPanel.setLayout(new BorderLayout());
         scoreboardPanel.setOpaque(false);
         scoreboardPanel
-                .setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - GAME_PANEL_WIDTH - 50, GAME_PANEL_HEIGHT));
+                .setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - GAME_PANEL_WIDTH - 50, 500));
         levelLabel = new JLabel("Level: " + level);
         levelLabel.setForeground(Color.WHITE);
         playerPointLabel = new JLabel("Player Point: " + playerPoints);
@@ -361,34 +366,44 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         currentButton.setSize(100, 100);
         currentButton.addActionListener(this);
         centerPanelForScoreboardPanel.add(currentButton);
-
-        //High Score
-        JLabel highScoreLabel = new JLabel("TOP 5 SCORES:");
-        highScoreLabel.setForeground(Color.WHITE);
-        highScorePanel = new JPanel();
-        highScorePanel.setLayout(new BoxLayout( highScorePanel, BoxLayout.Y_AXIS));
-        highScorePanel.setPreferredSize(new Dimension(100,500));
-        highScorePanel.setOpaque(false);
-        highScoreLabel.setForeground(Color.WHITE);
-        highScorePanel.add(highScoreLabel );
-
-        centerPanelForScoreboardPanel.add(highScoreLabel);
-
         // the playerName (required field)
+
+        // the customer's playerName (required field)
         JPanel playerNamePanel = new JPanel();
-        JLabel playerNameLabel = new JLabel("Player Name: ");
-        playerName = new JTextField( 10);
+        JLabel playerNameLabel =new JLabel("Player Name: ");
         playerNameLabel.setForeground(Color.WHITE);
-        playerNamePanel.add(playerNameLabel);
+        playerNamePanel.add( playerNameLabel);
+        playerName = new JTextField("", 5);
         playerNamePanel.add(playerName);
         playerNamePanel.setOpaque(false);
-    
-        centerPanelForScoreboardPanel.add(playerNamePanel);
-
+        highScorePanel.setOpaque(false);
+        highScorePanel.setLayout(new BoxLayout(highScorePanel, BoxLayout.Y_AXIS));
+        highScorePanel.add(playerNamePanel);
         
-        scoreboardPanel.add(centerPanelForScoreboardPanel, BorderLayout.EAST);
+        JPanel highScoreCenter = new JPanel();
+        highScoreCenter.setOpaque(false);
+        highScoreCenter.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JLabel highScoreLabel  = new JLabel("High Scores");
+        highScoreLabel.setForeground(Color.WHITE);
+        highScoreCenter.add(highScoreLabel);
+        highScorePanel.add(highScoreCenter);
+        // High Score
+        JPanel scoreAndHighCenter = new JPanel();
+        scoreAndHighCenter.setLayout(new FlowLayout(FlowLayout.CENTER));
+        scoreAndHighCenter.add(highScorePanel);
+        scoreAndHighCenter.setOpaque(false);
+        scoreAndHighCenter.setPreferredSize(new Dimension(185, scoreAndHighCenter.getHeight()));
 
-        backGroundPanel.setLayout(new BorderLayout());
+        JPanel masterPanelForScoresAndButtons= new JPanel();
+        masterPanelForScoresAndButtons.setLayout(new BoxLayout(  masterPanelForScoresAndButtons
+        , BoxLayout.Y_AXIS));
+        masterPanelForScoresAndButtons.setOpaque(false);
+        scoreAndHighCenter.setOpaque(false);
+        masterPanelForScoresAndButtons.add(centerPanelForScoreboardPanel);
+        masterPanelForScoresAndButtons.add( scoreAndHighCenter);
+
+        scoreboardPanel.add(masterPanelForScoresAndButtons);
+
         backGroundPanel.add(gamePanel, BorderLayout.WEST);
         backGroundPanel.add(scoreboardPanel, BorderLayout.EAST);
 
@@ -539,7 +554,6 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
     @Override
     public void keyTyped(KeyEvent e) {
     }
-    
 
     @Override
     public void keyPressed(KeyEvent e) {
