@@ -351,8 +351,12 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         // sets the size of the game panel
         gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
         gamePanel.setOpaque(false);
-
-        currentGameStatus = new JLabel("Space to shoot, A and D to move.");
+    
+        currentGameStatus = new JLabel("<html>Space to shoot"+ 
+                                       "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+                                       "<br>"+
+                                       "A and D to move</html>");
+        currentGameStatus.setFont(new Font("Serif", Font.PLAIN, 20));
         currentGameStatus.setForeground(Color.WHITE);
         // scoreboards panel
         JPanel scoreboardPanel = new JPanel(new BorderLayout());
@@ -362,10 +366,13 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         scoreboardPanel
                 .setPreferredSize(new Dimension(StartGame.FRAMEWIDTH - GAME_PANEL_WIDTH - 50, 500));
         levelLabel = new JLabel("Level: " + level);
+        levelLabel.setFont(new Font("Serif", Font.PLAIN, 20));
         levelLabel.setForeground(Color.WHITE);
         playerPointLabel = new JLabel("Player Point: " + playerPoints);
+        playerPointLabel.setFont(new Font("Serif", Font.PLAIN, 20));
         playerPointLabel.setForeground(Color.WHITE);
         playerLivesLeft = new JLabel("PlayerLives: " + Player.playerLives);
+        playerLivesLeft.setFont(new Font("Serif", Font.PLAIN, 20));
         playerLivesLeft.setForeground(Color.WHITE);
 
         centerPanelForScoreboardPanel.add(currentGameStatus);
@@ -384,6 +391,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         // the customer's playerName (required field)
         JPanel playerNamePanel = new JPanel();
         JLabel playerNameLabel = new JLabel("Player Name: ");
+         playerNameLabel.setFont(new Font("Serif", Font.PLAIN, 20));
         playerNameLabel.setForeground(Color.WHITE);
         playerNamePanel.add(playerNameLabel);
         playerName = new JTextField("", 5);
@@ -396,7 +404,8 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         JPanel highScoreCenter = new JPanel();
         highScoreCenter.setOpaque(false);
         highScoreCenter.setLayout(new FlowLayout(FlowLayout.CENTER));
-        JLabel highScoreLabel = new JLabel("High Scores");
+        JLabel highScoreLabel = new JLabel("HIGH SCORES:");
+        highScoreLabel.setFont(new Font("Serif", Font.PLAIN, 20));
         highScoreLabel.setForeground(Color.WHITE);
         highScoreCenter.add(highScoreLabel);
         highScorePanel.add(highScoreCenter);
