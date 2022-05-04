@@ -76,6 +76,7 @@ public class  EnemyPlayer extends Thread {
     public Point getUpperLeft(){
         return  upperLeftOfEnemyPlayer;
     }
+    
     @Override
     public void run() {
         Random rand = new Random();

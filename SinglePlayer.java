@@ -154,7 +154,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                     }
                     enemyList.clear();
                 }
-                // After game
+              
 
                 // collision between the player and enemybullet
                 if (!gameOver) {
@@ -278,6 +278,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                         }
                     }
                 }
+                //After game ends
                 if (gameOver) {
                     // When shots run out the button changes to play again
                     currentButton.setText("Restart Game");
@@ -521,6 +522,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         alienList.add(new Alien3(new Point(150, Alien.ALIENYPOS3)));
         alienList.add(new Alien3(new Point(350, Alien.ALIENYPOS3)));
         alienList.add(new Alien3(new Point(550, Alien.ALIENYPOS3)));
+        
 
     }
 

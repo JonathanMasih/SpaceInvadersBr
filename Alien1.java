@@ -1,7 +1,7 @@
 import java.awt.*;
 
 /**
- * Alein type 1 that extends Alein
+ * Alein type 1 that extends Alien
  * 
  */
 public class Alien1 extends Alien{
@@ -29,5 +29,7 @@ public class Alien1 extends Alien{
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         alienImage = toolkit.getImage("Alien.png");
     }
+
+    
 
 }
