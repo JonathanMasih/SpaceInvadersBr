@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.Random;
 
 /**
  * This is an alien object which a player can shoot and earn points.
@@ -7,7 +8,7 @@ import java.awt.*;
  * @author Jonathan Masih, Trevor Collins, Saif Ullah, Seth Coluccio
  * @version Spring 2022
  */
-public abstract class Alien {
+public abstract class Alien extends Thread {
     protected static Image alienImage;
     protected Point upperLeftOfAlien;
     protected Point centerOfAlien;
@@ -25,9 +26,12 @@ public abstract class Alien {
 
         this.alienHit = false;
     }
+
     public void paint(Graphics g) {
         if (!alienHit) {
             g.drawImage(alienImage, upperLeftOfAlien.x, upperLeftOfAlien.y, ALIENSIZE, ALIENSIZE, null);
+            centerOfAlien = new Point(upperLeftOfAlien.x + (Alien.ALIENSIZE / 2),
+                    upperLeftOfAlien.y + (Alien.ALIENSIZE / 2));
         }
     }
 
@@ -48,14 +52,13 @@ public abstract class Alien {
     }
 
     /**
-     *Set the alienHit to true so we stop drawing it
+     * Set the alienHit to true so we stop drawing it
      * 
      */
     public void hitAlien() {
         alienHit = true;
     }
 
-    
     /**
      * Return upperleft of the bullet
      * 
@@ -64,5 +67,44 @@ public abstract class Alien {
     public Point getUpperLeft() {
         return upperLeftOfAlien;
     }
-    
+
+    /**
+     * A relative move of this object.
+     * 
+     * @param dx amount to translate in x
+     */
+    public void translate(int dx) {
+        upperLeftOfAlien.translate(dx, 0);
+        if (upperLeftOfAlien.x < 0) {
+            upperLeftOfAlien.x = 0;
+        }
+        if (upperLeftOfAlien.x > SinglePlayer.GAME_PANEL_WIDTH - Alien.ALIENSIZE) {
+            upperLeftOfAlien.x = SinglePlayer.GAME_PANEL_WIDTH - Alien.ALIENSIZE;
+        }
+        centerOfAlien = new Point(upperLeftOfAlien.x + (Alien.ALIENSIZE / 2),
+                upperLeftOfAlien.y + (Alien.ALIENSIZE / 2));
+    }
+
+    @Override
+    public void run() {
+        Random rand = new Random();
+        int movementSpeedx = 0;
+        movementSpeedx += rand.nextInt(21) - 10;
+        while (!alienHit) {
+            try {
+                sleep(15);
+            } catch (InterruptedException e) {
+            }
+            movementSpeedx += rand.nextInt(21) - 10;
+            if (upperLeftOfAlien.x == 0) {
+                movementSpeedx += rand.nextInt(11);
+            }
+            if (upperLeftOfAlien.x == SinglePlayer.GAME_PANEL_WIDTH - Alien.ALIENSIZE) {
+                movementSpeedx -= rand.nextInt(11);
+            }
+            translate(movementSpeedx);
+
+        }
+    }
+
 }
