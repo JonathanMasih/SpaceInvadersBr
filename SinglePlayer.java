@@ -281,6 +281,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                     // If the highscore panel already has 5 players the 6th player will replace
                     // the player with the least amount of points
                     if (playersList.size() == 5) {
+                        System.out.println("YES");
                         int leastPoints = playersList.get(0).score;
                         int leastPointIndex = 0;
                         // Varible to see if the current points are greater then any
@@ -303,7 +304,6 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                         }
                     } else if (playerNameInserted == false) {
                         playerNameInserted = true;
-                        System.out.println("YES");
                         // If there less then 5 players it adds a new player
                         playersList.add(new Player(playerName.getText(), playerPoints));
                         JLabel currentPlayerLabel = new JLabel(playerName.getText() + ": " + playerPoints);
