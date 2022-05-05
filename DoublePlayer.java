@@ -19,7 +19,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
     protected final static int GAME_PANEL_HEIGHT = 750;
     protected static final int FRAMEWIDTH = 1100;
     protected static final int FRAMEHEIGHT = 850;
-    protected static boolean debugMode = false;
+    protected static boolean debugMode = true;
     // Only set to false when a player wins, waiting to press 'Restart Game'
     private boolean playingGame = true;
     // amount to the move player on each key press
@@ -106,7 +106,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                 super.paintComponent(g);
                 g.setColor(Color.WHITE);
                 // draws the border for the game
-                g.drawRect(0, 0, 800, GAME_PANEL_HEIGHT);
+                g.drawRect(0, 0,  gamePanel.getWidth() - 1, GAME_PANEL_HEIGHT);
 
                 // draws the shields, checking for collision
                 for (int i = 0; i < multiPlayerShieldList.size(); i++) {
