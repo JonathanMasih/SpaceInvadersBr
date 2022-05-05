@@ -20,6 +20,8 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
     protected static final int FRAMEWIDTH = 1100;
     protected static final int FRAMEHEIGHT = 850;
     protected static boolean debugMode = false;
+    // Only set to false when a player wins, waiting to press 'Restart Game'
+    private boolean playingGame = true;
     // amount to the move player on each key press
     protected static final int MOVE_BY = 5;
     // for repaint thread
@@ -151,7 +153,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                     if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 5, 5,
                             P2UpperLeft.x, P2UpperLeft.y, Player.PLAYERSIZE, Player.PLAYERSIZE)) {
                         player2.hitPlayer();
-                        player1Score = player1Score + 10;
+                        //player1Score = player1Score + 10;
                         MultiPlayer1.player1BulletsList.get(j).bulletHit();
                         MultiPlayer1.player1BulletsList.remove(j);
                         scoresLabel.setText("Blue: " + player1Score + "  Red: " + player2Score);
@@ -160,8 +162,13 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                 if (player2.getPlayer2Lives() > 0) {
                     player2.paint(g);
                 } else {
-                    player1Score = player1Score + 50;
-                    newGame();
+                    player1Score = player1Score + 1;
+                    if(player1Score == 3) {
+                        scoresLabel.setText("Blue Wins");
+                        playingGame = false;
+                    }
+                    else
+                        newGame();
                 }
 
                 for (int k = 0; k < MultiPlayer2.player2BulletsList.size(); k++) {
@@ -171,7 +178,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                     if (Collision.bulletOverlapsObject(upperLeftBullet.x, upperLeftBullet.y, 5, 5,
                             P1UpperLeft.x, P1UpperLeft.y, Player.PLAYERSIZE, Player.PLAYERSIZE)) {
                         player1.hitPlayer();
-                        player2Score = player2Score + 10;
+                        //player2Score = player2Score + 10;
                         MultiPlayer2.player2BulletsList.get(k).bulletHit();
                         MultiPlayer2.player2BulletsList.remove(k);
                         scoresLabel.setText("Blue: " + player1Score + "  Red: " + player2Score);
@@ -180,8 +187,13 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
                 if (player1.getPlayer1Lives() > 0) {
                     player1.paint(g);
                 } else {
-                    player2Score = player2Score + 50;
-                    newGame();
+                    player2Score = player2Score + 1;
+                    if(player2Score == 3) {
+                        scoresLabel.setText("Red Wins");
+                        playingGame = false;
+                    }
+                    else 
+                        newGame();
                 }
 
                 // draws the bullets
@@ -214,10 +226,12 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
             @Override
             public void run() {
                 while (true) {
+                    
                     try {
                         sleep(DELAY_TIME);
                     } catch (InterruptedException e) {
                     }
+                    if(playingGame) {
                     // Decrease cooldown
                     player1.cooldown();
                     player2.cooldown();
@@ -256,6 +270,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
 
                     // Finally, Repaint
                     gamePanel.repaint();
+                    }
                 }
             }
         }.start();
@@ -407,6 +422,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         map = mapSelect.getSelectedItem().toString();
         player1Score = 0;
         player2Score = 0;
+        playingGame = true;
         newGame();
     }
 
@@ -417,8 +433,9 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
      * and the shields are cleared and re-added based on the map
      */
     public void newGame() {
-        // Update Scoreboard
-        scoresLabel.setText("Blue: " + player1Score + "   Red: " + player2Score);
+        // Update Scoreboard if they are in the middle of a game
+        if(playingGame)
+            scoresLabel.setText("Blue: " + player1Score + "   Red: " + player2Score);
         // Reset all controls booleans
         keyPress_W = false;
         keyPress_A = false;
