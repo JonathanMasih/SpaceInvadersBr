@@ -19,7 +19,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
     protected final static int GAME_PANEL_HEIGHT = 750;
     protected static final int FRAMEWIDTH = 1100;
     protected static final int FRAMEHEIGHT = 850;
-    protected static boolean debugMode = true;
+    protected static boolean debugMode = false;
     // Only set to false when a player wins, waiting to press 'Restart Game'
     private boolean playingGame = true;
     // amount to the move player on each key press
@@ -303,7 +303,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
         scoreboardPanel.add(mapLabel);
         mapSelect = new JComboBox<String>();
         mapSelect.addItem("Default");
-        mapSelect.addItem("Test");
+        mapSelect.addItem("S-Shaped");
         mapSelect.addItem("The Wall");
         mapSelect.addItem("No Shields");
         mapSelect.setSelectedItem("Default");
@@ -459,7 +459,7 @@ public class DoublePlayer extends Thread implements KeyListener, ActionListener 
             multiPlayerShieldList.add(new Shield(new Point(600, Shield.SHIELDPOS - 50)));
             multiPlayerShieldList.add(new Shield(new Point(100, 150)));
             multiPlayerShieldList.add(new Shield(new Point(600, 150)));
-        } else if (map.equals("Test")) {
+        } else if (map.equals("S-Shaped")) {
             player1.reset(new Point(50, MultiPlayer1.PLAYER1YPOS));
             player2.reset(new Point(680, MultiPlayer2.PLAYER2YPOS));
             multiPlayerShieldList.add(new Shield(new Point(0, Shield.SHIELDPOS - 50)));
