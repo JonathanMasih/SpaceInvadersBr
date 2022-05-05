@@ -19,7 +19,7 @@ public class MultiPlayer2 {
     private int shotCooldown;
 
     public MultiPlayer2(Point startPos) {
-        this.lives = 5;
+        this.lives = 3;
         this.upperLeftOfPlayer2 = new Point(startPos.x, startPos.y);
         this.centerOfPlayer2 = new Point(startPos.x + ((Player.PLAYERSIZE) / 2),
                 upperLeftOfPlayer2.y + ((Player.PLAYERSIZE) / 2));
@@ -108,7 +108,7 @@ public class MultiPlayer2 {
         rotation = 180;
         enemyPlayerImage = originalEnemyPlayerImage; // resets to original
         upperLeftOfPlayer2 = p;
-        lives = 5;
+        lives = 3;
     }
 
     /**
