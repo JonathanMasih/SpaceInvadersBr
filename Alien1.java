@@ -9,6 +9,8 @@ public class Alien1 extends Alien{
     protected static Image alienImage;
     public Alien1(Point upperLeft){
         super(upperLeft);
+        super.hitLeftBorder = true;
+        super.hitRighttBorder = false;
     }
       /**
      * paint this object onto the given Graphics area
@@ -20,6 +22,7 @@ public class Alien1 extends Alien{
         if (!alienHit) {
             g.drawImage(alienImage, upperLeftOfAlien.x, upperLeftOfAlien.y, ALIENSIZE, ALIENSIZE, null);
         }
+
     }
 
      /**

@@ -131,6 +131,10 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         alienList.add(new Alien3(new Point(350, Alien.ALIENYPOS3)));
         alienList.add(new Alien3(new Point(550, Alien.ALIENYPOS3)));
 
+        for (int k = 0; k < alienList.size(); k++) {
+            alienList.get(k).start();
+        }
+
         gamePanel = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
@@ -149,12 +153,8 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                     // when the game is over kills all the enemy players so we don't have issues
                     // when we
                     // restart the game.
-                    for (int i = 0; i < enemyList.size(); i++) {
-                        enemyList.get(i).killEnemyPlayer();
-                    }
-                    enemyList.clear();
+                   
                 }
-              
 
                 // collision between the player and enemybullet
                 if (!gameOver) {
@@ -278,7 +278,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                         }
                     }
                 }
-                //After game ends
+                // After game ends
                 if (gameOver) {
                     // When shots run out the button changes to play again
                     currentButton.setText("Restart Game");
@@ -307,7 +307,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                             playersList.set(leastPointIndex, new Player(playerName.getText(), playerPoints));
                             playerLabels.get(leastPointIndex).setText(playerName.getText() + ": " + playerPoints);
                         }
-    
+
                     } else if (playerNameInserted == false) {
                         playerNameInserted = true;
                         // If there less then 5 players it adds a new player
@@ -315,8 +315,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                         JLabel currentPlayerLabel = new JLabel(playerName.getText() + ": " + playerPoints);
                         currentPlayerLabel.setForeground(Color.WHITE);
                         playerLabels.add(currentPlayerLabel);
-                        
-                        
+
                         // adds the players to the highscore panel
                         JPanel playerPanel = new JPanel();
                         playerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -352,11 +351,11 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         // sets the size of the game panel
         gamePanel.setPreferredSize(new Dimension(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT));
         gamePanel.setOpaque(false);
-    
-        currentGameStatus = new JLabel("<html>Space to shoot"+ 
-                                       "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
-                                       "<br>"+
-                                       "A and D to move</html>");
+
+        currentGameStatus = new JLabel("<html>Space to shoot" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                "<br>" +
+                "A and D to move</html>");
         currentGameStatus.setFont(new Font("Serif", Font.PLAIN, 20));
         currentGameStatus.setForeground(Color.WHITE);
         // scoreboards panel
@@ -392,7 +391,7 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         // the customer's playerName (required field)
         JPanel playerNamePanel = new JPanel();
         JLabel playerNameLabel = new JLabel("Player Name: ");
-         playerNameLabel.setFont(new Font("Serif", Font.PLAIN, 20));
+        playerNameLabel.setFont(new Font("Serif", Font.PLAIN, 20));
         playerNameLabel.setForeground(Color.WHITE);
         playerNamePanel.add(playerNameLabel);
         playerName = new JTextField("", 5);
@@ -466,6 +465,18 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                     if (keyPress_D) {
                         player.translate(MOVE_BY);
                     }
+
+                    // for (int k = 0; k < alienList.size(); k++) {
+                    //     for(int i = 0; i < alienList.size(); i++ ){
+                    //         if(k == i){
+                    //             break;
+                    //         }
+                    //         if(alienList.get(k).upperLeftOfAlien.x - alienList.get(i).upperLeftOfAlien.x < 200){
+                    //             alienList.get(k).upperLeftOfAlien.x +=   alienList.get(k).upperLeftOfAlien.x + 200;
+                    //         }
+                    
+                    //     }
+                    // }
                     gamePanel.repaint();
 
                 }
@@ -522,7 +533,12 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         alienList.add(new Alien3(new Point(150, Alien.ALIENYPOS3)));
         alienList.add(new Alien3(new Point(350, Alien.ALIENYPOS3)));
         alienList.add(new Alien3(new Point(550, Alien.ALIENYPOS3)));
-        
+
+        Alien.movementSpeedx += 1;
+
+        for (int k = 0; k < alienList.size(); k++) {
+            alienList.get(k).start();
+        }
 
     }
 
@@ -547,6 +563,11 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
 
         Player.playerLives = 5;
         playerLivesLeft.setText("PlayerLives: " + Player.playerLives);
+        for (int i = 0; i < enemyList.size(); i++) {
+            enemyList.get(i).killEnemyPlayer();
+        }
+        enemyList.clear();
+
         // player = new Player(playerName.getText(), 0);
 
         currentGameStatus.setText("Space to shoot, A and D to move.");
@@ -563,6 +584,12 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
         alienList.add(new Alien3(new Point(150, Alien.ALIENYPOS3)));
         alienList.add(new Alien3(new Point(350, Alien.ALIENYPOS3)));
         alienList.add(new Alien3(new Point(550, Alien.ALIENYPOS3)));
+
+
+
+        for (int k = 0; k < alienList.size(); k++) {
+            alienList.get(k).start();
+        }
 
         Shield sheild1 = new Shield(new Point(130, Shield.SHIELDPOS));
         Shield sheild2 = new Shield(new Point(540, Shield.SHIELDPOS));

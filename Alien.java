@@ -13,6 +13,9 @@ public abstract class Alien extends Thread {
     protected Point upperLeftOfAlien;
     protected Point centerOfAlien;
     protected boolean alienHit;
+    protected static int movementSpeedx = 1;
+    protected static boolean hitLeftBorder = false;
+    protected static boolean hitRighttBorder = false;
     protected static int point = 50;
     protected static final int ALIENSIZE = 50;
     protected static final int ALIENYPOS1 = 400;
@@ -68,7 +71,7 @@ public abstract class Alien extends Thread {
         return upperLeftOfAlien;
     }
 
-    /**
+   /**
      * A relative move of this object.
      * 
      * @param dx amount to translate in x
@@ -78,11 +81,9 @@ public abstract class Alien extends Thread {
         if (upperLeftOfAlien.x < 0) {
             upperLeftOfAlien.x = 0;
         }
-        if (upperLeftOfAlien.x > SinglePlayer.GAME_PANEL_WIDTH - Alien.ALIENSIZE) {
+        if (upperLeftOfAlien.x > SinglePlayer.GAME_PANEL_WIDTH - Alien.ALIENSIZE ) {
             upperLeftOfAlien.x = SinglePlayer.GAME_PANEL_WIDTH - Alien.ALIENSIZE;
         }
-        centerOfAlien = new Point(upperLeftOfAlien.x + (Alien.ALIENSIZE / 2),
-                upperLeftOfAlien.y + (Alien.ALIENSIZE / 2));
     }
 
     @Override
@@ -92,18 +93,20 @@ public abstract class Alien extends Thread {
         movementSpeedx += rand.nextInt(21) - 10;
         while (!alienHit) {
             try {
-                sleep(15);
+                sleep(150);
             } catch (InterruptedException e) {
             }
             movementSpeedx += rand.nextInt(21) - 10;
             if (upperLeftOfAlien.x == 0) {
                 movementSpeedx += rand.nextInt(11);
             }
-            if (upperLeftOfAlien.x == SinglePlayer.GAME_PANEL_WIDTH - Alien.ALIENSIZE) {
+            if (upperLeftOfAlien.x == SinglePlayer.GAME_PANEL_WIDTH -  Alien.ALIENSIZE) {
                 movementSpeedx -= rand.nextInt(11);
             }
             translate(movementSpeedx);
-
+            
+            
+           
         }
     }
 

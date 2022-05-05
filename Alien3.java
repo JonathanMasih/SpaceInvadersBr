@@ -29,4 +29,6 @@ public class Alien3 extends Alien{
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         alienImage = toolkit.getImage("Alien3.png");
     }
+
+   
 }

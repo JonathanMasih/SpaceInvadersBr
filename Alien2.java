@@ -30,4 +30,6 @@ public class Alien2 extends Alien{
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         alienImage = toolkit.getImage("Alien2.png");
     }
+
+    
 }
