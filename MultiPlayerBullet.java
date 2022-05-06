@@ -29,7 +29,7 @@ public class MultiPlayerBullet extends Bullet {
      */
     @Override
     public void run() {
-        while (centerPoint.x > 0 && centerPoint.x < SinglePlayer.GAME_PANEL_WIDTH-Player.PLAYERSIZE-32 && centerPoint.y < SinglePlayer.GAME_PANEL_HEIGHT  && centerPoint.y > 0) {
+        while (centerPoint.x > 0 && centerPoint.x < DoublePlayer.GAME_PANEL_WIDTH && centerPoint.y < SinglePlayer.GAME_PANEL_HEIGHT  && centerPoint.y > 0) {
             // every 30 ms or so, we move the center point of bullet
             sleepWithCatch(DELAY_TIME);
             centerPoint.translate((int)(10*Math.cos(Math.toRadians(rotationInt-90))), (int)(10*Math.sin(Math.toRadians(rotationInt-90))));
