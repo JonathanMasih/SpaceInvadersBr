@@ -466,7 +466,6 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
                         player.translate(MOVE_BY);
                     }
                  
-                     System.out.println();
                     // for (int k = 0; k < alienList.size(); k++) {
                     //     for(int i = 0; i < alienList.size(); i++ ){
                     //         if(k == i){
@@ -507,13 +506,16 @@ public class SinglePlayer extends Thread implements KeyListener, ActionListener 
             shieldList.add(sheild2);
         }
         Alien.point += 10;
-        EnemyPlayer.point += 10;
+     
         if (EnemyPlayer.fireRate  > 21) {
             EnemyPlayer.fireRate -= 10;
-        } else if (EnemyPlayer.fireRate <= 21) {
-            // no more increase fireRate
-        } else if( EnemyPlayer.fireRate < 16 &&  EnemyPlayer.fireRate > 6 ) {
+        }else if (EnemyPlayer.fireRate <= 31 && EnemyPlayer.fireRate >=  21) {
+            EnemyPlayer.fireRate -= 5;
+        }
+        else if( EnemyPlayer.fireRate < 21 &&  EnemyPlayer.fireRate >= 10 ) {
             EnemyPlayer.fireRate -= 2;
+        }else if ( EnemyPlayer.fireRate < 5){
+            EnemyPlayer.fireRate -= 1;
         }
 
         for (int i = 0; i < level; i++) {
